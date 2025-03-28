@@ -1,0 +1,95 @@
+/* ========================= */
+/* 🐾 ESTILOS DE MASCOTAS */
+/* ========================= */
+
+.mascotas {
+    padding: 2rem;
+    max-width: 1200px;  /* Limita el ancho en pantallas grandes */
+    margin: auto;  /* Centra la sección */
+}
+
+.mascotas h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #333;
+    font-weight: bold;
+}
+
+/* ========================= */
+/* 🐾 LISTA DE MASCOTAS */
+/* ========================= */
+
+.mascota-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem; /* Espaciado entre tarjetas */
+    justify-content: center;
+}
+
+/* ========================= */
+/* 📸 BOTÓN PUBLICAR */
+/* ========================= */
+
+.btn-publicar {
+    display: block;
+    width: fit-content;
+    margin: 2rem auto;
+    padding: 0.8rem 1.5rem;
+    background-color: #ff6600; /* Color llamativo */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn-publicar:hover {
+    background-color: #e65c00;
+    transform: scale(1.05);
+}
+
+.btn-publicar:active {
+    transform: scale(0.95);
+}
+
+/* ========================= */
+/* 📱 RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 768px) {
+    .mascotas {
+        padding: 1rem;
+    }
+
+    .mascotas h1 {
+        font-size: 1.8rem;
+    }
+
+    .mascota-list {
+        gap: 1rem;
+    }
+
+    .btn-publicar {
+        font-size: 1rem;
+        padding: 0.7rem 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mascotas {
+        padding: 0.5rem;
+    }
+
+    .mascotas h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-publicar {
+        font-size: 0.9rem;
+        padding: 0.6rem 1.2rem;
+    }
+}

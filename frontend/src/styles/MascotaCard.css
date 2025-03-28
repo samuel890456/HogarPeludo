@@ -1,0 +1,122 @@
+/* ========================= */
+/* 🎨 ESTILOS DE TARJETA 🐾 */
+/* ========================= */
+
+.mascota-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.2rem;
+    margin: 1rem;
+    max-width: 280px; /* Hace la tarjeta más flexible */
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto de elevación */
+.mascota-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ===================== */
+/* 🖼️ IMAGEN DE LA MASCOTA */
+/* ===================== */
+
+.mascota-card img {
+    width: 100%;
+    height: 180px; /* Ligeramente más pequeño para mejor ajuste */
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+/* ====================== */
+/* 🐶 TEXTO Y DESCRIPCIÓN */
+/* ====================== */
+
+.mascota-card h2 {
+    font-size: 1.3rem;
+    margin: 0.5rem 0;
+    color: #333;
+    font-weight: bold;
+}
+
+.mascota-card p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.25rem 0;
+}
+
+/* ===================== */
+/* 🔘 BOTÓN DE DETALLES */
+/* ===================== */
+
+.mascota-card .btn-primary {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.mascota-card .btn-primary:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* ===================== */
+/* 📱 DISEÑO RESPONSIVO */
+/* ===================== */
+
+@media (max-width: 768px) {
+    .mascota-card {
+        max-width: 100%;
+        padding: 1rem;
+        margin: 1rem auto; /* Centrar las tarjetas */
+    }
+
+    .mascota-card img {
+        height: 150px;
+    }
+
+    .mascota-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .mascota-card p {
+        font-size: 0.9rem;
+    }
+
+    .mascota-card .btn-primary {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mascota-card {
+        padding: 0.8rem;
+    }
+
+    .mascota-card img {
+        height: 130px;
+    }
+
+    .mascota-card h2 {
+        font-size: 1.1rem;
+    }
+
+    .mascota-card p {
+        font-size: 0.85rem;
+    }
+
+    .mascota-card .btn-primary {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+}

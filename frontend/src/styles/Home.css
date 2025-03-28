@@ -1,0 +1,73 @@
+.home {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+/* Títulos responsivos */
+.home h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Texto con mejor legibilidad */
+.home p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* Botón principal */
+.btn-primary {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Efecto hover y clic */
+.btn-primary:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+/* ===================== */
+/* ⚡ DISEÑO RESPONSIVO ⚡ */
+/* ===================== */
+@media (max-width: 768px) {
+    .home {
+        padding: 2rem 1rem;
+    }
+
+    .home h1 {
+        font-size: 2rem;
+    }
+
+    .home p {
+        font-size: 1rem;
+    }
+
+    .btn-primary {
+        font-size: 1rem;
+        padding: 0.6rem 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .home h1 {
+        font-size: 1.8rem;
+    }
+
+    .home p {
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}

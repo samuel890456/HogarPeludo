@@ -1,0 +1,23 @@
+/* Estilos para el pie de página */
+.footer {
+    background-color: #333; /* Color de fondo */
+    color: white; /* Color del texto */
+    padding: 1rem 2rem; /* Espaciado interno */
+    text-align: center; /* Alineación del texto */
+    margin-top: 2rem; /* Margen superior */
+    border-top: 1px solid #444; /* Borde superior */
+}
+
+.footer p {
+    margin: 0.5rem 0; /* Margen entre párrafos */
+}
+
+.footer a {
+    color: #4CAF50; /* Color de los enlaces */
+    text-decoration: none; /* Sin subrayado */
+    margin: 0 0.5rem; /* Margen entre enlaces */
+}
+
+.footer a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}

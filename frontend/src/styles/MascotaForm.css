@@ -1,0 +1,138 @@
+/* MascotaForm.css */
+
+/* Estilos generales del formulario */
+.mascota-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para los grupos de campos */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Estilos para las etiquetas */
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+/* Estilos para los inputs y textareas */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #555;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Estilos para el textarea */
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Estilos para el botón de enviar */
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para mensajes de error */
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Estilos para el contenedor de la imagen */
+.image-preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+    .mascota-form {
+        padding: 15px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 14px;
+    }
+
+    
+}
+/* Estilos para los botones */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.submit-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+    background-color: #a71d2a;
+}
