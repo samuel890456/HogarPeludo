@@ -5,7 +5,7 @@ import '../styles/MascotaCard.css';
 const MascotaCard = ({ mascota }) => {
     return (
         <div className="mascota-card">
-            <img src={`http://localhost:5000/uploads/${mascota.foto}`} alt={mascota.nombre} />
+            <img src={mascota.foto} alt={mascota.nombre} />
             <h2>{mascota.nombre}</h2>
             <p>{mascota.especie} - {mascota.raza}</p>
             <p>Edad: {mascota.edad} años</p>
