@@ -27,26 +27,29 @@ const MascotaForm = ({ onSubmit, onCancel }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const usuario_id = localStorage.getItem("userId"); // Asegúrate de que el ID del usuario está en el almacenamiento local
+        const usuario_id = localStorage.getItem("userId");
         if (!usuario_id) {
             alert("Debes estar autenticado para publicar una mascota.");
             return;
         }
     
-        const mascotaData = {
-            nombre,
-            especie,
-            raza,
-            edad,
-            genero,
-            tamaño,
-            descripcion,
-            foto,
-            usuario_id, // Agregar el usuario_id
-        };
-    
-        onSubmit(mascotaData);
+        const formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('especie', especie);
+        formData.append('raza', raza);
+        formData.append('edad', edad);
+        formData.append('genero', genero);
+        formData.append('tamaño', tamaño);
+        formData.append('descripcion', descripcion);
+        formData.append('estado', 'Disponible'); // O el estado que definas
+        formData.append('usuario_id', usuario_id);
+        if (foto) {
+            formData.append('foto', foto);
+        }
+        console.log("Datos enviados desde el frontend:", Object.fromEntries(formData)); // 👀 Verifica los datos antes de enviarlos
+        onSubmit(formData);
     };
+    
     
 
     return (

@@ -19,7 +19,7 @@ async function mostrarMascotas() {
     try {
         console.log('Conexión a la base de datos exitosa.');
         // Consulta para seleccionar todas las mascotas
-        const [rows] = await db.query('SELECT * FROM mascotas');
+        const [rows] = await db.query('SELECT * FROM mascotas WHERE id = ?', [1]);
         
         if (rows.length === 0) {
             console.log('No hay mascotas registradas.');
