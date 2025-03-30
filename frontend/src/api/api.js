@@ -27,11 +27,11 @@ export const getMascotaById = async (id) => {
 export const createMascota = async (mascota) => {
     try {
         const token = localStorage.getItem('token');
-        console.log("Enviando mascota:", mascota); // 🔍 Verifica los datos antes de enviar
+        
         const response = await axios.post(`${API_URL}/mascotas`, mascota, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json"
+                "Content-Type": 'multipart/form-data',
             },
         });
         return response.data;
@@ -40,6 +40,7 @@ export const createMascota = async (mascota) => {
         throw error;
     }
 };
+
 
 
 // Funciones para autenticación

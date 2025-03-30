@@ -10,6 +10,7 @@ const solicitudesRoutes = require('./routes/solicitudesRoutes');
 const seguimientoRoutes = require('./routes/seguimientoRoutes');
 
 const app = express();
+const path = require('path');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -21,6 +22,7 @@ app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/roles', rolesRoutes);
 app.use('/api/solicitudes', solicitudesRoutes);
 app.use('/api/seguimiento', seguimientoRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
