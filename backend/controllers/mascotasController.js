@@ -1,3 +1,4 @@
+//backend/controladores/mascotasController.js
 const Mascota = require('../models/mascotasModel');
 
 // Función para limpiar los nombres y valores de los campos
