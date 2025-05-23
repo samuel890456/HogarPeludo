@@ -1,0 +1,57 @@
+.gestion-mascotas {
+    padding: 40px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+.gestion-mascotas h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.mascota-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.mascota-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: space-between;
+    transition: transform 0.2s ease;
+}
+
+.mascota-card:hover {
+    transform: translateY(-5px);
+}
+
+.mascota-card h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #4CAF50;
+}
+
+.mascota-card p {
+    margin: 0;
+    color: #555;
+    font-size: 1rem;
+}
+
+
+
+.mascota-card button:hover {
+    background-color: #c0392b;
+}

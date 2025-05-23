@@ -8,7 +8,18 @@ import '../styles/Mascotas.css';
 const Mascotas = () => {
     const [mascotas, setMascotas] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [mostrarModal, setMostrarModal] = useState(false);
+    const usuario_id = localStorage.getItem("userId");
 
+
+
+    React.useEffect(() => {
+        const usuario_id = localStorage.getItem("userId");
+        if (!usuario_id) {
+            setMostrarModal(true);
+        }
+    }, []);
+    
     // Cargar las mascotas al iniciar
     React.useEffect(() => {
         const fetchMascotas = async () => {
@@ -34,9 +45,38 @@ const Mascotas = () => {
     };
 
     return (
+
+        <>
+            {mostrarModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Debes estar autenticado</h3>
+                        <p>Para publicar una mascota debes iniciar sesión o registrarte.</p>
+                        <div className="modal-actions">
+                        <button onClick={() => window.location.href = "/registrarse"} className="modal-button">
+                                Ir a registrarse
+                            </button>
+                            <button onClick={() => setMostrarModal(false)} className="modal-cancel">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        
         <div className="mascotas">
             <h1>Mascotas Disponibles</h1>
-            <button className="btn-publicar" onClick={() => setShowForm(true)}>
+                        <button
+                className="btn-publicar"
+                onClick={() => {
+                    const usuario_id = localStorage.getItem("userId");
+                    if (!usuario_id) {
+                        setMostrarModal(true);
+                    } else {
+                        setShowForm(true);
+                    }
+                }}
+            >
                 Publicar Aquí
             </button>
 
@@ -67,7 +107,9 @@ const Mascotas = () => {
                 )}
             </div>
         </div>
+        </>
     );
+    
 };
 
 export default Mascotas;

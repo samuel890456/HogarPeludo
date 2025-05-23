@@ -17,7 +17,7 @@ router.get('/:id', mascotasController.getMascotaById);
 router.post('/', authController.verificarToken, upload.single('foto'), mascotasController.createMascota);
 
 // Actualizar una mascota existente (protegida)
-router.put('/:id', authController.verificarToken, mascotasController.updateMascota);
+router.put('/:id', authController.verificarToken, upload.single('foto'), mascotasController.updateMascota);
 
 // Eliminar una mascota (protegida)
 router.delete('/:id', authController.verificarToken, mascotasController.deleteMascota);

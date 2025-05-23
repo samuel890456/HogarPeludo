@@ -2,6 +2,11 @@
 const db = require('../config/db');
 
 class Mascota {
+    static async count() {
+        const [rows] = await db.query('SELECT COUNT(*) AS total FROM mascotas');
+        return rows[0].total;
+    }
+    
     static async getAll() {
         const [rows] = await db.query('SELECT * FROM mascotas');
         return rows;

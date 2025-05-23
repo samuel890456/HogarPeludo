@@ -43,7 +43,10 @@ exports.iniciarSesion = async (req, res) => {
         if (!usuario) {
             return res.status(400).json({ message: 'Credenciales incorrectas' });
         }
-
+        // Verificar si está bloqueado
+        if (usuario.activo === 0 || usuario.estado === 'bloqueado') {
+            return res.status(403).json({ message: 'Tu cuenta está bloqueada. Contacta al administrador.' });
+        }
         // Verificar la contraseña
         const contraseñaValida = await bcrypt.compare(contraseña, usuario.contraseña);
         if (!contraseñaValida) {
@@ -54,7 +57,7 @@ exports.iniciarSesion = async (req, res) => {
         const token = jwt.sign({ id: usuario.id, email: usuario.email, rol_id: usuario.rol_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Devolver la respuesta con el token
-        res.json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email, token });
+        res.json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email, token,rol_id: usuario.rol_id });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

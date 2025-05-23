@@ -1,6 +1,16 @@
+//backend/models/solicitudesModel.js
 const db = require('../config/db');
 
 class Solicitud {
+    static async getAll() {
+        const [rows] = await db.query('SELECT * FROM solicitudes_adopcion');
+        return rows;
+    }
+    static async count() {
+        const [rows] = await db.query('SELECT COUNT(*) AS total FROM solicitudes_adopcion');
+        return rows[0].total;
+    }
+    
     // Crear una nueva solicitud de adopción
     static async create(usuario_id, mascota_id, comentarios) {
         const [result] = await db.query(

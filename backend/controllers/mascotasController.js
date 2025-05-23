@@ -70,23 +70,38 @@ exports.createMascota = async (req, res) => {
 
 exports.updateMascota = async (req, res) => {
     try {
-        let datos = limpiarCampos(req.body);
-        const { nombre, especie, raza, edad, genero, tamaño, descripcion, estado } = datos;
-        const foto = req.file ? req.file.filename : null;
+        console.log("Datos recibidos en el PUT:", req.body);
 
-        if (!nombre) return res.status(400).json({ error: "Nombre de mascota es obligatorio." });
+        let datos = limpiarCampos(req.body);
+        console.log("Datos limpios:", datos);
+
+        const { nombre, especie, raza, edad, genero, descripcion, estado } = datos;
+        const foto = req.file ? req.file.filename : null;
+        const tamaño = datos.tamaño || datos["tamaÃ±o"] || ""; // Manejar variaciones del campo
+
+        if (!nombre) {
+            console.error("Error: Falta el nombre");
+            return res.status(400).json({ error: "Nombre de mascota es obligatorio." });
+        }
 
         const edadNum = Number(edad);
         if (isNaN(edadNum)) {
             return res.status(400).json({ error: "Edad debe ser un número válido." });
         }
 
+        const mascotaExistente = await Mascota.getById(req.params.id);
+        if (!mascotaExistente) {
+            return res.status(404).json({ error: "Mascota no encontrada" });
+        }
+
         await Mascota.update(req.params.id, nombre, especie, raza, edadNum, genero, tamaño, descripcion, foto, estado);
-        res.json({ message: 'Mascota actualizada correctamente' });
+        res.json({ message: "Mascota actualizada correctamente" });
     } catch (error) {
+        console.error("Error en updateMascota:", error);
         res.status(500).json({ error: error.message });
     }
 };
+
 
 exports.deleteMascota = async (req, res) => {
     try {

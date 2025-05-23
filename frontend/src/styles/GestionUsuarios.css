@@ -1,0 +1,152 @@
+.gestion-usuarios {
+    padding: 2rem 3%;
+    font-family: 'Inter', sans-serif;
+    background-color: #f4f6f8;
+    min-height: 100vh;
+    color: #333;
+}
+
+.gestion-usuarios h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1a202c;
+}
+
+/* Tabla moderna */
+.gestion-usuarios table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    background: none;
+}
+
+.gestion-usuarios thead th {
+    text-align: left;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    color: #6b7280;
+}
+
+.gestion-usuarios tbody tr {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease;
+}
+
+.gestion-usuarios tbody tr:hover {
+    transform: scale(1.005);
+}
+
+.gestion-usuarios td {
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.gestion-usuarios td:last-child {
+    text-align: right;
+}
+
+/* Estado del usuario */
+.estado-activo {
+    color: #10b981;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.estado-bloqueado {
+    color: #ef4444;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Botón de acción */
+.gestion-usuarios button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gestion-usuarios button:hover {
+    background-color: #2563eb;
+}
+
+.gestion-usuarios button.bloquear {
+    background-color: #ef4444;
+}
+
+.gestion-usuarios button.bloquear:hover {
+    background-color: #dc2626;
+}
+
+.gestion-usuarios button.desbloquear {
+    background-color: #10b981;
+}
+
+.gestion-usuarios button.desbloquear:hover {
+    background-color: #059669;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gestion-usuarios table,
+    .gestion-usuarios thead,
+    .gestion-usuarios tbody,
+    .gestion-usuarios th,
+    .gestion-usuarios td,
+    .gestion-usuarios tr {
+        display: block;
+        width: 100%;
+    }
+
+    .gestion-usuarios thead {
+        display: none;
+    }
+
+    .gestion-usuarios tr {
+        margin-bottom: 16px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        padding: 12px;
+    }
+
+    .gestion-usuarios td {
+        padding: 12px 10px 12px 50%;
+        position: relative;
+        border: none;
+        text-align: left;
+    }
+
+    .gestion-usuarios td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 16px;
+        top: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: capitalize;
+    }
+
+    .gestion-usuarios button {
+        width: 100%;
+        margin-top: 10px;
+        justify-content: center;
+    }
+}

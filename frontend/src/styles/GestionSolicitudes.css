@@ -1,0 +1,80 @@
+.gestion-solicitudes {
+    padding: 40px 20px;
+    background-color: #f4f6f8;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.gestion-solicitudes h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+.solicitud-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+.solicitud-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.solicitud-card:hover {
+    transform: translateY(-5px);
+}
+
+.solicitud-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: #4CAF50;
+}
+
+.solicitud-card p {
+    margin: 0 0 15px 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.solicitud-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.solicitud-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-aprobar {
+    background-color: #2ecc71;
+}
+
+.btn-aprobar:hover {
+    background-color: #27ae60;
+}
+
+.btn-rechazar {
+    background-color: #e74c3c;
+}
+
+.btn-rechazar:hover {
+    background-color: #c0392b;
+}

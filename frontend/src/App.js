@@ -10,8 +10,16 @@ import Adopciones from './pages/Adopciones';
 import IniciarSesion from './pages/IniciarSesion';
 import Registrarse from './pages/Registrarse';
 import Perfil from './pages/Perfil';
+import MascotaDetalle from './components/MascotaDetalle';
 import MisPublicaciones from './pages/MisPublicaciones';
 import './styles/App.css';
+//import for admin dashboard
+import Dashboard from './pages/admin/Dashboard';
+import GestionMascotas from './pages/admin/GestionMascotas';
+import GestionSolicitudes from './pages/admin/GestionSolicitudes';
+import GestionUsuarios from './pages/admin/GestionUsuarios';
+import RutaPrivada from './components/RutaPrivada';
+import AdminNav from './components/admin/AdminNav'; // Importar el componente AdminNav
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,12 +28,20 @@ const App = () => {
     // Verificar si hay un token guardado en localStorage al cargar la página
     useEffect(() => {
         const token = localStorage.getItem('token'); 
-        if (token) {
+        const userId = localStorage.getItem('userId');
+        
+        
+        if (token && userId) {
+            const rol_id = localStorage.getItem('rol_id');
+            const userData = { id: userId, token, rol_id };  // Aquí debería incluirse `role` si viene del backend
             setIsAuthenticated(true);
-            setUser({ token }); // Aquí puedes hacer una petición al backend para obtener más datos del usuario
+            setUser(userData);
+            //console.log("Usuario autenticado en useEffect:", userData);
         }
+        
     }, []);
-
+    
+    
     // Función para manejar el inicio de sesión y guardar los datos del usuario
     const handleLogin = (userData) => { 
         if (!userData || !userData.id) {
@@ -38,8 +54,15 @@ const App = () => {
         
         localStorage.setItem('token', userData.token); // Guardar el token en localStorage
         localStorage.setItem('userId', userData.id); // Guardar el ID del usuario
+        localStorage.setItem('rol_id', userData.rol_id); // Guardar
+        console.log("Usuario autenticado en handleLogin:", userData);
+        if (userData.rol_id === 1) {
+    window.location.href = '/admin/dashboard';
+} else {
+    window.location.href = '/';
+}
+
     
-        window.location.href = '/'; // Redirigir después del login
     };
     
 
@@ -48,6 +71,8 @@ const App = () => {
         setIsAuthenticated(false);
         setUser(null);
         localStorage.removeItem('token'); // Eliminar el token del localStorage
+        localStorage.removeItem('userId'); // Eliminar el ID del usuario
+        localStorage.removeItem('rol_id'); // Eliminar el rol del usuario
         window.location.href = '/iniciar-sesion'; 
     };
 
@@ -57,7 +82,42 @@ const App = () => {
             <Header isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
             <Routes>
                 <Route path="/" element={<Home />} />
+
+                <Route path="/admin" element={
+                    <RutaPrivada rolRequerido={1}>
+                        <AdminNav />
+                    </RutaPrivada>
+                } />
+                {/*dashboard for admin*/}
+                <Route path="/admin/dashboard" element={
+                    <RutaPrivada rolRequerido={1}>
+                        <Dashboard />
+                    </RutaPrivada>
+                } />
+                
+                
+
+
+                <Route path="/admin/mascotas" element={
+                    <RutaPrivada rolRequerido={1}>
+                        <GestionMascotas />
+                    </RutaPrivada>
+                } />
+
+                <Route path="/admin/solicitudes" element={
+                    <RutaPrivada rolRequerido={1}>
+                        <GestionSolicitudes />
+                    </RutaPrivada>
+                } />
+
+                <Route path="/admin/usuarios" element={
+                    <RutaPrivada rolRequerido={1}>
+                        <GestionUsuarios />
+                    </RutaPrivada>
+                } />
+
                 <Route path="/mascotas" element={<Mascotas />} />
+                <Route path="/mascotas/:id" element={<MascotaDetalle />} />
                 <Route path="/adopciones" element={<Adopciones />} />
                 <Route path="/iniciar-sesion" element={<IniciarSesion onLogin={handleLogin} />} />
                 <Route path="/registrarse" element={<Registrarse />} />

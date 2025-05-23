@@ -59,6 +59,7 @@ export const iniciarSesion = async (credenciales) => {
         const response = await axios.post(`${API_URL}/auth/iniciar-sesion`, credenciales); 
         localStorage.setItem('token', response.data.token); // Guardar el token
         localStorage.setItem('userId', response.data.id); // Guardar el userId
+        localStorage.setItem('rol_id', response.data.rol_id); // Guardar el rol_id
         return response.data;
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
