@@ -115,7 +115,7 @@ const App = () => {
                         <GestionUsuarios />
                     </RutaPrivada>
                 } />
-
+                
                 <Route path="/mascotas" element={<Mascotas />} />
                 <Route path="/mascotas/:id" element={<MascotaDetalle />} />
                 <Route path="/adopciones" element={<Adopciones />} />

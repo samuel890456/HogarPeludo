@@ -8,14 +8,18 @@ const usuariosRoutes = require('./routes/usuariosRoutes');
 const rolesRoutes = require('./routes/rolesRoutes');
 const solicitudesRoutes = require('./routes/solicitudesRoutes');
 const seguimientoRoutes = require('./routes/seguimientoRoutes');
-
+const adopcionesRoutes = require('./routes/adopcionesRoutes');
 const app = express();
 const path = require('path');
 const adminRoutes = require('./routes/adminRoutes');
+const testCorreo = require('./routes/testCorreo');
 app.use(cors());
 app.use(bodyParser.json());
 
 // Rutas
+
+app.use('/api/test', testCorreo);
+app.use('/api/adopciones', adopcionesRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/mascotas', mascotasRoutes);
 app.use('/api/usuarios', usuariosRoutes);
