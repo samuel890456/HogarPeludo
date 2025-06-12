@@ -113,7 +113,16 @@ export const iniciarSesion = async (credenciales) => {
         throw error;
     }
 };
+//funciones para restablecimiento de contraseña
+export const solicitarRestablecimientoContrasena = async (data) => {
+    const response = await axios.post(`${API_URL}/auth/forgot-password`, data);
+    return response.data;
+};
 
+export const restablecerContrasena = async (token, data) => {
+    const response = await axios.post(`${API_URL}/auth/reset-password/${token}`, data);
+    return response.data;
+};
 // Funciones para solicitudes de adopción
 
 export const crearSolicitud = async (solicitud) => {

@@ -9,6 +9,8 @@ import Mascotas from './pages/Mascotas';
 import SolicitudesPage from './pages/SolicitudesPage';
 import IniciarSesion from './pages/IniciarSesion';
 import Registrarse from './pages/Registrarse';
+import OlvideContrasena from './pages/OlvideContrasena'; // <--- Nueva importación
+import RestablecerContrasena from './pages/RestablecerContrasena'; // <--- Nueva importación
 import Perfil from './pages/Perfil';
 import MascotaDetalle from './components/MascotaDetalle';
 import PublicarMascota from './pages/PublicarMascota';
@@ -151,6 +153,8 @@ const App = () => {
                 } />
         <Route path="/iniciar-sesion" element={<IniciarSesion onLogin={handleLogin} />} />
         <Route path="/registrarse" element={<Registrarse />} />
+        <Route path="/olvide-contrasena" element={<OlvideContrasena />} /> {/* <--- Nueva ruta */}
+        <Route path="/restablecer-contrasena/:token" element={<RestablecerContrasena />} /> {/* <--- Nueva ruta con parámetro */}
         <Route path="/perfil" element={
                     <RutaPrivada isAuthenticated={isAuthenticated}>
                         <Perfil user={user} />

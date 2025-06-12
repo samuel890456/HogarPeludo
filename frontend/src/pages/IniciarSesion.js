@@ -5,15 +5,15 @@ import '../styles/AuthForms.css'; // Using a shared CSS file for both forms
 
 const IniciarSesion = ({ onLogin }) => {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState(''); // Changed to 'password' for consistency
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); // Clear previous errors
+        setError('');
         try {
-            const userData = await iniciarSesion({ email, contraseña: password }); // Pass password to API
+            const userData = await iniciarSesion({ email, contraseña: password });
             onLogin(userData);
         } catch (err) {
             console.error('Error al iniciar sesión:', err);
@@ -61,13 +61,18 @@ const IniciarSesion = ({ onLogin }) => {
                     </button>
                 </form>
 
+                {/* Nuevo enlace para "Olvidé mi contraseña" */}
+                <p className="auth-additional-link">
+                    <Link to="/olvide-contrasena" className="auth-link">¿Olvidaste tu contraseña?</Link>
+                </p>
+
                 <p className="auth-link-text">
                     ¿No tienes una cuenta? <Link to="/registrarse" className="auth-link">Regístrate aquí</Link>
                 </p>
             </div>
             <div className="auth-image-banner">
-                <Link to="/">
-                <img src="/images/login-illustration.png" alt="Mascotas esperando ser adoptadas" className="auth-illustration" />
+                <Link to="/"> {/* Enlaza la imagen de vuelta a la página principal */}
+                    <img src="/images/login-illustration.png" alt="Mascotas esperando ser adoptadas" className="auth-illustration" />
                 </Link>
                 <p className="banner-text">Conecta con tu próxima huella</p>
             </div>

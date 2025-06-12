@@ -32,26 +32,35 @@ class Usuario {
 
     static async getByEmailWithRoles(email) {
         const [rows] = await db.query(
-            `SELECT u.*, GROUP_CONCAT(ur.rol_id) AS roles_ids 
+            `SELECT u.*, GROUP_CONCAT(ur.rol_id) AS roles_ids,
+                    u.resetPasswordToken, u.resetPasswordExpire -- <--- Añadido aquí
              FROM usuarios u 
              LEFT JOIN usuario_roles ur ON u.id = ur.usuario_id 
-             WHERE u.email = ? GROUP BY u.id`,
+             WHERE u.email = ? GROUP BY u.id`, 
             [email]
         );
         if (rows[0]) {
-            // Convertir la cadena de roles a un array de strings
             rows[0].roles = rows[0].roles_ids ? rows[0].roles_ids.split(',') : [];
             delete rows[0].roles_ids;
         }
         return rows[0] || null;
     }
-
+    
+    // Nuevo método: Encontrar un usuario por su token de restablecimiento de contraseña
+    static async findByResetToken(token) {
+        const [rows] = await db.query(
+            `SELECT * FROM usuarios WHERE resetPasswordToken = ? AND resetPasswordExpire > NOW()`,
+            [token]
+        );
+        return rows[0] || null;
+    }
     static async assignRole(usuarioId, rolId) {
         await db.query(
             'INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (?, ?)',
             [usuarioId, rolId]
         );
     }
+    
 
     static async getUserRoles(usuarioId) {
         const [rows] = await db.query(
@@ -67,6 +76,21 @@ class Usuario {
             [nombre, email, telefono, direccion, id]
         );
     }
+    // Nuevo método para actualizar la contraseña y limpiar el token de restablecimiento
+    static async updatePasswordAndClearToken(id, newHashedPassword) {
+        await db.query(
+            'UPDATE usuarios SET contraseña = ?, resetPasswordToken = NULL, resetPasswordExpire = NULL WHERE id = ?',
+            [newHashedPassword, id]
+        );
+    }
+    // Nuevo método para guardar el token de restablecimiento
+    static async saveResetToken(id, token, expirationDate) {
+        await db.query(
+            'UPDATE usuarios SET resetPasswordToken = ?, resetPasswordExpire = ? WHERE id = ?',
+            [token, expirationDate, id]
+        );
+    }
+
 
     static async updateStatus(id, activo) {
         await db.query('UPDATE usuarios SET activo = ? WHERE id = ?', [activo, id]);
