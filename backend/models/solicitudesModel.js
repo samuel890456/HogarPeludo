@@ -1,45 +1,169 @@
-//backend/models/solicitudesModel.js
 const db = require('../config/db');
 
 class Solicitud {
+    // Obtener todas las solicitudes (posiblemente solo para administradores o para el publicador de la mascota)
     static async getAll() {
-        const [rows] = await db.query('SELECT * FROM solicitudes_adopcion');
+    try {
+        const [rows] = await db.query(`
+            SELECT
+                a.id,
+                a.fecha_solicitud,
+                a.estado,
+                a.motivo,
+                m.id AS mascota_id,
+                m.nombre AS mascota_nombre,
+                m.especie AS mascota_especie,
+                m.imagen_url AS mascota_imagen_url,
+                u.id AS adoptante_id,
+                u.nombre AS adoptante_nombre,
+                u.email AS adoptante_email,
+                u.telefono AS adoptante_telefono,
+                u_publicador.id AS publicador_id,
+                u_publicador.nombre AS publicador_nombre,
+                u_publicador.email AS publicador_email
+            FROM adopciones a
+            JOIN mascotas m ON a.mascota_id = m.id
+            JOIN usuarios u ON a.adoptante_id = u.id
+            JOIN usuarios u_publicador ON m.publicado_por_id = u_publicador.id
+            ORDER BY a.fecha_solicitud DESC
+        `);
+
         return rows;
+    } catch (error) {
+        console.error('Error en Solicitud.getAll:', error);
+        throw error;
     }
-    static async count() {
-        const [rows] = await db.query('SELECT COUNT(*) AS total FROM solicitudes_adopcion');
-        return rows[0].total;
+}
+
+    static async getBySolicitudId(id) {
+    try {
+        const [rows] = await db.query(`
+            SELECT 
+                a.id, 
+                a.mascota_id, 
+                a.adoptante_id, 
+                a.fecha_solicitud, 
+                a.estado,
+                m.publicado_por_id AS publicador_id
+            FROM adopciones a
+            JOIN mascotas m ON a.mascota_id = m.id
+            WHERE a.id = ?
+        `, [id]);
+
+        return rows.length > 0 ? rows[0] : null; // ✅ corregido
+    } catch (error) {
+        console.error('Error en Solicitud.getBySolicitudId:', error);
+        throw error;
     }
-    
-    // Crear una nueva solicitud de adopción
-    static async create(usuario_id, mascota_id, comentarios) {
-        const [result] = await db.query(
-            'INSERT INTO solicitudes_adopcion (usuario_id, mascota_id, comentarios) VALUES (?, ?, ?)',
-            [usuario_id, mascota_id, comentarios]
-        );
-        return result.insertId;
+}
+
+    // Obtener solicitudes por ID de adoptante (para que un usuario vea sus propias solicitudes)
+    static async getByAdoptanteId(adoptanteId) {
+        try {
+            const [rows] = await db.query(`
+                SELECT 
+                    a.id, 
+                    a.fecha_solicitud, 
+                    a.estado,
+                    m.id AS mascota_id,
+                    m.nombre AS mascota_nombre,
+                    m.especie AS mascota_especie,
+                    m.imagen_url AS mascota_imagen_url,
+                    u.id AS adoptante_id,
+                    u.nombre AS adoptante_nombre,
+                    u.email AS adoptante_email,
+                    u.telefono AS adoptante_telefono,
+                    u_publicador.id AS publicador_id,
+                    u_publicador.nombre AS publicador_nombre
+                FROM adopciones a
+                JOIN mascotas m ON a.mascota_id = m.id
+                JOIN usuarios u ON a.adoptante_id = u.id
+                JOIN usuarios u_publicador ON m.publicado_por_id = u_publicador.id
+                WHERE a.adoptante_id = ?
+                ORDER BY a.fecha_solicitud DESC
+            `, [adoptanteId]);
+            return rows;
+        } catch (error) {
+            console.error('Error en Solicitud.getByAdoptanteId:', error);
+            throw error;
+        }
     }
 
-    // Obtener todas las solicitudes de un usuario
-    static async getByUsuarioId(usuario_id) {
-        const [rows] = await db.query('SELECT * FROM solicitudes_adopcion WHERE usuario_id = ?', [usuario_id]);
-        return rows;
+    // Obtener solicitudes por ID del publicador de la mascota
+    static async getByPublicadorId(publicadorId) {
+        try {
+            const [rows] = await db.query(`
+                SELECT 
+                    a.id, 
+                    a.fecha_solicitud, 
+                    a.estado,
+                    m.id AS mascota_id,
+                    m.nombre AS mascota_nombre,
+                    m.especie AS mascota_especie,
+                    m.imagen_url AS mascota_imagen_url,
+                    u.id AS adoptante_id,
+                    u.nombre AS adoptante_nombre,
+                    u.email AS adoptante_email,
+                    u.telefono AS adoptante_telefono,
+                    u_publicador.id AS publicador_id,
+                    u_publicador.nombre AS publicador_nombre
+                FROM adopciones a
+                JOIN mascotas m ON a.mascota_id = m.id
+                JOIN usuarios u ON a.adoptante_id = u.id
+                JOIN usuarios u_publicador ON m.publicado_por_id = u_publicador.id
+                WHERE m.publicado_por_id = ?
+                ORDER BY a.fecha_solicitud DESC
+            `, [publicadorId]);
+            return rows;
+        } catch (error) {
+            console.error('Error en Solicitud.getByPublicadorId:', error);
+            throw error;
+        }
     }
 
-    // Obtener una solicitud por su ID
-    static async getById(id) {
-        const [rows] = await db.query('SELECT * FROM solicitudes_adopcion WHERE id = ?', [id]);
-        return rows[0];
+
+    // Crear una nueva solicitud
+    static async create(mascota_id, adoptante_id) {
+        try {
+            const [result] = await db.query(
+                'INSERT INTO adopciones (mascota_id, adoptante_id, fecha_solicitud, estado) VALUES (?, ?, NOW(), ?)',
+                [mascota_id, adoptante_id, 'pendiente']
+            );
+            return {
+                id: result.insertId,
+                mascota_id,
+                adoptante_id,
+                estado: 'pendiente'
+            };
+        } catch (error) {
+            console.error('Error en Solicitud.create:', error);
+            throw error;
+        }
     }
 
     // Actualizar el estado de una solicitud
-    static async updateEstado(id, estado) {
-        await db.query('UPDATE solicitudes_adopcion SET estado = ? WHERE id = ?', [estado, id]);
+    static async updateState(id, estado) {
+        try {
+            const [result] = await db.query(
+                'UPDATE adopciones SET estado = ? WHERE id = ?',
+                [estado, id]
+            );
+            return result.affectedRows > 0;
+        } catch (error) {
+            console.error('Error en Solicitud.updateState:', error);
+            throw error;
+        }
     }
 
     // Eliminar una solicitud
     static async delete(id) {
-        await db.query('DELETE FROM solicitudes_adopcion WHERE id = ?', [id]);
+        try {
+            const [result] = await db.query('DELETE FROM adopciones WHERE id = ?', [id]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            console.error('Error en Solicitud.delete:', error);
+            throw error;
+        }
     }
 }
 

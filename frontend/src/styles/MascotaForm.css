@@ -1,203 +1,293 @@
-/* Estilos para el formulario de publicación de mascotas */
-.mascota-form {
-    max-width: 700px;
+/* ========================= */
+/* 📝 ESTILOS DE MASCOTA FORM 📝 */
+/* ========================= */
+
+.mascota-form-container {
+    max-width: 800px;
     margin: 40px auto;
     padding: 30px;
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-left: 6px solid #FF6600; /* Línea naranja de acento */
 }
 
-/* Grupo de campos */
-.form-group {
+.mascota-form-container h2 {
+    font-size: 2.2rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.form-error-message {
+    background-color: #ffe0e0;
+    color: #d32f2f;
+    padding: 15px;
+    border-radius: 8px;
     margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+    border: 1px solid #d32f2f;
+}
+
+.mascota-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group label {
-    display: block;
     font-weight: 600;
+    color: #4CAF50; /* Verde para etiquetas */
     margin-bottom: 8px;
-    color: #333;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+}
+
+.form-group label .required {
+    color: #FF6600; /* Naranja para asterisco de requerido */
+    margin-left: 5px;
 }
 
 .form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
+.form-group select,
+.form-group textarea {
     padding: 12px;
-    font-size: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    background-color: #fafafa;
-    transition: border-color 0.3s;
+    font-size: 1rem;
     color: #333;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%; /* Asegura que ocupen todo el ancho disponible */
+    box-sizing: border-box; /* Incluye padding y border en el ancho */
 }
 
 .form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #007bff;
-    background-color: #fff;
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.2);
     outline: none;
 }
 
 .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    min-height: 80px;
 }
 
-/* Vista previa de imagen */
-.image-preview {
-    margin-top: 12px;
-    text-align: center;
+/* Campos que ocupan todo el ancho en la cuadrícula */
+.form-group.full-width {
+    grid-column: 1 / -1; /* Ocupa todas las columnas */
 }
 
-.image-preview img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    padding: 6px;
-    background: #fff;
+/* ======== Subida de Imagen ======== */
+.image-upload-group {
+    position: relative;
 }
 
-/* Botones */
-.form-buttons {
+.image-upload-area {
+    border: 2px dashed #a0a0a0;
+    border-radius: 10px;
+    padding: 25px;
     display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
-}
-
-.submit-button,
-.cancel-button {
-    flex: 1;
-    padding: 12px 0;
-    margin: 0 8px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.submit-button {
-    background-color: #28a745;
-    color: white;
-}
-
-.submit-button:hover {
-    background-color: #218838;
-}
-
-.cancel-button {
-    background-color: #dc3545;
-    color: white;
-}
-
-.cancel-button:hover {
-    background-color: #c82333;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .mascota-form {
-        padding: 20px;
-    }
-
-    .form-buttons {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .submit-button,
-    .cancel-button {
-        margin: 0;
-    }
-}
-
-/* Modal emergente */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
-    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    min-height: 150px;
+    background-color: #fcfcfc;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.modal-content {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-    animation: fadeDown 0.3s ease-in-out;
+.image-upload-area:hover {
+    border-color: #4CAF50;
+    background-color: #f5fdf5;
 }
 
-.modal-content h3 {
-    font-size: 22px;
-    margin-bottom: 12px;
-    color: #333;
-}
-
-.modal-content p {
-    color: #555;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: space-around;
-    gap: 10px;
-}
-
-.modal-button,
-.modal-cancel {
-    flex: 1;
-    padding: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    border: none;
+.upload-button {
+    background-color: #007bff; /* Azul para seleccionar imagen */
+    color: white;
+    padding: 12px 25px;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-.modal-button {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.modal-button:hover {
+.upload-button:hover {
     background-color: #0056b3;
 }
 
-.modal-cancel {
-    background-color: #6c757d;
-    color: #fff;
+.upload-button i {
+    font-size: 1.2rem;
 }
 
-.modal-cancel:hover {
-    background-color: #5a6268;
+.upload-tip {
+    color: #777;
+    font-size: 0.9rem;
+    text-align: center;
 }
 
-@keyframes fadeDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
+.image-preview-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-top: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1; /* Para centrar la 'x' */
+    transition: background-color 0.3s ease;
+}
+
+.remove-image-btn:hover {
+    background-color: rgba(255, 0, 0, 0.9);
+}
+
+/* ======== Botones de Acción del Formulario ======== */
+.form-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    gap: 15px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.form-actions .btn-primary {
+    background-color: #FF6600; /* Naranja para acción principal (Publicar/Actualizar) */
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-actions .btn-primary:hover {
+    background-color: #E65C00;
+    transform: translateY(-2px);
+}
+
+.form-actions .btn-primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.form-actions .btn-secondary {
+    background-color: #f0f0f0; /* Gris claro para Cancelar */
+    color: #555;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-actions .btn-secondary:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+
+/* ========================= */
+/* 📱 RESPONSIVO DE FORMULARIO 📱 */
+/* ========================= */
+@media (max-width: 768px) {
+    .mascota-form-container {
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    .mascota-form-container h2 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    .form-grid {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+        gap: 20px;
+    }
+    .form-group.full-width {
+        grid-column: auto; /* Desactiva full-width en móviles */
+    }
+    .image-preview-container {
+        width: 120px;
+        height: 120px;
+    }
+    .form-actions {
+        flex-direction: column; /* Apila los botones en móviles */
+        gap: 10px;
+        align-items: stretch; /* Estira los botones al ancho completo */
+    }
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .mascota-form-container {
+        padding: 15px;
+    }
+    .mascota-form-container h2 {
+        font-size: 1.5rem;
+    }
+    .form-group label,
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .upload-button {
+        font-size: 0.9rem;
+    }
+    .upload-button {
+        padding: 10px 20px;
     }
 }

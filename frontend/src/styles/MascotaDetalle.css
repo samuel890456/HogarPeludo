@@ -1,68 +1,381 @@
-/* MascotaDetalle.css */
+/* frontend/src/styles/MascotaDetalle.css */
 
-.detalle-container {
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+.mascota-detalle-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Quicksand', sans-serif; /* Usa una fuente amigable */
+    color: #4a4a4a;
+    animation: fadeIn 0.8s ease-out;
 }
 
-.detalle-img {
-  width: 100%;
-  border-radius: 12px;
-  object-fit: cover;
-  max-height: 450px;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.detalle-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.detalle-info h1 {
-  margin-bottom: 0.5rem;
-  font-size: 2rem;
-  color: #2b2b2b;
-}
-
-.detalle-info p {
-  font-size: 1rem;
-  color: #444;
-}
-
-.btn-adoptar {
-  margin-top: auto;
-  padding: 0.75rem 1.5rem;
-  background-color: #4fc3f7;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-adoptar:hover {
-  background-color: #039be5;
-}
-
-@media (max-width: 768px) {
-  .detalle-container {
-    grid-template-columns: 1fr;
+.mascota-detalle-header {
     text-align: center;
-  }
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+}
 
-  .detalle-info {
-    align-items: center;
-  }
+.mascota-detalle-header h1 {
+    font-size: 2.8em;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
 
-  .btn-adoptar {
+.mascota-status-detail {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: -10px;
+}
+
+.mascota-status-detail .available {
+    color: #28a745; /* Verde para disponible */
+}
+
+.mascota-status-detail .adopted {
+    color: #dc3545; /* Rojo para adoptado */
+}
+
+.mascota-detalle-content {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    gap: 40px; /* Espacio entre la imagen y la información */
+}
+
+.mascota-image-gallery {
+    flex: 1;
+    min-width: 300px; /* Asegura un ancho mínimo para la imagen */
+    position: sticky; /* Opcional: la imagen se queda "pegada" al hacer scroll */
+    top: 20px; /* Distancia desde la parte superior */
+    align-self: flex-start; /* Alinea al inicio del contenedor flex */
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.main-mascota-image {
     width: 100%;
-  }
+    height: auto;
+    max-height: 500px; /* Altura máxima para evitar imágenes demasiado grandes */
+    object-fit: cover; /* Recorta la imagen para cubrir el área */
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.main-mascota-image:hover {
+    transform: scale(1.02); /* Pequeño efecto de zoom al pasar el ratón */
+}
+
+.thumbnail-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.thumbnail-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #eee;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.thumbnail-image:hover, .thumbnail-image.active {
+    border-color: #ff9800; /* Color de acento para la imagen activa/hover */
+}
+
+.mascota-info-section {
+    flex: 2; /* Ocupa más espacio que la imagen */
+    min-width: 400px; /* Ancho mínimo para la sección de info */
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.05);
+}
+
+.info-item {
+    padding: 10px 0;
+    border-bottom: 1px dashed #e0e0e0;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1; /* Ocupa todas las columnas disponibles */
+}
+
+.info-item p {
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-item span {
+    font-size: 1.1em;
+    color: #333;
+}
+
+.info-block {
+    margin-bottom: 30px;
+    line-height: 1.6;
+    padding: 15px 0;
+}
+
+.info-block h3 {
+    font-size: 1.8em;
+    color: #4CAF50; /* Color primario para títulos de sección */
+    margin-bottom: 15px;
+    border-bottom: 1px solid #4CAF50;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-block p {
+    font-size: 1.05em;
+    color: #555;
+    text-align: justify;
+}
+
+.adoption-cta-section, .adopted-message-section {
+    background-color: #e8f5e9; /* Fondo suave para la sección de CTA/mensaje */
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.adopted-message-section {
+    background-color: #ffebee; /* Rojo suave para mascota adoptada */
+}
+
+.adoption-cta-section h3, .adopted-message-section h3 {
+    color: #4CAF50;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.adopted-message-section h3 {
+    color: #d32f2f;
+}
+
+.btn-primary-detail {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-right: 15px;
+    text-decoration: none; /* Si se convierte en Link */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary-detail:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+.btn-secondary-detail {
+    background-color: #f0f0f0;
+    color: #555;
+    padding: 15px 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-secondary-detail:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.contact-tip {
+    margin-top: 25px;
+    font-size: 0.95em;
+    color: #777;
+}
+
+.contact-tip a {
+    color: #2196f3;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.contact-tip a:hover {
+    text-decoration: underline;
+}
+
+.back-button-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.btn-back {
+    background-color: #9e9e9e;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #757575;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .mascota-detalle-content {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .mascota-image-gallery, .mascota-info-section {
+        min-width: unset; /* Reinicia el ancho mínimo */
+        width: 100%; /* Ocupa todo el ancho disponible */
+        position: static; /* Deshabilita sticky en móviles */
+    }
+
+    .mascota-detalle-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .mascota-detalle-header h1 {
+        font-size: 2.2em;
+    }
+
+    .btn-primary-detail, .btn-secondary-detail {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 15px; /* Espacio entre botones en móviles */
+    }
+}
+
+@media (max-width: 480px) {
+    .info-grid {
+        grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        padding: 15px;
+    }
+}
+
+
+/* Estilos para el Modal de Confirmación */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo semi-transparente oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    animation: fadeInOverlay 0.3s ease-out;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    transform: translateY(-20px);
+    animation: slideInModal 0.4s ease-out forwards;
+    position: relative;
+}
+
+@keyframes slideInModal {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-content h2 {
+    color: #4CAF50; /* Color primario de éxito */
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-weight: 700;
+}
+
+.modal-content p {
+    font-size: 1.1em;
+    color: #555;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Ajusta el botón del modal si es necesario, usa el existente btn-primary-detail */
+.modal-content .btn-primary-detail {
+    margin-top: 20px;
+    width: auto; /* Para que el botón no ocupe todo el ancho en el modal */
+    padding: 12px 25px;
+    font-size: 1.1em;
+}
+
+/* Para pantallas más pequeñas, ajusta el modal */
+@media (max-width: 768px) {
+    .modal-content {
+        padding: 30px;
+    }
+    .modal-content h2 {
+        font-size: 2em;
+        gap: 10px;
+    }
+    .modal-content p {
+        font-size: 1em;
+    }
 }

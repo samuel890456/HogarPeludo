@@ -1,28 +1,74 @@
-/* ======== Estilo general del header ======== */
+/* ========================= */
+/* 🐾 ESTILOS MEJORADOS DE HEADER 🐾 */
+/* ========================= */
+
+
 .header {
-    background-color: #ffffff;
-    padding: 15px 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #E8F5E9;
+    padding: 10px 30px; /* Reducimos el padding vertical del header */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 100;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ======== Logo ======== */
+/* ======== Logo Container ======== */
+.logo {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
 .logo a {
-    font-size: 24px;
-    font-weight: bold;
-    color: #007bff;
+    display: flex;
+    align-items: center;
     text-decoration: none;
-    transition: color 0.3s ease;
+    color: inherit;
+    /* Aumentamos la altura de este contenedor para que la imagen tenga más espacio */
+    height: 45px; /* <-- AUMENTADO (anteriormente 55px o 60px) */
+    /* Asegúrate de que esta altura sea suficiente para tu logo ampliado */
 }
-.logo a:hover {
-    color: #0056b3;
+
+/* ======== Logo Image ======== */
+.logo-img {
+    height: 200%; /* El logo ocupará el 100% de la altura de su contenedor (.logo a) */
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    margin-right: 12px;
 }
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+/* ======== Logo Text Container ======== */
+.logo-text {
+    display: flex;
+    flex-direction: column; /* Para que los spans estén uno debajo del otro */
+    line-height: 1.2; /* Ajusta el espaciado entre líneas */
+    color: #333; /* Un color oscuro para el texto del logo, puedes usar el verde de tu marca si quieres */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistencia de fuente */
+}
+
+.logo-main-text {
+    font-size: 24px; /* Tamaño del texto principal "HOGAR PELUDO" */
+    font-weight: 800; /* Más audaz */
+    letter-spacing: -0.5px; /* Ajuste para que se vea compacto */
+    color:#2E7D32; /* O un color más oscuro como #333 para contraste */
+}
+
+.logo-sub-text {
+    font-size: 13px; /* Tamaño del texto secundario "ADOPCION ANIMAL" */
+    font-weight: 600; /* Ligeramente audaz */
+    color:  #4CAF50; /* Un gris más suave para el texto secundario */
+    text-transform: uppercase; /* Para que ADOPCION ANIMAL esté en mayúsculas */
+}
+
 
 /* ======== Menú de navegación ======== */
 .nav {
@@ -39,7 +85,7 @@
 .nav-list {
     display: flex;
     list-style: none;
-    gap: 20px;
+    gap: 30px; /* Más espacio entre los elementos del menú */
     margin: 0;
     padding: 0;
 }
@@ -47,48 +93,100 @@
 /* ======== Ítems de navegación ======== */
 .nav-item a {
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s ease;
+    color: #4A6572; /* Color de texto más suave */
+    font-weight: 600; /* Ligeramente más grueso */
+    transition: color 0.3s ease, transform 0.2s ease;
+    position: relative; /* Para el efecto de subrayado */
+    padding-bottom: 5px; /* Espacio para el subrayado */
 }
+
 .nav-item a:hover {
-    color: #007bff;
+    color: #00796B; /* Mismo verde que el logo */
+    transform: translateY(-2px); /* Pequeño levantamiento */
 }
+
+/* Efecto de subrayado al pasar el ratón */
+.nav-item a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background-color: #00796B; /* Azul verdoso teal para el subrayado */
+    transition: width 0.3s ease-out;
+}
+
+.nav-item a:hover::after {
+    width: 100%;
+}
+
+/* Enlace de administración */
+.nav-item.admin-link a {
+    color: #E64A19; /* Naranja para el enlace de admin */
+    font-weight: 700;
+}
+.nav-item.admin-link a:hover {
+    color:#D84315;
+}
+.nav-item.admin-link a::after {
+    background-color:#E64A19;
+}
+
 
 /* ======== Botón menú hamburguesa ======== */
 .menu-toggle {
-    font-size: 24px;
+    font-size: 28px; /* Tamaño de icono más grande */
     background: none;
     border: none;
     cursor: pointer;
-    color: #333;
+    color: #555;
     height: 40px;
     width: 40px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    display: none; /* Se oculta por defecto */
+    transition: color 0.3s ease;
+    display: none; /* Se oculta por defecto en escritorio */
 }
 
+.menu-toggle:hover {
+    color: #4CAF50;
+}
 
-/* ======== Botones de autenticación ======== */
-.auth-buttons,
-.auth-menu {
+/* ======== Botones de autenticación (Desktop) ======== */
+.auth-buttons {
     display: flex;
-    gap: 10px;
+    gap: 15px; /* Más espacio entre los botones */
+    margin-left: 20px; /* Espacio a la izquierda del menú */
 }
 
 .auth-button {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
+    padding: 10px 20px; /* Más padding */
     border: none;
-    border-radius: 6px;
+    border-radius: 8px; /* Bordes más redondeados */
     text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 1rem;
 }
-.auth-button:hover {
-    background-color: #0056b3;
+
+.auth-button-login {
+    background-color: #1976D2; /* Azul vibrante */
+    color: white;
+}
+.auth-button-login:hover {
+    background-color: #1565C0;
+    transform: translateY(-2px);
+}
+
+.auth-button-register {
+    background-color: #4CAF50; /* Verde principal */
+    color: white;
+}
+.auth-button-register:hover {
+    background-color: #4CAF50; /* Verde principal */
+    transform: translateY(-2px);
 }
 
 /* ======== Ocultar auth-mobile en escritorio ======== */
@@ -99,27 +197,40 @@
 /* ======== Menú de usuario con dropdown ======== */
 .user-menu {
     position: relative;
+    margin-left: 20px;
 }
 
 .user-button {
     background: none;
     border: none;
-    color: #333;
-    font-weight: 500;
+    color: #4A6572;
+    font-weight: 600;
     cursor: pointer;
     transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1rem;
 }
 .user-button:hover {
-    color: #007bff;
+    color: #00796B;
+}
+
+.dropdown-arrow {
+    font-size: 0.7em;
+    transition: transform 0.3s ease;
+}
+.user-button[aria-expanded="true"] .dropdown-arrow {
+    transform: rotate(180deg);
 }
 
 .dropdown-content {
     position: absolute;
-    top: 35px;
+    top: 45px; /* Más espacio para el botón */
     right: 0;
-    background-color: white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 8px;
+    background-color: #F0F4F7; /* Un gris azulado muy claro */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18); /* Sombra más definida */
+    border-radius: 10px; /* Más redondeado */
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -128,6 +239,7 @@
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
+    min-width: 180px; /* Ancho mínimo para el dropdown */
 }
 .dropdown-content.active {
     opacity: 1;
@@ -136,9 +248,9 @@
 }
 .dropdown-content a,
 .dropdown-content button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     background-color: white;
-    color: #333;
+    color: #4A6572;
     text-align: left;
     text-decoration: none;
     border: none;
@@ -148,60 +260,132 @@
 }
 .dropdown-content a:hover,
 .dropdown-content button:hover {
-    background-color: #f2f2f2;
+    background-color: #E1F5FE; /* Azul claro */
+    color: #00796B;
+}
+.dropdown-content button {
+    border-top: 1px solid #eee; /* Separador para el botón de cerrar sesión */
+    font-weight: 600;
+}
+.dropdown-content button:hover {
+     background-color: #FFEBEE; /* Rojo muy suave */
+    color: #D32F2F; /* Rojo de cancelar */
 }
 
-/* ======== Responsive (modo móvil) ======== */
+
+/* ========================= */
+/* 📱 RESPONSIVO DEL HEADER 📱 */
+/* ========================= */
 @media (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
+    
+    .logo a {
+        height: 50px; /* Ajustar altura del contenedor en móvil */
     }
+    .logo-img {
+        height: 45px; /* Tamaño del logo en móvil */
+        margin-right: 8px; /* Menos espacio en móvil */
+    }
+    .logo-main-text {
+        font-size: 20px; /* Tamaño del texto principal en móvil */
+    }
+    .logo-sub-text {
+        font-size: 11px; /* Tamaño del texto secundario en móvil */
+    }
+    .logo {
+        margin-right: 10px; /* Ajustar margen en móvil */
+    }
+
 
     .nav {
         position: absolute;
-        top: 65px;
+        top: 70px; /* Debajo del header */
         right: 0;
         background-color: #fff;
         width: 100%;
-        max-height: 0;
+        max-height: 0; /* Oculto por defecto */
         overflow: hidden;
         flex-direction: column;
         align-items: flex-start;
         padding: 0 20px;
-        transition: max-height 0.3s ease;
+        transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 10px 10px;
     }
 
     .nav.active {
-        max-height: 400px;
-        padding-bottom: 20px;
+        max-height: 400px; /* Altura máxima para mostrar el menú */
+        padding-top: 15px;
+        padding-bottom: 25px;
     }
 
     .nav-list {
         flex-direction: column;
         width: 100%;
-        gap: 12px;
+        gap: 15px; /* Espacio entre los elementos del menú en móvil */
+        text-align: center;
+    }
+
+    .nav-item a {
+        padding: 10px 0;
+        display: block; /* Asegurar que el enlace ocupe todo el ancho */
+        font-size: 1.1rem;
+    }
+
+    .nav-item a::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .nav-item a:hover::after {
+        width: 80%; /* Un poco menos ancho para un mejor look móvil */
     }
 
     .auth-pc {
-        display: none;
+        display: none; /* Ocultar botones de auth de escritorio */
     }
 
     .auth-mobile {
-        display: flex;
+        display: flex; /* Mostrar botones de auth móvil */
         flex-direction: column;
         align-items: center;
-        gap: 10px;
-        margin-top: 10px;
+        gap: 12px;
+        margin-top: 20px; /* Espacio desde los elementos del menú */
         width: 100%;
     }
 
     .auth-mobile .auth-button {
-        width: 100%;
+        width: 80%; /* Los botones ocupan más ancho */
         text-align: center;
     }
 
-    .dropdown-content {
-        position: static;
+    .user-menu {
+        margin-left: 0; /* Eliminar margen en móvil */
+        width: 100%; /* Ocupar todo el ancho disponible */
+        text-align: center;
+    }
+
+    .user-button {
         width: 100%;
+        justify-content: center; /* Centrar el texto del botón de usuario */
+        padding: 10px 0;
+        font-size: 1.1rem;
+    }
+
+    .dropdown-content {
+        position: static; /* No flotar, sino que esté dentro del flujo del menú */
+        width: 100%;
+        max-width: none;
+        box-shadow: none; /* Eliminar sombra del dropdown */
+        border-radius: 0;
+        border-top: 1px solid #eee; /* Separador visual */
+        margin-top: 10px; /* Espacio del botón de usuario */
+        opacity: 1; /* Siempre visible cuando el menú está activo */
+        visibility: visible;
+        transform: translateY(0);
+    }
+    .dropdown-content a,
+    .dropdown-content button {
+        padding: 10px 0; /* Menos padding en móvil */
+        text-align: center;
     }
 }

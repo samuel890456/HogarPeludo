@@ -1,3 +1,4 @@
+//file: frontend/src/pages/admin/GestionSolicitudes.js
 import React, { useEffect, useState } from 'react';
 import AdminNav from '../../components/admin/AdminNav';
 import { fetchSolicitudes, aprobarSolicitud, rechazarSolicitud } from '../../api/adminApi';

@@ -1,134 +1,248 @@
 /* ========================= */
-/* 🐾 ESTILOS DE MASCOTAS */
+/* 🐾 ESTILOS DE PÁGINA MASCOTAS 🐾 */
 /* ========================= */
 
-.mascotas {
-    padding: 2rem;
-    max-width: 1200px;  /* Limita el ancho en pantallas grandes */
-    margin: auto;  /* Centra la sección */
+.mascotas-page {
+    padding: 30px 20px;
+    max-width: 1400px; /* Ancho máximo para el contenido principal */
+    margin: 0 auto;
 }
 
-.mascotas h1 {
+.mascotas-header-section {
     text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2rem;
+    margin-bottom: 40px;
+    padding: 20px 0;
+    background-color: #f7fbf7; /* Fondo suave para el encabezado */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.mascotas-header-section h1 {
+    font-size: 3rem;
     color: #333;
-    font-weight: bold;
+    margin-bottom: 10px;
+    font-weight: 800;
 }
 
-/* ========================= */
-/* 🐾 LISTA DE MASCOTAS */
-/* ========================= */
-
-.mascota-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem; /* Espaciado entre tarjetas */
-    justify-content: center;
+.mascotas-header-section p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 25px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* ========================= */
-/* 📸 BOTÓN PUBLICAR */
-/* ========================= */
-
-.btn-publicar {
-    display: block;
-    width: fit-content;
-    margin: 2rem auto;
-    padding: 0.8rem 1.5rem;
-    background-color: #ff6600; /* Color llamativo */
-    color: white;
+.mascotas-header-section .publish-btn {
+    padding: 14px 30px;
     font-size: 1.1rem;
-    font-weight: bold;
+    background-color: #FF6600; /* Naranja llamativo */
+    color: white;
+    border-radius: 50px; /* Botón tipo píldora */
     text-decoration: none;
-    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mascotas-header-section .publish-btn:hover {
+    background-color: #E65C00;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* ======== Sección de Filtros ======== */
+.filters-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    border-left: 5px solid #4CAF50; /* Línea decorativa verde */
+}
+
+.filters-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    align-items: flex-end; /* Alinea los elementos al final */
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #4CAF50; /* Verde para las etiquetas */
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fdfdfd;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+    outline: none;
+}
+
+.filter-group.age-filters {
+    flex-direction: row; /* Inputs de edad en la misma línea */
+    gap: 10px;
+    align-items: center; /* Alinea los inputs con la etiqueta */
+}
+.filter-group.age-filters label {
+    margin-bottom: 0; /* Elimina margen inferior de la etiqueta en este grupo */
+}
+
+.filter-group.age-filters input {
+    flex-grow: 1; /* Permite que los inputs de edad crezcan */
+}
+
+
+.filter-btn, .btn-clear-filters {
+    padding: 12px 25px;
     border: none;
+    border-radius: 8px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px; /* Para alinear con los inputs si es necesario */
 }
 
-.btn-publicar:hover {
-    background-color: #e65c00;
-    transform: scale(1.05);
+.filter-btn {
+    background-color: #007bff; /* Azul para filtrar */
+    color: white;
+}
+.filter-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-.btn-publicar:active {
-    transform: scale(0.95);
+.btn-clear-filters {
+    background-color: #f0f0f0; /* Gris claro */
+    color: #555;
+    border: 1px solid #ccc;
 }
+.btn-clear-filters:hover {
+    background-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+
+/* ======== Cuadrícula de Mascotas ======== */
+.mascotas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Columnas responsivas */
+    gap: 30px; /* Espacio entre tarjetas */
+    padding: 20px 0;
+}
+
+/* Mensajes de estado */
+.loading-message, .error-message, .no-mascotas-message {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #777;
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    margin-top: 40px;
+}
+
+.no-mascotas-message p {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+.no-mascotas-message .btn-secondary {
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
 
 /* ========================= */
-/* 📱 RESPONSIVE */
+/* 📱 RESPONSIVO DE PÁGINA MASCOTAS 📱 */
 /* ========================= */
+@media (max-width: 992px) {
+    .mascotas-header-section h1 {
+        font-size: 2.5rem;
+    }
+    .mascotas-header-section p {
+        font-size: 1.1rem;
+    }
+    .filters-form {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+}
 
 @media (max-width: 768px) {
-    .mascotas {
-        padding: 1rem;
+    .mascotas-page {
+        padding: 20px 15px;
     }
-
-    .mascotas h1 {
-        font-size: 1.8rem;
+    .mascotas-header-section h1 {
+        font-size: 2rem;
     }
-
-    .mascota-list {
-        gap: 1rem;
-    }
-
-    .btn-publicar {
+    .mascotas-header-section .publish-btn {
         font-size: 1rem;
-        padding: 0.7rem 1.3rem;
+        padding: 12px 25px;
+    }
+    .filters-section {
+        padding: 20px;
+    }
+    .filters-form {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+    }
+    .filter-group.age-filters {
+        flex-direction: column; /* Apila los inputs de edad en móviles */
+        gap: 0;
+    }
+    .filter-group.age-filters input {
+        margin-top: 10px; /* Espacio entre ellos */
+    }
+    .filter-group.age-filters label {
+        width: 100%;
+        text-align: left;
+    }
+    .filter-btn, .btn-clear-filters {
+        width: 100%; /* Botones de filtro de ancho completo */
+        margin-top: 15px;
+    }
+    .mascotas-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
     }
 }
 
 @media (max-width: 480px) {
-    .mascotas {
-        padding: 0.5rem;
+    .mascotas-header-section {
+        padding: 15px 0;
     }
-
-    .mascotas h1 {
-        font-size: 1.5rem;
+    .mascotas-header-section h1 {
+        font-size: 1.8rem;
     }
-
-    .btn-publicar {
-        font-size: 0.9rem;
-        padding: 0.6rem 1.2rem;
+    .mascotas-header-section p {
+        font-size: 0.95rem;
     }
-}
-
-/* Modal emergente */
-
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(2px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
-
-.modal-content {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 16px;
-    max-width: 800px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    animation: fadeInModal 0.3s ease-in-out;
-}
-
-@keyframes fadeInModal {
-    from {
-        opacity: 0;
-        transform: scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
+    .mascotas-grid {
+        grid-template-columns: 1fr; /* Solo una columna en móviles muy pequeños */
+        gap: 15px;
     }
 }

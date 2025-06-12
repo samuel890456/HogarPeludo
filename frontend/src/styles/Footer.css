@@ -1,23 +1,165 @@
-/* Estilos para el pie de página */
+/* frontend/src/styles/Footer.css */
+
 .footer {
-    background-color: #333; /* Color de fondo */
-    color: white; /* Color del texto */
-    padding: 1rem 2rem; /* Espaciado interno */
-    text-align: center; /* Alineación del texto */
-    margin-top: 2rem; /* Margen superior */
-    border-top: 1px solid #444; /* Borde superior */
+    background-color: #333; /* Un gris oscuro, puedes cambiarlo */
+    color: #f8f8f8; /* Color de texto claro */
+    padding: 3rem 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.footer p {
-    margin: 0.5rem 0; /* Margen entre párrafos */
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 2rem; /* Espacio entre secciones */
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center; /* Centrar contenido en móviles */
 }
 
-.footer a {
-    color: #4CAF50; /* Color de los enlaces */
-    text-decoration: none; /* Sin subrayado */
-    margin: 0 0.5rem; /* Margen entre enlaces */
+.footer-section {
+    flex: 1; /* Permite que las secciones crezcan y se encojan */
+    min-width: 250px; /* Ancho mínimo para cada sección */
+    margin-bottom: 1.5rem;
 }
 
-.footer a:hover {
-    text-decoration: underline; /* Subrayado al pasar el mouse */
+.footer-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+    border-bottom: 2px solid #ff6600; /* Un toque de color de tu botón Publicar */
+    padding-bottom: 0.5rem;
+    display: inline-block; /* Para que el borde se ajuste al texto */
+}
+
+.footer-section p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+/* Enlaces rápidos */
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links ul li a {
+    color: #f8f8f8;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 1rem;
+}
+
+.footer-links ul li a:hover {
+    color: #ff6600; /* Color al pasar el ratón */
+}
+
+/* Redes sociales */
+.social-links {
+    margin-top: 1.5rem;
+}
+
+.social-links a {
+    color: #f8f8f8;
+    font-size: 1.8rem;
+    margin: 0 1rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+    text-decoration: none; /* Asegura que no haya subrayado */
+}
+
+.social-links a:hover {
+    color: #007bff; /* Color de tus enlaces principales */
+    transform: translateY(-3px);
+}
+
+/* Contacto */
+.footer-contact p {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centrar iconos y texto en móviles */
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+.footer-contact i {
+    color: #ff6600; /* Color de icono, puedes ajustarlo */
+    font-size: 1.1rem;
+}
+
+/* Sección inferior del footer */
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #bbb;
+}
+
+.footer-bottom .legal-links {
+    margin-top: 0.8rem;
+}
+
+.footer-bottom .legal-links a {
+    color: #bbb;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.footer-bottom .legal-links a:hover {
+    color: #ff6600;
+}
+
+/* ========================= */
+/* ⚡ DISEÑO RESPONSIVO ⚡ */
+/* ========================= */
+@media (min-width: 769px) {
+    .footer-content {
+        text-align: left; /* Alinear a la izquierda en escritorio */
+    }
+
+    .footer-contact p {
+        justify-content: flex-start; /* Alinear iconos y texto a la izquierda en escritorio */
+    }
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 2rem 1rem;
+    }
+    .footer-section {
+        min-width: 100%; /* Una columna en pantallas pequeñas */
+        text-align: center;
+    }
+    .footer-section h3 {
+        margin-bottom: 0.8rem;
+    }
+    .social-links a {
+        margin: 0 0.8rem;
+        font-size: 1.5rem;
+    }
+    .footer-contact p {
+        flex-direction: row; /* Mantener en fila en móviles, ajustar si es necesario */
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-section h3 {
+        font-size: 1.3rem;
+    }
+    .footer-section p,
+    .footer-links ul li a,
+    .footer-contact p,
+    .footer-bottom p,
+    .footer-bottom .legal-links a {
+        font-size: 0.85rem;
+    }
 }

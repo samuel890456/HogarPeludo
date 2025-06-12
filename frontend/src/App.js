@@ -1,17 +1,19 @@
 // src/App.js
-// Importar las dependencias
-import React, { useState, useEffect } from 'react';  
+import React, { useState, useEffect } from 'react';  
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
 import Header from './components/Header';
-//import Footer from './components/Footer';
+import Footer from './components/Footer';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import Home from './pages/Home';
 import Mascotas from './pages/Mascotas';
-import Adopciones from './pages/Adopciones';
+import SolicitudesPage from './pages/SolicitudesPage';
 import IniciarSesion from './pages/IniciarSesion';
 import Registrarse from './pages/Registrarse';
 import Perfil from './pages/Perfil';
 import MascotaDetalle from './components/MascotaDetalle';
+import PublicarMascota from './pages/PublicarMascota';
 import MisPublicaciones from './pages/MisPublicaciones';
+import MascotaForm from './components/MascotaForm'; 
 import './styles/App.css';
 //import for admin dashboard
 import Dashboard from './pages/admin/Dashboard';
@@ -19,113 +21,151 @@ import GestionMascotas from './pages/admin/GestionMascotas';
 import GestionSolicitudes from './pages/admin/GestionSolicitudes';
 import GestionUsuarios from './pages/admin/GestionUsuarios';
 import RutaPrivada from './components/RutaPrivada';
-import AdminNav from './components/admin/AdminNav'; // Importar el componente AdminNav
+import AdminNav from './components/admin/AdminNav'; 
 
 const App = () => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-    // Verificar si hay un token guardado en localStorage al cargar la página
-    useEffect(() => {
-        const token = localStorage.getItem('token'); 
-        const userId = localStorage.getItem('userId');
-        
-        
-        if (token && userId) {
-            const rol_id = localStorage.getItem('rol_id');
-            const userData = { id: userId, token, rol_id };  // Aquí debería incluirse `role` si viene del backend
-            setIsAuthenticated(true);
-            setUser(userData);
-            //console.log("Usuario autenticado en useEffect:", userData);
+  // Check for token and user data in localStorage on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token'); 
+    const userId = localStorage.getItem('userId');
+        // IMPORTANT: Get user roles as a JSON string and parse it
+        const userRolesString = localStorage.getItem('userRoles'); 
+    
+    if (token && userId && userRolesString) {
+            try {
+                const userRoles = JSON.parse(userRolesString); // Parse the roles string back into an array
+                const userData = { id: parseInt(userId), token, roles: userRoles }; // Use 'roles' key
+                setIsAuthenticated(true);
+                setUser(userData);
+                // console.log("User authenticated in useEffect:", userData);
+            } catch (e) {
+                console.error("Error parsing userRoles from localStorage:", e);
+                // In case of parsing error, clear authentication to prevent issues
+                handleLogout(); 
+            }
+    } else if (token && userId && !userRolesString) {
+            // Handle cases where old tokens without 'userRoles' might exist
+            console.warn("Found old user data in localStorage without roles. Logging out to refresh.");
+            handleLogout();
         }
-        
-    }, []);
+  }, []);
+  
+  // Function to handle login and save user data
+  const handleLogin = (userData) => { 
+    // userData from backend should now include `id`, `token`, and `roles` (an array)
+    if (!userData || !userData.id || !userData.roles) {
+      console.error('Error: Invalid user data (missing ID or roles)', userData);
+      return;
+    }
+  
+    setIsAuthenticated(true); 
+    setUser(userData); 
     
+    localStorage.setItem('token', userData.token); 
+    localStorage.setItem('userId', userData.id); 
+        // IMPORTANT: Store the roles array as a JSON string
+    localStorage.setItem('userRoles', JSON.stringify(userData.roles)); 
+    console.log("User authenticated in handleLogin:", userData);
     
-    // Función para manejar el inicio de sesión y guardar los datos del usuario
-    const handleLogin = (userData) => { 
-        if (!userData || !userData.id) {
-            console.error('Error: Datos de usuario inválidos', userData);
-            return;
+        // Redirect based on roles (assuming '1' is the admin role ID)
+    if (userData.roles.includes('1')) { // Check if '1' (admin role ID) is in the roles array
+          window.location.href = '/admin/dashboard';
+        } else {
+          window.location.href = '/';
         }
-    
-        setIsAuthenticated(true); 
-        setUser(userData);  // Solo almacenar los datos del usuario, no el token
-        
-        localStorage.setItem('token', userData.token); // Guardar el token en localStorage
-        localStorage.setItem('userId', userData.id); // Guardar el ID del usuario
-        localStorage.setItem('rol_id', userData.rol_id); // Guardar
-        console.log("Usuario autenticado en handleLogin:", userData);
-        if (userData.rol_id === 1) {
-    window.location.href = '/admin/dashboard';
-} else {
-    window.location.href = '/';
-}
+  };
+  
+  // Function to handle logout
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('userId'); 
+    localStorage.removeItem('userRoles'); // REMOVE THIS as well
+    window.location.href = '/iniciar-sesion'; 
+  };
 
-    
-    };
-    
-
-    // Función para manejar el cierre de sesión
-    const handleLogout = () => {
-        setIsAuthenticated(false);
-        setUser(null);
-        localStorage.removeItem('token'); // Eliminar el token del localStorage
-        localStorage.removeItem('userId'); // Eliminar el ID del usuario
-        localStorage.removeItem('rol_id'); // Eliminar el rol del usuario
-        window.location.href = '/iniciar-sesion'; 
+    // Function to check if a user has a specific role
+    // This is useful for conditional rendering in Header or other components
+    const hasRole = (roleId) => {
+        return user?.roles?.includes(roleId.toString()) || false;
     };
 
-    // Renderizar la app con sus componentes y rutas protegidas
-    return (
-        <Router>
-            <Header isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
-            <Routes>
-                <Route path="/" element={<Home />} />
+  return (
+    <Router>
+      <Header isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+      <main>
+      <Routes>
+        <Route path="/" element={<Home />} />
 
+        {/* Admin routes protected by checking for admin role (ID '1') */}
                 <Route path="/admin" element={
-                    <RutaPrivada rolRequerido={1}>
-                        <AdminNav />
-                    </RutaPrivada>
-                } />
-                {/*dashboard for admin*/}
-                <Route path="/admin/dashboard" element={
-                    <RutaPrivada rolRequerido={1}>
-                        <Dashboard />
-                    </RutaPrivada>
-                } />
-                
-                
+          <RutaPrivada allowedRoles={['1']}> {/* Pass array of allowed roles */}
+            <AdminNav />
+          </RutaPrivada>
+        } />
+        <Route path="/admin/dashboard" element={
+          <RutaPrivada allowedRoles={['1']}>
+            <Dashboard />
+          </RutaPrivada>
+        } />
+        <Route path="/admin/mascotas" element={
+          <RutaPrivada allowedRoles={['1']}>
+            <GestionMascotas />
+          </RutaPrivada>
+        } />
+        <Route path="/admin/solicitudes" element={
+          <RutaPrivada allowedRoles={['1']}>
+            <GestionSolicitudes />
+          </RutaPrivada>
+        } />
+        <Route path="/admin/usuarios" element={
+          <RutaPrivada allowedRoles={['1']}>
+            <GestionUsuarios />
+          </RutaPrivada>
+        } />
+        
+        <Route path="/mascotas" element={<Mascotas />} />
+        <Route path="/mascotas/:id" element={<MascotaDetalle />} />
+        
+                {/* Routes that require any authenticated user, or specific roles */}
+                <Route path="/publicar-mascota" element={
+          <RutaPrivada isAuthenticated={isAuthenticated} allowedRoles={['2', '1']}> {/* Publicador (2) or Admin (1) can publish */}
+            <MascotaForm />
+          </RutaPrivada>
+        } />
+        <Route path="/mascotas/:id/editar" element={
+          <RutaPrivada isAuthenticated={isAuthenticated} allowedRoles={['2', '1']}> {/* Publicador (2) or Admin (1) can edit */}
+            <MascotaForm />
+          </RutaPrivada>
+        } />
 
-
-                <Route path="/admin/mascotas" element={
-                    <RutaPrivada rolRequerido={1}>
-                        <GestionMascotas />
+                {/* SolicitudesPage and Perfil should be accessible to authenticated users */}
+        <Route path="/solicitudes" element={
+                    <RutaPrivada isAuthenticated={isAuthenticated}> {/* No specific role, just authenticated */}
+                        <SolicitudesPage />
                     </RutaPrivada>
                 } />
-
-                <Route path="/admin/solicitudes" element={
-                    <RutaPrivada rolRequerido={1}>
-                        <GestionSolicitudes />
+        <Route path="/iniciar-sesion" element={<IniciarSesion onLogin={handleLogin} />} />
+        <Route path="/registrarse" element={<Registrarse />} />
+        <Route path="/perfil" element={
+                    <RutaPrivada isAuthenticated={isAuthenticated}>
+                        <Perfil user={user} />
                     </RutaPrivada>
                 } />
-
-                <Route path="/admin/usuarios" element={
-                    <RutaPrivada rolRequerido={1}>
-                        <GestionUsuarios />
+        <Route path="/mis-publicaciones" element={
+                    <RutaPrivada isAuthenticated={isAuthenticated} allowedRoles={['2', '1']}> {/* Only Publicador (2) or Admin (1) */}
+                        <MisPublicaciones user={user} />
                     </RutaPrivada>
                 } />
-                
-                <Route path="/mascotas" element={<Mascotas />} />
-                <Route path="/mascotas/:id" element={<MascotaDetalle />} />
-                <Route path="/adopciones" element={<Adopciones />} />
-                <Route path="/iniciar-sesion" element={<IniciarSesion onLogin={handleLogin} />} />
-                <Route path="/registrarse" element={<Registrarse />} />
-                <Route path="/perfil" element={<Perfil user={user} />} />
-                {/*<Route path="/mis-publicaciones" element={<MisPublicaciones user={user} />} />*/}
-            </Routes>
-        </Router>
-    );
+      </Routes>
+      </main>
+      <Footer />
+    </Router>
+  );
 };
 
 export default App;

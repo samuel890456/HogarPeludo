@@ -1,53 +1,258 @@
 // File: frontend/src/components/MascotaDetalle.js
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/MascotaDetalle.css';
+import { Link } from 'react-router-dom';
+import {
+    faMars, faVenus, faMapMarkerAlt, faSyringe, faPaw, faShareNodes,
+    faCalendarDays, faWeightHanging, faExpand, faPalette, faHeartCircleCheck, faHouseChimneyUser
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
+const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
 
 const MascotaDetalle = () => {
-  const { id } = useParams();
-  const [mascota, setMascota] = useState(null);
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [mascota, setMascota] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showAdoptSuccessModal, setShowAdoptSuccessModal] = useState(false); // Nuevo estado para el modal
 
-  useEffect(() => {
-    axios.get(`http://localhost:5000/api/mascotas/${id}`)
-      .then(res => setMascota(res.data))
-      .catch(err => console.error(err));
-  }, [id]);
+    useEffect(() => {
+        const fetchMascota = async () => {
+            try {
+                setLoading(true);
+                const res = await axios.get(`http://localhost:5000/api/mascotas/${id}`);
+                setMascota(res.data);
+            } catch (err) {
+                console.error("Error al cargar detalles de la mascota:", err);
+                setError("No se pudo cargar la información de la mascota. Por favor, inténtalo de nuevo más tarde.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchMascota();
+    }, [id]);
 
-  if (!mascota) return <p>Cargando...</p>;
-
- return (
-  <div className="detalle-container">
-    <img className="detalle-img" src={`http://localhost:5000/uploads/${mascota.foto}`} alt={mascota.nombre} />
-    <div className="detalle-info">
-      <h1>{mascota.nombre}</h1>
-      <p><strong>Raza:</strong> {mascota.raza}</p>
-      <p><strong>Edad:</strong> {mascota.edad} años</p>
-      <p><strong>Descripción:</strong> {mascota.descripcion}</p>
-      <button
-  onClick={() => {
+   const handleAdoptClick = async () => {
     const usuarioId = localStorage.getItem('userId');
-    fetch('http://localhost:5000/api/adopciones', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mascota_id: mascota.id, adoptante_id: usuarioId }),
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Error al enviar solicitud');
-      return res.json();
-    })
-    .then(data => alert("✅ Solicitud enviada al dueño"))
-    .catch(err => alert("❌ Error enviando solicitud: " + err.message));
-  }}
->
-  Adoptar
-</button>
+    const token = localStorage.getItem('token');
+
+    if (!usuarioId || !token) {
+        alert("Para solicitar la adopción, por favor inicia sesión. Si no tienes una cuenta, puedes registrarte.");
+        navigate('/iniciar-sesion');
+        return;
+    }
+
+    if (mascota.publicado_por_id === parseInt(usuarioId)) {
+        alert("No puedes solicitar la adopción de tu propia mascota publicada.");
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:5000/api/adopciones', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ mascota_id: mascota.id, adoptante_id: parseInt(usuarioId) }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+
+            // Manejo específico de error 409
+            if (response.status === 409) {
+                alert("⚠️ " + errorData.error); // El backend debe mandar algo como: "Ya has solicitado adoptar esta mascota"
+            } else {
+                alert("❌ Error al enviar solicitud de adopción: " + (errorData.error || 'Inténtalo de nuevo.'));
+            }
+
+            return; // Detiene el flujo para que NO muestre el modal de éxito
+        }
+
+        const data = await response.json();
+        console.log('Solicitud de adopción enviada con éxito. Mostrando modal.', data);
+        setShowAdoptSuccessModal(true);
+    } catch (err) {
+        console.error("Error enviando solicitud:", err);
+        alert("❌ Error de conexión al enviar solicitud de adopción. Por favor, inténtalo de nuevo más tarde.");
+    }
+};
 
 
-    </div>
-  </div>
-);
+    const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `¡Adopta a ${mascota.nombre} en Huellitas de Esperanza!`,
+                    text: `Conoce a ${mascota.nombre}, un(a) ${mascota.especie} de ${mascota.edad} años, que busca un hogar lleno de amor.`,
+                    url: window.location.href,
+                });
+                console.log('Contenido compartido con éxito');
+            } catch (shareError) {
+                console.error('Error al compartir:', shareError);
+            }
+        } else {
+            prompt("Copia este enlace para compartir:", window.location.href);
+        }
+    };
 
+    if (loading) {
+        return <p className="loading-message">Cargando detalles de la mascota...</p>;
+    }
+
+    if (error) {
+        return <div className="error-message">{error}</div>;
+    }
+
+    if (!mascota) {
+        return <div className="not-found-message">Lo sentimos, esta mascota no fue encontrada.</div>;
+    }
+
+    const imageUrl = mascota.imagen_url
+        ? `${UPLOADS_BASE_URL}${mascota.imagen_url}`
+        : '/paw-icon.png';
+    // ESTO ES PARA DEPURAR: Confirma el estado del modal antes de renderizar
+    console.log('Estado actual de showAdoptSuccessModal antes de renderizar:', showAdoptSuccessModal);
+    return (
+        <div className="mascota-detalle-container">
+            <div className="mascota-detalle-header">
+                <h1>{mascota.nombre}</h1>
+                <p className="mascota-status-detail">
+                    Estado: <span className={mascota.disponible ? 'available' : 'adopted'}>
+                        {mascota.disponible ? 'Disponible para Adopción' : '¡Adoptado!'}
+                    </span>
+                </p>
+            </div>
+
+            <div className="mascota-detalle-content">
+                <div className="mascota-image-gallery">
+                    <img
+                        src={imageUrl}
+                        alt={`Foto de ${mascota.nombre}`}
+                        className="main-mascota-image"
+                        onError={(e) => { e.target.onerror = null; e.target.src = '/paw-icon.png'; }}
+                    />
+                </div>
+
+                <div className="mascota-info-section">
+                    <div className="info-grid">
+                        <div className="info-item">
+                            <p><FontAwesomeIcon icon={faPaw} /> Especie:</p>
+                            <span>{mascota.especie}</span>
+                        </div>
+                        {mascota.raza && (
+                            <div className="info-item">
+                                <p>Raza:</p>
+                                <span>{mascota.raza}</span>
+                            </div>
+                        )}
+                        <div className="info-item">
+                            <p><FontAwesomeIcon icon={faCalendarDays} /> Edad:</p>
+                            <span>{mascota.edad} años</span>
+                        </div>
+                        <div className="info-item">
+                            <p><FontAwesomeIcon icon={mascota.sexo === 'Macho' ? faMars : faVenus} /> Sexo:</p>
+                            <span>{mascota.sexo}</span>
+                        </div>
+                        {mascota.tamano && (
+                            <div className="info-item">
+                                <p><FontAwesomeIcon icon={faExpand} /> Tamaño:</p>
+                                <span>{mascota.tamano}</span>
+                            </div>
+                        )}
+                        {mascota.peso && (
+                            <div className="info-item">
+                                <p><FontAwesomeIcon icon={faWeightHanging} /> Peso:</p>
+                                <span>{mascota.peso} kg</span>
+                            </div>
+                        )}
+                        {mascota.color && (
+                            <div className="info-item">
+                                <p><FontAwesomeIcon icon={faPalette} /> Color:</p>
+                                <span>{mascota.color}</span>
+                            </div>
+                        )}
+                        <div className="info-item full-width">
+                            <p><FontAwesomeIcon icon={faMapMarkerAlt} /> Ubicación:</p>
+                            <span>{mascota.ubicacion}</span>
+                        </div>
+                    </div>
+
+                    <div className="info-block">
+                        <h3>Sobre {mascota.nombre}</h3>
+                        <p>{mascota.descripcion}</p>
+                    </div>
+
+                    {mascota.historia && (
+                        <div className="info-block">
+                            <h3><FontAwesomeIcon icon={faHouseChimneyUser} /> Mi Historia</h3>
+                            <p>{mascota.historia}</p>
+                        </div>
+                    )}
+
+                    {mascota.estado_salud && (
+                        <div className="info-block">
+                            <h3><FontAwesomeIcon icon={faSyringe} /> Salud y Cuidados</h3>
+                            <p>{mascota.estado_salud}</p>
+                        </div>
+                    )}
+
+                    {mascota.disponible ? (
+                        <div className="adoption-cta-section">
+                            <h3>¡Quiero Adoptar a {mascota.nombre}!</h3>
+                            <p>Si estás listo para darle un hogar lleno de amor a {mascota.nombre}, haz clic en "Solicitar Adopción". ¡Es el primer paso hacia una hermosa amistad!</p>
+                            <button
+                                className="btn-primary-detail"
+                                onClick={handleAdoptClick}
+                            >
+                                <FontAwesomeIcon icon={faHeartCircleCheck} /> Solicitar Adopción
+                            </button>
+                            <button className="btn-secondary-detail" onClick={handleShare}>
+                                <FontAwesomeIcon icon={faShareNodes} /> Compartir Publicación
+                            </button>
+                            <p className="contact-tip">¿Dudas sobre el proceso? Visita nuestra sección <Link to="/#ComoFunciona">"Cómo Adoptar"</Link> o <Link to="/contacto">contáctanos</Link>.</p>
+                        </div>
+                    ) : (
+                        <div className="adopted-message-section">
+                            <h3>¡Felicidades! {mascota.nombre} ya ha encontrado un hogar.</h3>
+                            <p>Nos alegra mucho que {mascota.nombre} tenga una nueva familia. ¡Hay muchas otras mascotas maravillosas esperando! <a href="/mascotas">Explora más mascotas disponibles</a>.</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="back-button-container">
+                <button className="btn-back" onClick={() => navigate(-1)}>
+                    &larr; Volver al Listado de Mascotas
+                </button>
+            </div>
+
+            {/* Modal de éxito de adopción */}
+            {showAdoptSuccessModal && ( // <-- ESTO ES CLAVE
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2><FontAwesomeIcon icon={faHeartCircleCheck} /> ¡Solicitud Enviada!</h2>
+                        <p>Tu solicitud de adopción para **{mascota.nombre}** ha sido enviada con éxito.</p>
+                        <p>El publicador de la mascota ha sido notificado y pronto se pondrá en contacto contigo para los siguientes pasos.</p>
+                        <p>Agradecemos tu interés en darle un hogar amoroso a una mascota. ¡Te deseamos mucha suerte!</p>
+                        <button
+                            className="btn-primary-detail"
+                            onClick={() => setShowAdoptSuccessModal(false)}
+                            style={{ marginTop: '20px' }} // Estilo inline simple para el botón del modal
+                        >
+                            Cerrar y Volver
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default MascotaDetalle;

@@ -10,6 +10,7 @@ exports.getResumenGeneral = async (req, res) => {
         const totalUsuarios = await Usuario.count();
         res.json({ totalMascotas, totalSolicitudes, totalUsuarios });
     } catch (error) {
+        console.error("Error en getResumenGeneral:", error); // Añadir log de error
         res.status(500).json({ error: error.message });
     }
 };

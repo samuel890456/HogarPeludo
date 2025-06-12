@@ -1,53 +1,108 @@
-// models/adopcionesModel.js
-const db = require('../config/db');
+// backend/models/adopcionesModel.js
+const db = require('../config/db'); // Esto es el pool de promesas que exportas de db.js
 
 const Adopcion = {
-  create: async (mascota_id, adoptante_id) => {
-    return new Promise((resolve, reject) => {
-      const fecha_solicitud = new Date();
-      const estado = 'aceptada'; // Puedes usar 'pendiente', 'aceptada', 'rechazada'
+  // Crear nueva solicitud de adopción
+  // Ya no necesitamos 'new Promise' aquí, ya que db.query devuelve una promesa
+  create: async (mascota_id, adoptante_id, estado) => { // Marca la función como async
+    const query = `INSERT INTO adopciones (mascota_id, adoptante_id, fecha_solicitud, estado) VALUES (?, ?, NOW(), ?)`;
+    
+    console.log('🟠 Modelo DB: Iniciando Adopcion.create (Async/Await)...');
+    console.log('🟠 Modelo DB: SQL Query:', query);
+    console.log('🟠 Modelo DB: Valores:', [mascota_id, adoptante_id, estado]);
 
-      const query = `
-        INSERT INTO adopciones (mascota_id, adoptante_id, fecha_solicitud, estado)
-        VALUES (?, ?, ?, ?)
-      `;
-
-      db.query(query, [mascota_id, adoptante_id, fecha_solicitud, estado], (err, result) => {
-        if (err) return reject(err);
-        resolve(result.insertId);
-      });
-    });
+    try {
+      // Usa await con db.query
+      const [results] = await db.query(query, [mascota_id, adoptante_id, estado]);
+      
+      console.log('✅ Modelo DB: Query de inserción exitosa. Insert ID:', results.insertId);
+      return results.insertId; // Devuelve directamente el ID insertado
+    } catch (err) {
+      console.error('❌ Modelo DB: ERROR al ejecutar query (async/await):', err);
+      throw err; // Vuelve a lanzar el error para que sea capturado por el controlador
+    }
   },
 
+  // ... (el resto de tus métodos, adaptalos también a async/await si usan db.query) ...
+  // Por ejemplo, getAll:
   getAll: async () => {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM adopciones`;
-      db.query(query, (err, results) => {
-        if (err) return reject(err);
-        resolve(results);
-      });
-    });
+    const query = `
+      SELECT 
+        a.id,
+        a.fecha_solicitud,
+        a.estado,
+        m.nombre as mascota_nombre,
+        m.imagen_url,
+        u.nombre as adoptante_nombre,
+        u.email as adoptante_email
+      FROM adopciones a
+      JOIN mascotas m ON a.mascota_id = m.id
+      JOIN usuarios u ON a.adoptante_id = u.id
+      ORDER BY a.fecha_solicitud DESC
+    `;
+    try {
+      const [rows] = await db.query(query);
+      return rows;
+    } catch (err) {
+      console.error('Error en adopcionesModel.getAll:', err);
+      throw err;
+    }
   },
 
-  getById: async (id) => {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM adopciones WHERE id = ?`;
-      db.query(query, [id], (err, results) => {
-        if (err) return reject(err);
-        resolve(results[0]);
-      });
-    });
+  getByUsuario: async (usuario_id) => {
+    const query = `
+      SELECT 
+        a.id,
+        a.fecha_solicitud,
+        a.estado,
+        m.nombre as mascota_nombre,
+        m.imagen_url,
+        m.id as mascota_id
+      FROM adopciones a
+      JOIN mascotas m ON a.mascota_id = m.id
+      WHERE a.adoptante_id = ?
+      ORDER BY a.fecha_solicitud DESC
+    `;
+    try {
+      const [rows] = await db.query(query, [usuario_id]);
+      return rows;
+    } catch (err) {
+      console.error('Error en adopcionesModel.getByUsuario:', err);
+      throw err;
+    }
   },
 
-  updateEstado: async (id, nuevoEstado) => {
-    return new Promise((resolve, reject) => {
-      const query = `UPDATE adopciones SET estado = ? WHERE id = ?`;
-      db.query(query, [nuevoEstado, id], (err, result) => {
-        if (err) return reject(err);
-        resolve(result);
-      });
-    });
+  updateEstado: async (id, estado) => {
+    const query = `UPDATE adopciones SET estado = ? WHERE id = ?`;
+    try {
+      const [results] = await db.query(query, [estado, id]);
+      return results.affectedRows > 0;
+    } catch (err) {
+      console.error('Error en adopcionesModel.updateEstado:', err);
+      throw err;
+    }
+  },
+// Nuevo método para verificar si ya existe una solicitud para la misma mascota por el mismo adoptante
+  getExistingSolicitud: async (mascota_id, adoptante_id) => {
+    try {
+      const query = `
+        SELECT id, estado
+        FROM adopciones
+        WHERE mascota_id = ? AND adoptante_id = ?
+        ORDER BY fecha_solicitud DESC
+        LIMIT 1;
+      `;
+      console.log('🟠 Modelo DB: Verificando solicitud existente...');
+      const [rows] = await db.query(query, [mascota_id, adoptante_id]);
+      
+      // Si rows tiene elementos, significa que ya hay una solicitud
+      return rows[0] || null; // Devuelve la primera solicitud encontrada o null si no hay
+    } catch (error) {
+      console.error('❌ Modelo DB: ERROR al verificar solicitud existente:', error);
+      throw error;
+    }
   }
 };
+  
 
 module.exports = Adopcion;

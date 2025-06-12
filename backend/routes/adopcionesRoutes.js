@@ -1,4 +1,5 @@
-// File: frontend/src/components/MascotaDetalle.js
+// File: backend/routes/adopcionesRoutes.js
+// Este archivo define las rutas relacionadas con las adopciones de mascotas.
 const express = require('express');
 const router = express.Router();
 const adopcionesController = require('../controllers/adopcionesController');
