@@ -1,6 +1,7 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';  
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -97,6 +98,7 @@ const App = () => {
     };
 
   return (
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
     <Router>
       <Header isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
       <main>
@@ -169,6 +171,7 @@ const App = () => {
       </main>
       <Footer />
     </Router>
+    </GoogleOAuthProvider>
   );
 };
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import { getSolicitudes, updateSolicitudEstado, deleteSolicitud } from '../api/api';
 import '../styles/SolicitudesPage.css'; // Make sure this path is correct
 
@@ -138,7 +139,9 @@ const SolicitudesPage = () => {
             {solicitudesAMostrar.length === 0 ? (
                 <div className="no-solicitudes-message">
                     <p>No hay solicitudes disponibles en esta sección.</p>
-                    <img src="/images/empty-state-paw.png" alt="No hay solicitudes" className="empty-state-image" />
+                    <Link to="/">
+                        <img src="/images/nada.gif" alt="No hay solicitudes" className="empty-state-image" />
+                    </Link>
                 </div>
             ) : (
                 <div className="solicitudes-grid">
@@ -149,7 +152,7 @@ const SolicitudesPage = () => {
                                     src={
                                         solicitud.mascota_imagen_url
                                             ? `${UPLOADS_BASE_URL}${solicitud.mascota_imagen_url}`
-                                            : '/paw-icon.png' // Default placeholder if no image
+                                            : '/nada.gif' // Default placeholder if no image
                                     }
                                     alt={solicitud.mascota_nombre}
                                     className="mascota-img"

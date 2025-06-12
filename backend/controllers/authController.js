@@ -4,6 +4,10 @@ const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuariosModel');
 const crypto = require('crypto'); // Para generar tokens seguros
 const enviarCorreo = require('../utils/correoUtils'); // <--- Importa tu utilidad de correo
+
+// Para la verificación de Google ID Token
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); // Inicializa con tu Client ID de Google
 // Registro de un nuevo usuario
 exports.registrarUsuario = async (req, res) => {
     try {
@@ -67,7 +71,71 @@ exports.iniciarSesion = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+// @desc    Iniciar sesión con Google
+// @route   POST /api/auth/google-login
+// @access  Public
+exports.googleLogin = async (req, res) => {
+    const { idToken } = req.body; // El ID Token enviado desde el frontend
 
+    if (!idToken) {
+        return res.status(400).json({ message: 'No se proporcionó ID Token de Google.' });
+    }
+
+    try {
+        // 1. Verificar el ID Token con la librería de Google
+        const ticket = await client.verifyIdToken({
+            idToken: idToken,
+            audience: process.env.GOOGLE_CLIENT_ID, // Asegúrate de que tu Client ID es la audiencia
+        });
+        const payload = ticket.getPayload(); // Contiene la información del usuario de Google
+        
+        const { email, name, picture } = payload; // Extraer email, nombre, y quizás foto de perfil
+
+        // 2. Buscar si el usuario ya existe en tu base de datos
+        let user = await Usuario.getByEmailWithRoles(email); // Usamos getByEmailWithRoles para obtener sus roles
+
+        if (user) {
+            // Si el usuario ya existe, genera un token JWT para tu aplicación
+            // y envía sus datos (incluyendo roles) al frontend.
+            const userRoles = user.roles || [];
+            const token = jwt.sign({ id: user.id, email: user.email, roles: userRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            return res.json({ id: user.id, nombre: user.nombre, email: user.email, token, roles: userRoles });
+
+        } else {
+            // Si el usuario no existe, registrarlo (crear una nueva cuenta)
+            // Genera una contraseña aleatoria (ya que el login es vía Google)
+            const randomPassword = crypto.randomBytes(16).toString('hex'); 
+            const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+            // Crear el nuevo usuario en tu base de datos
+            const newUserId = await Usuario.create(name, email, hashedPassword, null, null); // Nombre, email, hashed_password, telefono, direccion
+
+            // Asignar roles por defecto (Publicador '2' y Adoptante '3')
+            const defaultRoleIds = ['2', '3']; 
+            for (const roleId of defaultRoleIds) {
+                await Usuario.assignRole(newUserId, roleId);
+            }
+            
+            // Obtener los roles del nuevo usuario
+            const newUserRoles = await Usuario.getUserRoles(newUserId);
+
+            // Generar un token JWT para tu aplicación para el nuevo usuario
+            const token = jwt.sign({ id: newUserId, email: email, roles: newUserRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            
+            // Opcional: Podrías querer enviar un correo de bienvenida aquí.
+
+            return res.status(201).json({ id: newUserId, nombre: name, email: email, token, roles: newUserRoles });
+        }
+
+    } catch (error) {
+        console.error('Error en googleLogin (controlador):', error);
+        // Diferenciar errores de verificación de token de otros errores de servidor
+        if (error.name === 'TokenExpiredError' || error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'ID Token de Google inválido o expirado.' });
+        }
+        res.status(500).json({ message: 'Error en el servidor al procesar el inicio de sesión con Google.' });
+    }
+};
 // Middleware para verificar el token JWT
 exports.verificarToken = (req, res, next) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');

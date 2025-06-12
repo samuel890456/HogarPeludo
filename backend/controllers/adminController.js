@@ -3,6 +3,7 @@ const Mascota = require('../models/mascotasModel');
 const Solicitud = require('../models/solicitudesModel');
 const Usuario = require('../models/usuariosModel');
 
+
 exports.getResumenGeneral = async (req, res) => {
     try {
         const totalMascotas = await Mascota.count();

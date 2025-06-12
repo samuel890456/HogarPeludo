@@ -113,6 +113,18 @@ export const iniciarSesion = async (credenciales) => {
         throw error;
     }
 };
+
+// NUEVA FUNCIÓN: Iniciar Sesión con Google
+export const googleLogin = async ({ idToken }) => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/google-login`, { idToken });
+        // La respuesta del backend ya incluirá el token de tu app y los roles
+        return response.data;
+    } catch (error) {
+        console.error('Error al iniciar sesión con Google:', error);
+        throw error;
+    }
+};
 //funciones para restablecimiento de contraseña
 export const solicitarRestablecimientoContrasena = async (data) => {
     const response = await axios.post(`${API_URL}/auth/forgot-password`, data);
