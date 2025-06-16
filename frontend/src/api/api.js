@@ -1,4 +1,4 @@
-//src/api.js
+//file: frontend/src/api/api.js
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api'; // URL base del backend
@@ -196,6 +196,79 @@ export const deleteSolicitud = async (id) => {
         throw error;
     }
 };
+//notificaciones
+// Función existente para obtener notificaciones no leídas
+export const getUnreadNotifications = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/notificaciones`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener notificaciones no leídas:', error);
+        throw error;
+    }
+};
+
+// Función existente para marcar una notificación específica como leída
+export const markNotificationAsRead = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.put(`${API_URL}/notificaciones/${id}/leida`, {}, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return true;
+    } catch (error) {
+        console.error('Error al marcar notificación como leída:', error);
+        throw error;
+    }
+};
+
+// NUEVAS FUNCIONES para la bandeja completa:
+
+// Obtener TODAS las notificaciones de un usuario
+export const getAllNotifications = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/notificaciones/todas`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener todas las notificaciones:', error);
+        throw error;
+    }
+};
+
+// Marcar TODAS las notificaciones de un usuario como leídas
+export const markAllNotificationsAsRead = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.put(`${API_URL}/notificaciones/marcar-todas-leidas`, {}, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return true;
+    } catch (error) {
+        console.error('Error al marcar todas las notificaciones como leídas:', error);
+        throw error;
+    }
+};
+
+// Eliminar una notificación específica
+export const deleteNotification = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`${API_URL}/notificaciones/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return true;
+    } catch (error) {
+        console.error('Error al eliminar notificación:', error);
+        throw error;
+    }
+};
+
 
 // Funciones para el perfil del usuario
 export const obtenerPerfil = async () => {

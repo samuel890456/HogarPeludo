@@ -1,0 +1,228 @@
+/* frontend/src/styles/NotificationsPage.css */
+
+.notifications-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+.notifications-container h1 {
+    text-align: center;
+    color: #2E7D32; /* Verde oscuro */
+    margin-bottom: 30px;
+    font-size: 2.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.no-notifications-message {
+    text-align: center;
+    color: #777;
+    font-size: 1.1em;
+    padding: 50px 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #ddd;
+    margin-top: 30px;
+}
+
+.error-message {
+    color: #D32F2F; /* Rojo de error */
+    text-align: center;
+    font-size: 1.1em;
+    padding: 20px;
+    background-color: #ffebee;
+    border-radius: 8px;
+    border: 1px solid #ef9a9a;
+}
+
+.notification-actions {
+    display: flex;
+    justify-content: flex-end; /* Alinea el botón a la derecha */
+    margin-bottom: 25px;
+    gap: 15px;
+}
+
+.btn-mark-all-read {
+    background-color: #1976D2; /* Azul */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-mark-all-read:hover {
+    background-color: #1565C0;
+    transform: translateY(-2px);
+}
+
+.notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notification-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.notification-item.unread {
+    background-color: #e3f2fd; /* Azul claro para no leídas */
+    border-left: 5px solid #2196F3; /* Barra azul distintiva */
+}
+
+.notification-item.read {
+    background-color: #f5f5f5; /* Gris claro para leídas */
+    color: #666;
+    border-left: 5px solid #9e9e9e; /* Barra gris */
+}
+
+.notification-content {
+    flex-grow: 1;
+    margin-right: 15px;
+}
+
+.notification-message {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.4;
+    color: #333;
+}
+
+.notification-item.read .notification-message {
+    color: #555;
+}
+
+.notification-date {
+    font-size: 0.85em;
+    color: #888;
+    margin-top: 5px;
+    display: block;
+}
+
+.notification-actions-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-mark-read {
+    color: #4CAF50; /* Verde */
+}
+.btn-mark-read:hover {
+    background-color: #e8f5e9;
+    color: #2E7D32;
+}
+
+.btn-view-link {
+    color: #FFC107; /* Amarillo */
+}
+.btn-view-link:hover {
+    background-color: #fff8e1;
+    color: #FFA000;
+}
+
+.btn-delete {
+    color: #D32F2F; /* Rojo */
+}
+.btn-delete:hover {
+    background-color: #ffebee;
+    color: #C62828;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+    .notifications-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .notifications-container h1 {
+        font-size: 1.8em;
+        gap: 10px;
+    }
+
+    .notification-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+    }
+
+    .notification-content {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .notification-message {
+        font-size: 0.95em;
+    }
+
+    .notification-date {
+        font-size: 0.8em;
+    }
+
+    .notification-actions {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .btn-mark-all-read {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .notification-actions-item {
+        width: 100%;
+        justify-content: flex-end; /* Alinea los botones de acción a la derecha en móvil */
+        margin-top: 10px;
+    }
+
+    .btn-action {
+        font-size: 1.1em;
+        width: 30px;
+        height: 30px;
+    }
+}

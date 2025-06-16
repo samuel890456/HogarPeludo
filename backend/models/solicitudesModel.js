@@ -1,3 +1,4 @@
+// File: backend/models/solicitudesModel.js
 const db = require('../config/db');
 
 class Solicitud {
@@ -125,16 +126,25 @@ class Solicitud {
     // Crear una nueva solicitud
     static async create(mascota_id, adoptante_id) {
         try {
+            // *** AGREGAR ESTA VERIFICACIÓN ***
+            const [existingSolicitud] = await db.query(
+                'SELECT id FROM adopciones WHERE mascota_id = ? AND adoptante_id = ? AND estado = "pendiente"',
+                [mascota_id, adoptante_id]
+            );
+
+            if (existingSolicitud.length > 0) {
+                // Si ya existe una solicitud pendiente, lanzar un error
+                const error = new Error('Ya existe una solicitud pendiente para esta mascota por parte de este usuario.');
+                error.statusCode = 409; // Código de conflicto HTTP
+                throw error;
+            }
+            // **********************************
+
             const [result] = await db.query(
                 'INSERT INTO adopciones (mascota_id, adoptante_id, fecha_solicitud, estado) VALUES (?, ?, NOW(), ?)',
                 [mascota_id, adoptante_id, 'pendiente']
             );
-            return {
-                id: result.insertId,
-                mascota_id,
-                adoptante_id,
-                estado: 'pendiente'
-            };
+            return { id: result.insertId };
         } catch (error) {
             console.error('Error en Solicitud.create:', error);
             throw error;

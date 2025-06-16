@@ -8,6 +8,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import Home from './pages/Home';
 import Mascotas from './pages/Mascotas';
 import SolicitudesPage from './pages/SolicitudesPage';
+import NotificationsPage from './pages/NotificationsPage'; 
 import IniciarSesion from './pages/IniciarSesion';
 import Registrarse from './pages/Registrarse';
 import OlvideContrasena from './pages/OlvideContrasena'; // <--- Nueva importación
@@ -153,6 +154,7 @@ const App = () => {
                         <SolicitudesPage />
                     </RutaPrivada>
                 } />
+        <Route path="/notificaciones" element={<RutaPrivada isAuthenticated={isAuthenticated}><NotificationsPage /></RutaPrivada>} />
         <Route path="/iniciar-sesion" element={<IniciarSesion onLogin={handleLogin} />} />
         <Route path="/registrarse" element={<Registrarse />} />
         <Route path="/olvide-contrasena" element={<OlvideContrasena />} /> {/* <--- Nueva ruta */}

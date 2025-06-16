@@ -6,8 +6,10 @@ const enviarCorreo = require('../utils/correoUtils');
 
 exports.solicitarAdopcion = async (req, res) => {
   try {
+    const Notificacion = require('../models/notificacionesModel'); // Importa el modelo de notificación
+    
     const { mascota_id, adoptante_id } = req.body;
-
+    
     // Validar datos obligatorios
     if (!mascota_id || !adoptante_id) {
       return res.status(400).json({ error: 'Faltan datos obligatorios (mascota_id o adoptante_id)' });
@@ -49,6 +51,19 @@ exports.solicitarAdopcion = async (req, res) => {
     if (!adoptante) {
         return res.status(404).json({ error: 'Adoptante no encontrado' });
     }
+    
+    // Registrar la solicitud en la base de datos
+    console.log('🔵 Controlador: Antes de llamar a Adopcion.create()');
+    const id = await Adopcion.create(mascota_id, adoptante_id, 'pendiente'); 
+    console.log('🔵 Controlador: Después de llamar a Adopcion.create(), ID:', id);
+
+    // Crear notificación para el publicador de la mascota
+    await Notificacion.create(
+        duenio.id, // ID del publicador
+        'nueva_solicitud',
+        `¡${adoptante.nombre} ha solicitado adoptar a ${mascota.nombre}!`,
+        `/solicitudes`
+    );
 
     console.log('🐶 Mascota:', mascota.nombre);
     console.log('👤 Adoptante:', adoptante.nombre);
@@ -72,13 +87,9 @@ exports.solicitarAdopcion = async (req, res) => {
 
     console.log('🟢 Después de enviarCorreo()');
 
-    // Registrar la solicitud en la base de datos
-    console.log('🔵 Controlador: Antes de llamar a Adopcion.create()');
-    const id = await Adopcion.create(mascota_id, adoptante_id, 'pendiente'); 
-    console.log('🔵 Controlador: Después de llamar a Adopcion.create(), ID:', id);
     
-    return res.status(201).json({ message: 'Solicitud enviada exitosamente', id_solicitud: id });
 
+    return res.status(201).json({ message: 'Solicitud enviada exitosamente', id_solicitud: id });
   } catch (error) {
     console.error('🔴 Error en solicitud de adopción (controlador):', error);
     // Asegúrate de enviar un error amigable al frontend

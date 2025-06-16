@@ -8,6 +8,7 @@ const mascotasRoutes = require('./routes/mascotasRoutes');
 const usuariosRoutes = require('./routes/usuariosRoutes');
 const rolesRoutes = require('./routes/rolesRoutes');
 const solicitudesRoutes = require('./routes/solicitudesRoutes');
+const notificacionesRoutes = require('./routes/notificacionesRoutes'); // Asegúrate de que este controlador exista
 const seguimientoRoutes = require('./routes/seguimientoRoutes');
 const adopcionesRoutes = require('./routes/adopcionesRoutes');
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api/mascotas', mascotasRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/roles', rolesRoutes);
 app.use('/api/solicitudes', solicitudesRoutes);
+app.use('/api/notificaciones', notificacionesRoutes); // Asegúrate de que esta ruta exista
 app.use('/api/seguimiento', seguimientoRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/admin', adminRoutes);

@@ -271,7 +271,145 @@
      background-color: #FFEBEE; /* Rojo muy suave */
     color: #D32F2F; /* Rojo de cancelar */
 }
+/* ========================= */
+/* 🔔 ESTILOS DE NOTIFICACIONES 🔔 */
+/* ========================= */
 
+.notification-icon-container {
+    position: relative;
+    cursor: pointer;
+    /* Asegúrate de que no haya conflicto con el gap de nav-list si ya lo tienes */
+    margin-right: 20px; /* Ajusta según el diseño general */
+    display: flex; /* Para alinear el icono y el badge */
+    align-items: center;
+    justify-content: center; /* Centrar contenido dentro del contenedor */
+    padding: 0 5px; /* Pequeño padding para el área de clic */
+}
+
+.notification-bell {
+    font-size: 1.5em; /* Tamaño de la campana */
+    color: #457b9d; /* Color de la campana */
+    transition: color 0.3s ease;
+}
+
+.notification-bell:hover {
+    color: #1d3557; /* Color al pasar el ratón */
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Posición vertical del badge */
+    right: -10px; /* Posición horizontal del badge */
+    background-color: #e63946; /* Rojo para el número de notificaciones */
+    color: white;
+    border-radius: 50%; /* Forma circular */
+    padding: 2px 7px;
+    font-size: 0.7em;
+    font-weight: bold;
+    min-width: 20px; /* Asegura un tamaño mínimo */
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    display: flex; /* Para centrar el número si es de un dígito */
+    align-items: center;
+    justify-content: center;
+}
+
+.notifications-dropdown {
+    position: absolute;
+    top: calc(100% + 15px); /* Posición debajo del icono de la campana */
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+    width: 320px; /* Ancho del desplegable */
+    max-height: 400px;
+    overflow-y: auto; /* Scroll si hay muchas notificaciones */
+    z-index: 1001; /* Asegura que esté por encima de otros elementos */
+    padding: 10px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease-out;
+}
+
+/* Activa la visibilidad y el efecto al mostrarse */
+.notification-icon-container .notifications-dropdown { /* Asegura que solo se active si el padre es el contenedor del icono */
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+.notifications-dropdown ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notifications-dropdown li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0; /* Separador suave */
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    flex-direction: column; /* Mensaje y fecha en líneas separadas */
+}
+
+.notifications-dropdown li:hover {
+    background-color: #f1faee; /* Fondo suave al pasar el ratón */
+}
+
+.notifications-dropdown li:last-child {
+    border-bottom: none; /* Elimina el borde inferior del último elemento */
+}
+
+.notification-date {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 5px;
+}
+
+.no-notifications {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+    font-style: italic;
+}
+
+/* ========================= */
+/* 📱 RESPONSIVO NOTIFICACIONES 📱 */
+/* ========================= */
+@media (max-width: 768px) {
+    .notification-icon-container {
+        /* En móvil, la campana debería estar dentro del menú deslizante */
+        margin-right: 0; /* Eliminar margen extra */
+        width: 100%; /* Ocupar todo el ancho en el menú móvil */
+        justify-content: center; /* Centrar la campana */
+        padding: 10px 0; /* Padding para el elemento de lista */
+    }
+
+    .notification-badge {
+        /* Ajustar posición del badge para móvil si es necesario */
+        top: 5px; 
+        right: 25%; /* Ajustar la posición de la insignia en móvil */
+    }
+
+    .notifications-dropdown {
+        /* En móvil, el dropdown debería estar dentro del flujo del menú */
+        position: static; /* No flotar, sino parte del flujo */
+        width: 100%;
+        max-width: none;
+        box-shadow: none; /* Eliminar sombra */
+        border-radius: 0;
+        border-top: 1px solid #eee; /* Separador visual */
+        margin-top: 10px; /* Espacio */
+        opacity: 1; /* Siempre visible cuando el menú padre está activo */
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
 
 /* ========================= */
 /* 📱 RESPONSIVO DEL HEADER 📱 */
