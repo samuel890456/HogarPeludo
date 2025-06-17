@@ -6,6 +6,8 @@ import { faCheckCircle, faTimesCircle, faEnvelopeOpen, faTrashAlt, faBell } from
 import { getAllNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '../api/api';
 import '../styles/NotificationsPage.css'; // Crea este archivo CSS
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
+
 const NotificationsPage = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -31,7 +33,6 @@ const NotificationsPage = () => {
     const handleMarkAsRead = async (id) => {
         try {
             await markNotificationAsRead(id);
-            // Actualiza el estado local para reflejar el cambio
             setNotifications(prev => 
                 prev.map(notif => 
                     notif.id === id ? { ...notif, leida: true } : notif
@@ -39,14 +40,13 @@ const NotificationsPage = () => {
             );
         } catch (err) {
             console.error('Error al marcar notificación como leída:', err);
-            // Opcional: mostrar un toast o mensaje de error
+            toast.error('Error al marcar notificación como leída.');
         }
     };
 
     const handleMarkAllAsRead = async () => {
         try {
             await markAllNotificationsAsRead();
-            // Actualiza todas las notificaciones no leídas como leídas
             setNotifications(prev => 
                 prev.map(notif => 
                     notif.leida === false ? { ...notif, leida: true } : notif
@@ -62,12 +62,12 @@ const NotificationsPage = () => {
         if (window.confirm('¿Estás seguro de que quieres eliminar esta notificación?')) {
             try {
                 await deleteNotification(id);
-                // Elimina la notificación del estado local
                 setNotifications(prev => prev.filter(notif => notif.id !== id));
+                toast.success('Notificación eliminada.');
             } catch (err) {
                 console.error('Error al eliminar notificación:', err);
                 setError('Error al eliminar la notificación.');
-                // Opcional: mostrar un toast o mensaje de error
+                toast.error('Error al eliminar la notificación.');
             }
         }
     };

@@ -9,9 +9,21 @@ import {
     faCalendarDays, faWeightHanging, faExpand, faPalette, faHeartCircleCheck, faHouseChimneyUser
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import { toast } from 'react-toastify';
 
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
+
+const TAG_LABELS = {
+    amigable_ninos: 'Amigable con niños',
+    compatible_perros: 'Compatible con otros perros',
+    patio_grande: 'Necesita patio grande',
+    entrenado_bano: 'Entrenado para ir al baño',
+    energia_alta: 'Nivel de energía: Alto',
+    jugueton: 'Le encanta jugar',
+    tranquilo: 'Tranquilo y cariñoso',
+    requiere_medicacion: 'Requiere medicación',
+    // ...etc
+};
 
 const MascotaDetalle = () => {
     const { id } = useParams();
@@ -22,67 +34,70 @@ const MascotaDetalle = () => {
     const [showAdoptSuccessModal, setShowAdoptSuccessModal] = useState(false); // Nuevo estado para el modal
 
     useEffect(() => {
-        const fetchMascota = async () => {
-            try {
-                setLoading(true);
-                const res = await axios.get(`http://localhost:5000/api/mascotas/${id}`);
-                setMascota(res.data);
-            } catch (err) {
-                console.error("Error al cargar detalles de la mascota:", err);
-                setError("No se pudo cargar la información de la mascota. Por favor, inténtalo de nuevo más tarde.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchMascota();
-    }, [id]);
+    const fetchMascota = async () => {
+        try {
+            setLoading(true);
+            const res = await axios.get(`http://localhost:5000/api/mascotas/${id}`);
+            // AQUI: Parsear el campo 'tags' si existe y no es nulo/vacío
+            const fetchedMascota = {
+                ...res.data,
+                tags: res.data.tags ? JSON.parse(res.data.tags) : [] // Asegura que sea un array
+            };
+            setMascota(fetchedMascota);
+        } catch (err) {
+            console.error("Error al cargar detalles de la mascota:", err);
+            setError("No se pudo cargar la información de la mascota. Por favor, inténtalo de nuevo más tarde.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchMascota();
+}, [id]);
 
-   const handleAdoptClick = async () => {
-    const usuarioId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+    const handleAdoptClick = async () => {
+        const usuarioId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
 
-    if (!usuarioId || !token) {
-        alert("Para solicitar la adopción, por favor inicia sesión. Si no tienes una cuenta, puedes registrarte.");
-        navigate('/iniciar-sesion');
-        return;
-    }
-
-    if (mascota.publicado_por_id === parseInt(usuarioId)) {
-        alert("No puedes solicitar la adopción de tu propia mascota publicada.");
-        return;
-    }
-
-    try {
-        const response = await fetch('http://localhost:5000/api/adopciones', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ mascota_id: mascota.id, adoptante_id: parseInt(usuarioId) }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-
-            // Manejo específico de error 409
-            if (response.status === 409) {
-                alert("⚠️ " + errorData.error); // El backend debe mandar algo como: "Ya has solicitado adoptar esta mascota"
-            } else {
-                alert("❌ Error al enviar solicitud de adopción: " + (errorData.error || 'Inténtalo de nuevo.'));
-            }
-
-            return; // Detiene el flujo para que NO muestre el modal de éxito
+        if (!usuarioId || !token) {
+            toast.info("Para solicitar la adopción, por favor inicia sesión. Si no tienes una cuenta, puedes registrarte.");
+            navigate('/iniciar-sesion');
+            return;
         }
 
-        const data = await response.json();
-        console.log('Solicitud de adopción enviada con éxito. Mostrando modal.', data);
-        setShowAdoptSuccessModal(true);
-    } catch (err) {
-        console.error("Error enviando solicitud:", err);
-        alert("❌ Error de conexión al enviar solicitud de adopción. Por favor, inténtalo de nuevo más tarde.");
-    }
-};
+        if (mascota.publicado_por_id === parseInt(usuarioId)) {
+            toast.warn("No puedes solicitar la adopción de tu propia mascota publicada.");
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:5000/api/adopciones', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ mascota_id: mascota.id, adoptante_id: parseInt(usuarioId) }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+
+                if (response.status === 409) {
+                    toast.warn(errorData.error);
+                } else {
+                    toast.error("Error al enviar solicitud de adopción: " + (errorData.error || 'Inténtalo de nuevo.'));
+                }
+                return;
+            }
+
+            const data = await response.json();
+            setShowAdoptSuccessModal(true);
+            toast.success('Solicitud de adopción enviada con éxito.');
+        } catch (err) {
+            console.error("Error enviando solicitud:", err);
+            toast.error("Error de conexión al enviar solicitud de adopción. Por favor, inténtalo de nuevo más tarde.");
+        }
+    };
 
 
     const handleShare = async () => {
@@ -119,6 +134,27 @@ const MascotaDetalle = () => {
         : '/paw-icon.png';
     // ESTO ES PARA DEPURAR: Confirma el estado del modal antes de renderizar
     console.log('Estado actual de showAdoptSuccessModal antes de renderizar:', showAdoptSuccessModal);
+    // --- NUEVO: Asegura que los tags sean un array ---
+    let tags = [];
+    if (mascota && mascota.tags) {
+        if (Array.isArray(mascota.tags)) {
+            tags = mascota.tags;
+        } else if (typeof mascota.tags === 'string') {
+            try {
+                let parsed = JSON.parse(mascota.tags);
+                // Si el resultado es un string, parsea de nuevo
+                if (typeof parsed === 'string') {
+                    parsed = JSON.parse(parsed);
+                }
+                tags = Array.isArray(parsed) ? parsed : [];
+            } catch {
+                tags = [];
+            }
+        }
+    }
+    console.log('TAGS MascotaDetalle:', mascota.tags, '->', tags);
+    // Ahora tags SIEMPRE es un array
+
     return (
         <div className="mascota-detalle-container">
             <div className="mascota-detalle-header">
@@ -200,6 +236,15 @@ const MascotaDetalle = () => {
                         <div className="info-block">
                             <h3><FontAwesomeIcon icon={faSyringe} /> Salud y Cuidados</h3>
                             <p>{mascota.estado_salud}</p>
+                        </div>
+                    )}
+
+                    {/* NUEVO: Mostrar tags como badges */}
+                    {tags && Array.isArray(tags) && tags.length > 0 && (
+                        <div className="mascota-tags">
+                            {tags.map(tag => (
+                                <span key={tag} className="mascota-tag">{TAG_LABELS[tag] || tag}</span>
+                            ))}
                         </div>
                     )}
 

@@ -2,10 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createMascota, getMascotaById, updateMascota } from '../api/api';
+import { toast } from 'react-toastify';
+import Select from 'react-select';
 import '../styles/MascotaForm.css';
 
 // Definir la URL base de tus uploads del backend
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/'; 
+
+const TAG_OPTIONS = [
+    { value: 'amigable_ninos', label: 'Amigable con niños' },
+    { value: 'compatible_perros', label: 'Compatible con otros perros' },
+    { value: 'patio_grande', label: 'Necesita patio grande' },
+    { value: 'entrenado_bano', label: 'Entrenado para ir al baño' },
+    { value: 'energia_alta', label: 'Nivel de energía: Alto' },
+    { value: 'jugueton', label: 'Le encanta jugar' },
+    { value: 'tranquilo', label: 'Tranquilo y cariñoso' },
+    { value: 'requiere_medicacion', label: 'Requiere medicación' },
+    // ...agrega más según tu necesidad
+];
 
 const MascotaForm = () => {
     const { id } = useParams();
@@ -26,7 +40,10 @@ const MascotaForm = () => {
         imagen: null,
         imagen_url_preview: null,
         disponible: true,
+        esterilizado: false, // <--- aquí
+        vacunas: false,      // <--- aquí
         clear_imagen: false,
+        tags: [],
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -57,7 +74,10 @@ const MascotaForm = () => {
                         // AQUI: Construye la URL completa para el preview
                         imagen_url_preview: mascota.imagen_url ? `${UPLOADS_BASE_URL}${mascota.imagen_url}` : null,
                         disponible: mascota.disponible,
+                        esterilizado: mascota.esterilizado === 1, // <---
+                        vacunas: mascota.vacunas === 1,           // <---
                         clear_imagen: false,
+                        tags: mascota.tags ? JSON.parse(mascota.tags) : [], // <---
                     });
                 } catch (err) {
                     console.error("Error al cargar mascota para edición:", err);
@@ -72,7 +92,7 @@ const MascotaForm = () => {
             setFormData({
                 nombre: '', especie: '', raza: '', edad: '', sexo: '', tamano: '', peso: '', color: '',
                 descripcion: '', estado_salud: '', historia: '', ubicacion: '', imagen: null,
-                imagen_url_preview: null, disponible: true, clear_imagen: false
+                imagen_url_preview: null, disponible: true, clear_imagen: false, tags: []
             });
         }
     }, [id]);
@@ -104,6 +124,13 @@ const MascotaForm = () => {
         }));
     };
 
+    const handleTagsChange = (selectedOptions) => {
+        setFormData(prev => ({
+            ...prev,
+            tags: selectedOptions ? selectedOptions.map(opt => opt.value) : []
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -113,24 +140,27 @@ const MascotaForm = () => {
         for (const key in formData) {
             if (key === 'imagen' && formData.imagen) {
                 data.append('imagen', formData.imagen);
+            } else if (key === 'tags') {
+                data.append('tags', JSON.stringify(formData.tags));
             } else if (key !== 'imagen_url_preview' && key !== 'imagen') {
                 data.append(key, formData[key]);
             }
         }
+        
 
         try {
             if (isEditing) {
                 await updateMascota(id, data);
-                alert('Mascota actualizada correctamente');
+                toast.success('¡Mascota actualizada con éxito!');
                 navigate('/mis-publicaciones');
             } else {
                 await createMascota(data);
-                alert('Mascota publicada correctamente');
+                toast.success('¡Mascota publicada con éxito!');
                 navigate('/mis-publicaciones');
             }
         } catch (err) {
             console.error("Error al guardar mascota:", err);
-            setError('Error al guardar la mascota: ' + (err.response?.data?.error || err.message));
+            toast.error('Ocurrió un error al publicar la mascota');
         } finally {
             setLoading(false);
         }
@@ -213,6 +243,45 @@ const MascotaForm = () => {
                             <input type="checkbox" id="disponible" name="disponible" checked={formData.disponible} onChange={handleChange} />
                             Disponible para Adopción
                         </label>
+                    </div>
+
+                    {/* Agrupación de Esterilizado y Vacunas */}
+                    <div className="form-group full-width checkbox-duo-group">
+                        <span className="section-label">Salud</span>
+                        <label className="inline-checkbox">
+                            <input
+                                type="checkbox"
+                                name="esterilizado"
+                                checked={!!formData.esterilizado}
+                                onChange={handleChange}
+                            />
+                            Esterilizado
+                        </label>
+                        <label className="inline-checkbox">
+                            <input
+                                type="checkbox"
+                                name="vacunas"
+                                checked={!!formData.vacunas}
+                                onChange={handleChange}
+                            />
+                            Vacunas
+                        </label>
+                    </div>
+
+                    {/* Nueva sección para etiquetas (tags) */}
+                    <div className="form-group full-width">
+                        <label>Personalidad y Comportamiento</label>
+                        <Select
+                            isMulti
+                            name="tags"
+                            options={TAG_OPTIONS}
+                            className="react-select-container"
+                            classNamePrefix="react-select"
+                            value={TAG_OPTIONS.filter(opt => formData.tags.includes(opt.value))}
+                            onChange={handleTagsChange}
+                            placeholder="Selecciona características..."
+                            
+                        />
                     </div>
                 </div>
 

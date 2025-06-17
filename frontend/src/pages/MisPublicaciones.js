@@ -4,13 +4,15 @@ import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate
 import MascotaCard from '../components/MascotaCard';
 // import MascotaForm from '../components/MascotaForm'; // Ya no lo importamos aquí directamente para edición
 import { getMascotasByUserId, deleteMascota as apiDeleteMascota } from '../api/api';
+import { toast } from 'react-toastify';
 import '../styles/MisPublicaciones.css';
 
 const MisPublicaciones = () => {
     const [misMascotas, setMisMascotas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    // const [editingMascota, setEditingMascota] = useState(null); // Ya no es necesario si redirigimos
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [mascotaAEliminar, setMascotaAEliminar] = useState(null);
     const navigate = useNavigate(); // Hook para la navegación
 
     const fetchMisMascotas = async () => {
@@ -32,7 +34,6 @@ const MisPublicaciones = () => {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchMisMascotas();
     }, []);
@@ -42,23 +43,33 @@ const MisPublicaciones = () => {
         navigate(`/mascotas/${mascota.id}/editar`);
     };
 
-    const handleDeleteClick = async (mascotaId) => {
-        if (window.confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción no se puede deshacer.')) {
-            try {
-                setLoading(true);
-                await apiDeleteMascota(mascotaId);
-                alert('Mascota eliminada con éxito.');
-                fetchMisMascotas(); // Recarga la lista después de eliminar
-            } catch (err) {
-                console.error("Error al eliminar mascota:", err);
-                setError('Error al eliminar la publicación: ' + (err.response?.data?.error || err.message));
-            } finally {
-                setLoading(false);
-            }
+    const handleDeleteClick = (mascotaId) => {
+        setMascotaAEliminar(mascotaId);
+        setShowConfirm(true);
+    };
+
+    const confirmDelete = async () => {
+        setShowConfirm(false);
+        if (!mascotaAEliminar) return;
+        try {
+            setLoading(true);
+            await apiDeleteMascota(mascotaAEliminar);
+            toast.success('Mascota eliminada con éxito.');
+            fetchMisMascotas();
+        } catch (err) {
+            console.error("Error al eliminar mascota:", err);
+            setError('Error al eliminar la publicación: ' + (err.response?.data?.error || err.message));
+            toast.error('Error al eliminar la publicación.');
+        } finally {
+            setLoading(false);
+            setMascotaAEliminar(null);
         }
     };
 
-    // const handleMascotaSaved = () => { ... } // Esto ya no es necesario aquí si MascotaForm maneja la redirección
+    const cancelDelete = () => {
+        setShowConfirm(false);
+        setMascotaAEliminar(null);
+    };
 
     if (loading) return <div className="loading-message">Cargando tus publicaciones...</div>;
     if (error) return <div className="error-message">{error}</div>;
@@ -91,6 +102,17 @@ const MisPublicaciones = () => {
                     </div>
                 )}
             </>
+            {showConfirm && (
+                <div className="modal-confirm">
+                    <div className="modal-content">
+                        <p>¿Estás seguro de que quieres eliminar esta publicación?</p>
+                        <div className="modal-actions">
+                            <button className="btn btn-cancel" onClick={cancelDelete}>Cancelar</button>
+                            <button className="btn btn-danger" onClick={confirmDelete}>Sí, eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

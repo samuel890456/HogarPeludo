@@ -23,19 +23,43 @@ class Mascota {
         return rows;
     }
     // CREATE con todos los nuevos campos
-    static async create(nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, publicado_por_id, disponible) {
+    static async create(
+        nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, publicado_por_id, disponible, esterilizado, vacunas, tags
+    ) {
         const [result] = await db.query(
-            'INSERT INTO mascotas (nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, publicado_por_id, disponible) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, publicado_por_id, disponible]
+            `INSERT INTO mascotas 
+            (nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, publicado_por_id, disponible, esterilizado, vacunas, tags)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, publicado_por_id, disponible, esterilizado, vacunas, tags]
         );
         return result.insertId;
     }
 
     // UPDATE con todos los nuevos campos
-    static async update(id, nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, disponible) {
+    static async update(
+        id, nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, disponible, esterilizado, vacunas, tags
+    ) {
         await db.query(
-            'UPDATE mascotas SET nombre = ?, especie = ?, raza = ?, edad = ?, sexo = ?, tamano = ?, peso = ?, color = ?, descripcion = ?, estado_salud = ?, historia = ?, ubicacion = ?, imagen_url = ?, disponible = ? WHERE id = ?',
-            [nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, disponible, id]
+            `UPDATE mascotas SET 
+                nombre = ?, 
+                especie = ?, 
+                raza = ?, 
+                edad = ?, 
+                sexo = ?, 
+                tamano = ?, 
+                peso = ?, 
+                color = ?, 
+                descripcion = ?, 
+                estado_salud = ?, 
+                historia = ?, 
+                ubicacion = ?, 
+                imagen_url = ?, 
+                disponible = ?, 
+                esterilizado = ?, 
+                vacunas = ?,
+                tags = ?
+            WHERE id = ?`,
+            [nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, imagen_url, disponible, esterilizado, vacunas, tags, id]
         );
     }
 

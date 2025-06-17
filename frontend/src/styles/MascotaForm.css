@@ -236,7 +236,6 @@
     transform: translateY(-2px);
 }
 
-
 /* ========================= */
 /* 📱 RESPONSIVO DE FORMULARIO 📱 */
 /* ========================= */
@@ -290,4 +289,44 @@
     .upload-button {
         padding: 10px 20px;
     }
+}
+
+.checkbox-duo-group {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: #f8f8f8;
+    padding: 12px 18px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+}
+.section-label {
+    font-weight: 600;
+    color: #4CAF50;
+    margin-right: 18px;
+    font-size: 1rem;
+}
+.inline-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+.mascota-tags {
+    margin: 8px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.mascota-tag {
+    background: #f0f0f0;
+    color: #333;
+    border-radius: 12px;
+    padding: 3px 12px;
+    font-size: 0.85em;
+    font-weight: 500;
+    border: 1px solid #ddd;
 }

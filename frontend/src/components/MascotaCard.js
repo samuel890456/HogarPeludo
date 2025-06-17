@@ -6,6 +6,18 @@ import '../styles/MascotaCard.css';
 // Definir la URL base de tus uploads del backend
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
 
+const TAG_LABELS = {
+    amigable_ninos: 'Amigable con niños',
+    compatible_perros: 'Compatible con otros perros',
+    patio_grande: 'Necesita patio grande',
+    entrenado_bano: 'Entrenado para ir al baño',
+    energia_alta: 'Nivel de energía: Alto',
+    jugueton: 'Le encanta jugar',
+    tranquilo: 'Tranquilo y cariñoso',
+    requiere_medicacion: 'Requiere medicación',
+    // ...etc
+};
+
 const MascotaCard = ({ mascota, showDetailButton = true }) => {
     if (!mascota) {
         return (
@@ -20,12 +32,29 @@ const MascotaCard = ({ mascota, showDetailButton = true }) => {
         );
     }
 
-    // AQUI: Construye la URL completa
-    // Si mascota.imagen_url es 'null', 'undefined' o una cadena vacía, usa la imagen de fallback.
-    // Si tiene un nombre de archivo, prefija con UPLOADS_BASE_URL.
     const imageUrl = mascota.imagen_url 
         ? `${UPLOADS_BASE_URL}${mascota.imagen_url}` 
-        : '/paw-icon.png'; // Asegúrate de que '/paw-icon.png' existe en tu carpeta 'public'
+        : '/paw-icon.png';
+
+    // --- NUEVO: Asegura que los tags sean un array ---
+    let tags = [];
+    if (mascota && mascota.tags) {
+        if (Array.isArray(mascota.tags)) {
+            tags = mascota.tags;
+        } else if (typeof mascota.tags === 'string') {
+            try {
+                let parsed = JSON.parse(mascota.tags);
+                if (typeof parsed === 'string') {
+                    parsed = JSON.parse(parsed);
+                }
+                tags = Array.isArray(parsed) ? parsed : [];
+            } catch {
+                tags = [];
+            }
+        }
+    }
+    console.log('TAGS MascotaCard:', mascota.tags, '->', tags);
+    // Ahora tags SIEMPRE es un array
 
     return (
         <div className="mascota-card">
@@ -50,6 +79,18 @@ const MascotaCard = ({ mascota, showDetailButton = true }) => {
                         Estado: {mascota.disponible ? 'Disponible' : 'Adoptado'}
                     </p>
                 )}
+                <p>Esterilizado: {mascota.esterilizado ? 'Sí' : 'No'}</p>
+                <p>Vacunas: {mascota.vacunas ? 'Sí' : 'No'}</p>
+
+                {/* INICIO: Bloque para mostrar los tags en MascotaCard */}
+                {tags && Array.isArray(tags) && tags.length > 0 && (
+                    <div className="mascota-tags">
+                        {tags.map(tag => (
+                            <span key={tag} className="mascota-tag">{TAG_LABELS[tag] || tag}</span>
+                        ))}
+                    </div>
+                )}
+                {/* FIN: Bloque para mostrar los tags */}
 
                 {showDetailButton && (
                     <Link to={`/mascotas/${mascota.id}`} className="btn-detail">

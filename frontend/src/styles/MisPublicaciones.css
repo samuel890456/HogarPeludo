@@ -317,3 +317,87 @@
     color: #dc3545;
     border: 1px solid #dc3545;
 }
+
+/* Modal de confirmación para eliminar publicación */
+.modal-confirm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(30, 30, 30, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 32px 28px 24px 28px;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    max-width: 350px;
+    width: 90%;
+    text-align: center;
+    animation: modalFadeIn 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes modalFadeIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+}
+
+.modal-content p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 28px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 24px; /* Espacio amplio entre botones */
+    margin-top: 20px;
+}
+
+.modal-content .btn {
+    min-width: 120px;
+    padding: 12px 0;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.modal-content .btn-cancel {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.modal-content .btn-cancel:hover {
+    background: #bdbdbd;
+}
+
+.modal-content .btn-danger {
+    background: #dc3545;
+    color: #fff;
+}
+
+.modal-content .btn-danger:hover {
+    background: #b52a37;
+}
+
+.modal-content .btn {
+    background: #6c757d;
+    color: #fff;
+}
+
+.modal-content .btn:hover {
+    background: #5a6268;
+}

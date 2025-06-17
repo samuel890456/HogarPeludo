@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { getSolicitudes, updateSolicitudEstado, deleteSolicitud } from '../api/api';
+import { toast } from 'react-toastify';
 import '../styles/SolicitudesPage.css'; // Make sure this path is correct
 
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
@@ -51,11 +52,11 @@ const SolicitudesPage = () => {
             setSolicitudes(solicitudes.map(sol =>
                 sol.id === solicitudId ? { ...sol, estado: newEstado } : sol
             ));
-            alert('Estado de la solicitud actualizado con éxito.');
+            toast.success('Estado de la solicitud actualizado con éxito.');
         } catch (err) {
             setError('Error al actualizar el estado de la solicitud.');
             console.error(err);
-            alert('No se pudo actualizar el estado de la solicitud. Revisa los permisos.');
+            toast.error('No se pudo actualizar el estado de la solicitud. Revisa los permisos.');
         }
     };
 
@@ -64,11 +65,11 @@ const SolicitudesPage = () => {
             try {
                 await deleteSolicitud(solicitudId);
                 setSolicitudes(solicitudes.filter(sol => sol.id !== solicitudId));
-                alert('Solicitud eliminada con éxito.');
+                toast.success('Solicitud eliminada con éxito.');
             } catch (err) {
                 setError('Error al eliminar la solicitud.');
                 console.error(err);
-                alert('No se pudo eliminar la solicitud. Revisa los permisos.');
+                toast.error('No se pudo eliminar la solicitud. Revisa los permisos.');
             }
         }
     };

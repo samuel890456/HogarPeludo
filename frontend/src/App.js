@@ -26,6 +26,8 @@ import GestionSolicitudes from './pages/admin/GestionSolicitudes';
 import GestionUsuarios from './pages/admin/GestionUsuarios';
 import RutaPrivada from './components/RutaPrivada';
 import AdminNav from './components/admin/AdminNav'; 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -100,13 +102,13 @@ const App = () => {
 
   return (
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-    <Router>
-      <Header isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
-      <main>
-      <Routes>
-        <Route path="/" element={<Home />} />
+      <Router>
+        <Header isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
 
-        {/* Admin routes protected by checking for admin role (ID '1') */}
+            {/* Admin routes protected by checking for admin role (ID '1') */}
                 <Route path="/admin" element={
           <RutaPrivada allowedRoles={['1']}> {/* Pass array of allowed roles */}
             <AdminNav />
@@ -169,10 +171,11 @@ const App = () => {
                         <MisPublicaciones user={user} />
                     </RutaPrivada>
                 } />
-      </Routes>
-      </main>
-      <Footer />
-    </Router>
+          </Routes>
+        </main>
+        <Footer />
+        <ToastContainer position="top-right" autoClose={3000} />
+      </Router>
     </GoogleOAuthProvider>
   );
 };

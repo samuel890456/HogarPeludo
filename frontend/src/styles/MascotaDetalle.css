@@ -265,6 +265,24 @@
     background-color: #757575;
 }
 
+/* Nueva sección para las etiquetas de la mascota */
+.mascota-tags {
+    margin: 8px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mascota-tag {
+    background: #f0f0f0;
+    color: #333;
+    border-radius: 12px;
+    padding: 3px 12px;
+    font-size: 0.85em;
+    font-weight: 500;
+    border: 1px solid #ddd;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .mascota-detalle-content {

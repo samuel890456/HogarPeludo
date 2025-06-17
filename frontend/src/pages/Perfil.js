@@ -1,6 +1,7 @@
 //src/pages/Perfil.js
 import React, { useState, useEffect } from 'react';
 import { getUsuario, updateUsuario } from '../api/api.js';
+import { toast } from 'react-toastify';
 import '../styles/Perfil.css';
 
 const Perfil = () => {
@@ -32,8 +33,10 @@ const Perfil = () => {
         try {
             await updateUsuario({ nombre, email, telefono, direccion });
             setError('Perfil actualizado correctamente');
+            toast.success('Perfil actualizado correctamente');
         } catch (error) {
             setError('Error al actualizar el perfil');
+            toast.error('Error al actualizar el perfil');
         }
     };
 

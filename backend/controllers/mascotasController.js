@@ -64,8 +64,24 @@ exports.createMascota = async (req, res) => {
 
         const { nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, disponible } = datos;
         const publicado_por_id = req.usuario.id;
+        const imagen_filename = req.file ? req.file.filename : null;
 
-        const imagen_filename = req.file ? req.file.filename : null; // Solo guarda el nombre del archivo
+        // NUEVO: Obtener y convertir los campos booleanos
+        const esterilizado = datos.esterilizado === 'true' || datos.esterilizado === 1 || datos.esterilizado === true ? 1 : 0;
+        const vacunas = datos.vacunas === 'true' || datos.vacunas === 1 || datos.vacunas === true ? 1 : 0;
+        let tags = datos.tags;
+
+        // Si los recibes como string, intenta parsear primero:
+        if (typeof tags === 'string') {
+            try {
+                tags = JSON.parse(tags);
+            } catch {
+                tags = [];
+            }
+        }
+
+        // Guarda SIEMPRE con un solo JSON.stringify
+        const tagsToSave = JSON.stringify(tags);
 
         if (!nombre || !especie || !edad || !sexo || !ubicacion || !descripcion) {
             if (req.file) { await fs.unlink(req.file.path); }
@@ -88,14 +104,15 @@ exports.createMascota = async (req, res) => {
             return res.status(401).json({ error: "Usuario no autenticado para crear mascota." });
         }
 
+        // NUEVO: Pasa los campos al modelo
         const id = await Mascota.create(
-            nombre, especie, raza, Number(edad), sexo, tamano, Number(peso), color, descripcion, estado_salud, historia, ubicacion, imagen_filename, publicado_por_id, disponible === 'true'
+            nombre, especie, raza, Number(edad), sexo, tamano, Number(peso), color, descripcion, estado_salud, historia, ubicacion, imagen_filename, publicado_por_id, disponible === 'true', esterilizado, vacunas, tagsToSave
         );
 
-        // Devuelve el nombre del archivo, no la URL completa
         res.status(201).json({
             id, nombre, especie, raza, edad: Number(edad), sexo, tamano, peso: Number(peso), color,
-            descripcion, estado_salud, historia, ubicacion, imagen_url: imagen_filename, publicado_por_id, disponible: disponible === 'true'
+            descripcion, estado_salud, historia, ubicacion, imagen_url: imagen_filename, publicado_por_id, disponible: disponible === 'true',
+            esterilizado: !!esterilizado, vacunas: !!vacunas
         });
 
     } catch (error) {
@@ -123,6 +140,23 @@ exports.updateMascota = async (req, res) => {
 
         const { nombre, especie, raza, edad, sexo, tamano, peso, color, descripcion, estado_salud, historia, ubicacion, disponible, clear_imagen } = datos;
         const publicado_por_id = req.usuario.id;
+
+        // NUEVO: Obtener y convertir los campos booleanos
+        const esterilizado = datos.esterilizado === 'true' || datos.esterilizado === 1 || datos.esterilizado === true ? 1 : 0;
+        const vacunas = datos.vacunas === 'true' || datos.vacunas === 1 || datos.vacunas === true ? 1 : 0;
+        let tags = datos.tags;
+
+        // Si los recibes como string, intenta parsear primero:
+        if (typeof tags === 'string') {
+            try {
+                tags = JSON.parse(tags);
+            } catch {
+                tags = [];
+            }
+        }
+
+        // Guarda SIEMPRE con un solo JSON.stringify
+        const tagsToSave = JSON.stringify(tags);
 
         const mascotaExistente = await Mascota.getById(mascotaId);
         if (!mascotaExistente) {
@@ -175,9 +209,10 @@ exports.updateMascota = async (req, res) => {
             return res.status(400).json({ error: "El tamaño debe ser 'Pequeño', 'Mediano' o 'Grande'." });
         }
 
+        // NUEVO: Pasa los campos al modelo
         await Mascota.update(
             mascotaId, nombre, especie, raza, Number(edad), sexo, tamano, Number(peso), color,
-            descripcion, estado_salud, historia, ubicacion, new_imagen_filename, disponible === 'true'
+            descripcion, estado_salud, historia, ubicacion, new_imagen_filename, disponible === 'true', esterilizado, vacunas, tagsToSave
         );
 
         res.json({ message: "Mascota actualizada correctamente" });

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registrarUsuario } from '../api/api';
+import { toast } from 'react-toastify';
 import '../styles/AuthForms.css'; // Using a shared CSS file for both forms
 
 const Registrarse = () => {
@@ -15,15 +16,17 @@ const Registrarse = () => {
         setError(''); // Clear previous errors
         try {
             await registrarUsuario({ nombre, email, contraseña: password }); // Pass password to API
-            alert('¡Registro exitoso! Ahora puedes iniciar sesión.'); // User feedback
+            toast.success('¡Registro exitoso! Ahora puedes iniciar sesión.');
             navigate('/iniciar-sesion');
         } catch (err) {
             console.error('Error al registrarse:', err);
             // Check if error response has a specific message
             if (err.response && err.response.data && err.response.data.message) {
                 setError(`Error al registrarse: ${err.response.data.message}`);
+                toast.error(`Error al registrarse: ${err.response.data.message}`);
             } else {
                 setError('Error al registrarse. Por favor, inténtalo de nuevo.');
+                toast.error('Error al registrarse. Por favor, inténtalo de nuevo.');
             }
         }
     };
