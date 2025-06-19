@@ -105,6 +105,10 @@ class Usuario {
     }
 
 
+    // Nuevo método para eliminar un usuario
+    static async delete(id) {
+        await db.query('DELETE FROM usuarios WHERE id = ?', [id]);
+    }
 }
 
 module.exports = Usuario;

@@ -1,4 +1,3 @@
-// File: frontend/src/components/MascotaForm.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createMascota, getMascotaById, updateMascota } from '../api/api';
@@ -7,7 +6,7 @@ import Select from 'react-select';
 import '../styles/MascotaForm.css';
 
 // Definir la URL base de tus uploads del backend
-const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/'; 
+const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
 
 const TAG_OPTIONS = [
     { value: 'amigable_ninos', label: 'Amigable con niños' },
@@ -18,8 +17,19 @@ const TAG_OPTIONS = [
     { value: 'jugueton', label: 'Le encanta jugar' },
     { value: 'tranquilo', label: 'Tranquilo y cariñoso' },
     { value: 'requiere_medicacion', label: 'Requiere medicación' },
-    // ...agrega más según tu necesidad
+    { value: 'timido', label: 'Tímido/Reservado' },
+    { value: 'sociable', label: 'Muy sociable' },
+    { value: 'curioso', label: 'Curioso y explorador' },
+    { value: 'leal', label: 'Muy leal' },
+    { value: 'independiente', label: 'Independiente' },
+    { value: 'necesita_compania', label: 'Necesita compañía constante' },
+    { value: 'ideal_primeriza', label: 'Ideal para dueños primerizos' },
+    { value: 'experiencia_requerida', label: 'Requiere experiencia' },
 ];
+
+const MAX_DESCRIPCION = 300;
+const MAX_ESTADO_SALUD = 200;
+const MAX_HISTORIA = 400;
 
 const MascotaForm = () => {
     const { id } = useParams();
@@ -40,8 +50,8 @@ const MascotaForm = () => {
         imagen: null,
         imagen_url_preview: null,
         disponible: true,
-        esterilizado: false, // <--- aquí
-        vacunas: false,      // <--- aquí
+        esterilizado: false,
+        vacunas: false,
         clear_imagen: false,
         tags: [],
     });
@@ -70,18 +80,18 @@ const MascotaForm = () => {
                         estado_salud: mascota.estado_salud || '',
                         historia: mascota.historia || '',
                         ubicacion: mascota.ubicacion || '',
-                        imagen: null,
-                        // AQUI: Construye la URL completa para el preview
+                        imagen: null, // No precargar el archivo, solo el preview
                         imagen_url_preview: mascota.imagen_url ? `${UPLOADS_BASE_URL}${mascota.imagen_url}` : null,
                         disponible: mascota.disponible,
-                        esterilizado: mascota.esterilizado === 1, // <---
-                        vacunas: mascota.vacunas === 1,           // <---
+                        esterilizado: mascota.esterilizado === 1,
+                        vacunas: mascota.vacunas === 1,
                         clear_imagen: false,
-                        tags: mascota.tags ? JSON.parse(mascota.tags) : [], // <---
+                        tags: mascota.tags ? JSON.parse(mascota.tags) : [],
                     });
                 } catch (err) {
                     console.error("Error al cargar mascota para edición:", err);
                     setError('No se pudo cargar la información de la mascota para editar.');
+                    toast.error('Error al cargar la mascota.');
                 } finally {
                     setLoading(false);
                 }
@@ -92,7 +102,7 @@ const MascotaForm = () => {
             setFormData({
                 nombre: '', especie: '', raza: '', edad: '', sexo: '', tamano: '', peso: '', color: '',
                 descripcion: '', estado_salud: '', historia: '', ubicacion: '', imagen: null,
-                imagen_url_preview: null, disponible: true, clear_imagen: false, tags: []
+                imagen_url_preview: null, disponible: true, esterilizado: false, vacunas: false, clear_imagen: false, tags: []
             });
         }
     }, [id]);
@@ -147,6 +157,10 @@ const MascotaForm = () => {
             }
         }
         
+        // Si se limpió la imagen en el modo de edición, enviar la señal al backend
+        if (isEditing && formData.clear_imagen && !formData.imagen) {
+            data.append('clear_imagen', 'true');
+        }
 
         try {
             if (isEditing) {
@@ -160,11 +174,19 @@ const MascotaForm = () => {
             }
         } catch (err) {
             console.error("Error al guardar mascota:", err);
-            toast.error('Ocurrió un error al publicar la mascota');
+            // Mostrar un error más específico si la API lo proporciona
+            const errorMessage = err.response && err.response.data && err.response.data.message 
+                                ? err.response.data.message 
+                                : 'Ocurrió un error al publicar la mascota.';
+            toast.error(errorMessage);
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
     };
+
+    // Filtra las opciones de tags seleccionadas para el componente Select
+    const selectedTags = TAG_OPTIONS.filter(opt => formData.tags.includes(opt.value));
 
     if (loading && isEditing) return <div className="loading-message">Cargando datos de la mascota...</div>;
 
@@ -173,127 +195,184 @@ const MascotaForm = () => {
             <h2>{isEditing ? 'Editar Publicación' : 'Publicar Nueva Mascota'}</h2>
             {error && <div className="form-error-message">{error}</div>}
             <form onSubmit={handleSubmit}>
-                <div className="form-grid">
-                    <div className="form-group">
-                        <label htmlFor="nombre">Nombre<span className="required">*</span></label>
-                        <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
+                {/* Sección de Información Básica */}
+                <div className="form-section">
+                    <h3>Información Básica</h3>
+                    <div className="form-grid">
+                        <div className="form-group">
+                            <label htmlFor="nombre">Nombre<span className="required">*</span></label>
+                            <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="especie">Especie<span className="required">*</span></label>
+                            <select id="especie" name="especie" value={formData.especie} onChange={handleChange} required>
+                                <option value="">Selecciona</option>
+                                <option value="Perro">Perro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Ave">Ave</option>
+                                <option value="Roedor">Roedor</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="raza">Raza</label>
+                            <input type="text" id="raza" name="raza" value={formData.raza} onChange={handleChange} />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="edad">Edad (años)<span className="required">*</span></label>
+                            <input type="number" id="edad" name="edad" value={formData.edad} onChange={handleChange} min="0" required />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="sexo">Sexo<span className="required">*</span></label>
+                            <select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange} required>
+                                <option value="">Selecciona</option>
+                                <option value="Macho">Macho</option>
+                                <option value="Hembra">Hembra</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="tamano">Tamaño</label>
+                            <select id="tamano" name="tamano" value={formData.tamano} onChange={handleChange}>
+                                <option value="">Selecciona</option>
+                                <option value="Pequeño">Pequeño</option>
+                                <option value="Mediano">Mediano</option>
+                                <option value="Grande">Grande</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="peso">Peso (kg)</label>
+                            <input type="number" id="peso" name="peso" value={formData.peso} onChange={handleChange} step="0.1" min="0" />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="color">Color</label>
+                            <input type="text" id="color" name="color" value={formData.color} onChange={handleChange} />
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="especie">Especie<span className="required">*</span></label>
-                        <select id="especie" name="especie" value={formData.especie} onChange={handleChange} required>
-                            <option value="">Selecciona</option>
-                            <option value="Perro">Perro</option>
-                            <option value="Gato">Gato</option>
-                            <option value="Ave">Ave</option>
-                            <option value="Roedor">Roedor</option>
-                            <option value="Otro">Otro</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="raza">Raza</label>
-                        <input type="text" id="raza" name="raza" value={formData.raza} onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="edad">Edad (años)<span className="required">*</span></label>
-                        <input type="number" id="edad" name="edad" value={formData.edad} onChange={handleChange} min="0" required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="sexo">Sexo<span className="required">*</span></label>
-                        <select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange} required>
-                            <option value="">Selecciona</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="tamano">Tamaño</label>
-                        <select id="tamano" name="tamano" value={formData.tamano} onChange={handleChange}>
-                            <option value="">Selecciona</option>
-                            <option value="Pequeño">Pequeño</option>
-                            <option value="Mediano">Mediano</option>
-                            <option value="Grande">Grande</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="peso">Peso (kg)</label>
-                        <input type="number" id="peso" name="peso" value={formData.peso} onChange={handleChange} step="0.1" min="0" />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="color">Color</label>
-                        <input type="text" id="color" name="color" value={formData.color} onChange={handleChange} />
-                    </div>
-                    <div className="form-group full-width">
-                        <label htmlFor="descripcion">Descripción<span className="required">*</span></label>
-                        <textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleChange} required></textarea>
-                    </div>
-                    <div className="form-group full-width">
-                        <label htmlFor="estado_salud">Estado de Salud</label>
-                        <textarea id="estado_salud" name="estado_salud" value={formData.estado_salud} onChange={handleChange}></textarea>
-                    </div>
-                    <div className="form-group full-width">
-                        <label htmlFor="historia">Historia</label>
-                        <textarea id="historia" name="historia" value={formData.historia} onChange={handleChange}></textarea>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="ubicacion">Ubicación (Ciudad, País)<span className="required">*</span></label>
-                        <input type="text" id="ubicacion" name="ubicacion" value={formData.ubicacion} onChange={handleChange} required />
-                    </div>
-                    <div className="form-group checkbox-group">
-                        <label htmlFor="disponible">
-                            <input type="checkbox" id="disponible" name="disponible" checked={formData.disponible} onChange={handleChange} />
-                            Disponible para Adopción
-                        </label>
-                    </div>
+                </div>
 
-                    {/* Agrupación de Esterilizado y Vacunas */}
-                    <div className="form-group full-width checkbox-duo-group">
-                        <span className="section-label">Salud</span>
-                        <label className="inline-checkbox">
-                            <input
-                                type="checkbox"
-                                name="esterilizado"
-                                checked={!!formData.esterilizado}
+                {/* Sección de Descripción e Historia */}
+                <div className="form-section">
+                    <h3>Más Detalles</h3>
+                    <div className="form-grid">
+                        <div className="form-group full-width">
+                            <label htmlFor="descripcion">Descripción<span className="required">*</span></label>
+                            <textarea
+                                id="descripcion"
+                                name="descripcion"
+                                value={formData.descripcion}
                                 onChange={handleChange}
+                                required
+                                placeholder="Describe a la mascota: su personalidad, qué le gusta hacer, si es activa o tranquila, etc."
+                                maxLength={MAX_DESCRIPCION}
                             />
-                            Esterilizado
-                        </label>
-                        <label className="inline-checkbox">
-                            <input
-                                type="checkbox"
-                                name="vacunas"
-                                checked={!!formData.vacunas}
+                            <div className={`char-counter${formData.descripcion.length === MAX_DESCRIPCION ? ' limit' : ''}`}>
+                                {formData.descripcion.length}/{MAX_DESCRIPCION} caracteres
+                            </div>
+                        </div>
+                        <div className="form-group full-width">
+                            <label htmlFor="historia">Historia</label>
+                            <textarea
+                                id="historia"
+                                name="historia"
+                                value={formData.historia}
                                 onChange={handleChange}
+                                placeholder="¿Cómo llegó a ti? ¿Tiene alguna historia especial? (Opcional)"
+                                maxLength={MAX_HISTORIA}
                             />
-                            Vacunas
-                        </label>
+                            <div className={`char-counter${formData.historia.length === MAX_HISTORIA ? ' limit' : ''}`}>
+                                {formData.historia.length}/{MAX_HISTORIA} caracteres
+                            </div>
+                        </div>
+                        <div className="form-group full-width">
+                            <label htmlFor="ubicacion">Ubicación (Ciudad, País)<span className="required">*</span></label>
+                            <input type="text" id="ubicacion" name="ubicacion" value={formData.ubicacion} onChange={handleChange} required placeholder="Ej: Medellín, Colombia" />
+                        </div>
                     </div>
+                </div>
 
-                    {/* Nueva sección para etiquetas (tags) */}
+                 {/* --- SECCIÓN DE SALUD Y ESTATUS (CAMBIO AQUÍ) --- */}
+                <div className="form-section">
+                    <h3>Salud y Estatus</h3>
+                    <div className="form-grid"> {/* Mantén el form-grid para consistencia de layout */}
+                        <div className="form-group full-width">
+                            <label htmlFor="estado_salud">Estado de Salud</label>
+                            <textarea
+                                id="estado_salud"
+                                name="estado_salud"
+                                value={formData.estado_salud}
+                                onChange={handleChange}
+                                placeholder="Información relevante sobre su salud, alergias o condiciones médicas."
+                                maxLength={MAX_ESTADO_SALUD}
+                            />
+                            <div className={`char-counter${formData.estado_salud.length === MAX_ESTADO_SALUD ? ' limit' : ''}`}>
+                                {formData.estado_salud.length}/{MAX_ESTADO_SALUD} caracteres
+                            </div>
+                        </div>
+                        {/* Nuevo contenedor para los checkboxes específicos */}
+                        <div className="checkbox-options-row full-width"> {/* <-- Nueva clase y full-width para ocupar el espacio */}
+                            <label htmlFor="esterilizado" className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    id="esterilizado"
+                                    name="esterilizado"
+                                    checked={formData.esterilizado}
+                                    onChange={handleChange}
+                                />
+                                Esterilizado/Castrado
+                            </label>
+                            <label htmlFor="vacunas" className="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    id="vacunas"
+                                    name="vacunas"
+                                    checked={formData.vacunas}
+                                    onChange={handleChange}
+                                />
+                                Vacunas al día
+                            </label>
+                            <label htmlFor="disponible" className="checkbox-label">
+                                <input type="checkbox" id="disponible" name="disponible" checked={formData.disponible} onChange={handleChange} />
+                                Disponible para Adopción
+                            </label>
+                        </div> {/* <-- Fin del nuevo contenedor */}
+                    </div>
+                </div>
+                {/* --- FIN CAMBIO EN SECCIÓN DE SALUD Y ESTATUS --- */}
+
+                {/* Sección de Personalidad y Comportamiento (Tags) */}
+                <div className="form-section">
+                    <h3>Personalidad y Comportamiento</h3>
                     <div className="form-group full-width">
-                        <label>Personalidad y Comportamiento</label>
+                        <label>Características (tags)</label>
                         <Select
                             isMulti
                             name="tags"
                             options={TAG_OPTIONS}
                             className="react-select-container"
                             classNamePrefix="react-select"
-                            value={TAG_OPTIONS.filter(opt => formData.tags.includes(opt.value))}
+                            value={selectedTags} // Usa las opciones filtradas
                             onChange={handleTagsChange}
-                            placeholder="Selecciona características..."
-                            
+                            placeholder="Selecciona características de la mascota..."
                         />
+                        <p className="field-tip">Elige las características que mejor describan a la mascota.</p>
                     </div>
                 </div>
 
-                <div className="image-upload-group">
-                    <label>Imagen de la Mascota</label>
+                {/* Sección de Imagen */}
+                <div className="form-section image-upload-section">
+                    <h3>Foto de la Mascota<span className="required">*</span></h3>
                     <div className="image-upload-area">
-                        {formData.imagen_url_preview && (
-                            <div className="image-preview-container">
+                        {formData.imagen_url_preview ? (
+                            <div className="image-preview-wrapper">
                                 <img src={formData.imagen_url_preview} alt="Vista previa" className="image-preview" />
-                                <button type="button" className="remove-image-btn" onClick={handleRemoveImage}>
+                                <button type="button" className="remove-image-btn" onClick={handleRemoveImage} aria-label="Eliminar imagen">
                                     &times;
                                 </button>
+                            </div>
+                        ) : (
+                            <div className="upload-placeholder">
+                                <i className="fas fa-camera"></i>
+                                <p>Sube una foto clara y atractiva de la mascota.</p>
                             </div>
                         )}
                         <input
@@ -309,13 +388,10 @@ const MascotaForm = () => {
                             className="upload-button"
                             onClick={() => document.getElementById('imagen').click()}
                         >
-                            <i className="fas fa-upload"></i> Subir Imagen
+                            <i className="fas fa-upload"></i> {formData.imagen_url_preview ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
                         </button>
-                        {formData.imagen_url_preview && isEditing && (
-                            <p className="upload-tip">Deja el campo vacío si no quieres cambiar la imagen.</p>
-                        )}
-                        {!formData.imagen_url_preview && (
-                            <p className="upload-tip">Sube una foto clara de la mascota.</p>
+                        {isEditing && formData.imagen_url_preview && (
+                            <p className="upload-tip">La imagen actual se mantendrá si no subes una nueva.</p>
                         )}
                     </div>
                 </div>

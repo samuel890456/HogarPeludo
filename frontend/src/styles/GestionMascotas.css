@@ -1,76 +1,346 @@
 /* frontend/src/styles/GestionMascotas.css */
 
 .gestion-mascotas {
-    padding: 20px;
+    padding: 30px 20px;
+    background-color: #f8f9fa; /* Fondo suave para todo el panel */
+    min-height: calc(100vh - 60px); /* Ajusta si tienes un header/footer fijo */
 }
 
-.gestion-mascotas h1 {
+.gestion-title {
     text-align: center;
-    margin-bottom: 30px;
-    color: #333;
+    margin-bottom: 40px;
+    color: #343a40; /* Un gris oscuro para el texto */
+    font-size: 2.5em;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 15px;
 }
 
-.mascota-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Columnas responsivas */
-    gap: 25px;
-    padding: 20px;
-    justify-content: center; /* Centrar las tarjetas si no llenan una fila completa */
+.gestion-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #ff9800; /* Color naranja de la marca */
+    border-radius: 2px;
 }
 
-.mascota-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* --- Estilos para la sección de Filtros y Búsqueda --- */
+.filtros-container {
     display: flex;
     flex-direction: column;
+    gap: 20px;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #fff8f0 0%, #ffe0b2 100%); /* Degradado cálido */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(255, 182, 73, 0.15); /* Sombra suave */
+    border: 1px solid #ffbe7a; /* Borde delicado */
+}
+
+.search-bar {
+    display: flex;
     align-items: center;
-    text-align: center;
-    transition: transform 0.2s ease-in-out;
+    background-color: #fff;
+    border: 1px solid #ffd580;
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.mascota-card:hover {
-    transform: translateY(-5px);
+.search-icon {
+    color: #ff9800;
+    margin-right: 10px;
+    font-size: 1.2em;
 }
 
-.mascota-imagen {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-bottom: 15px;
-}
-
-.mascota-card h3 {
-    color: #007bff;
-    margin-bottom: 10px;
-}
-
-.mascota-card p {
-    font-size: 0.9em;
-    color: #555;
-    margin-bottom: 5px;
-    line-height: 1.4;
-}
-
-.mascota-card p strong {
-    color: #333;
-}
-
-.mascota-card .btn-eliminar {
-    background-color: #dc3545;
-    color: white;
+.search-bar input[type="text"] {
+    flex-grow: 1;
     border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9em;
-    margin-top: 15px;
-    transition: background-color 0.3s ease;
+    padding: 5px;
+    font-size: 1.1em;
+    color: #555;
+    outline: none; /* Eliminar el contorno al enfocar */
+    background: transparent;
 }
 
-.mascota-card .btn-eliminar:hover {
+.search-bar input[type="text"]::placeholder {
+    color: #999;
+}
+
+.filter-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    position: relative; /* Para el posicionamiento del icono */
+}
+
+.filter-group label {
+    font-weight: 600;
+    color: #6c757d; /* Un gris medio para las etiquetas */
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre icono y texto */
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    background-color: #fff;
+    color: #333;
+    appearance: none; /* Elimina la flecha predeterminada del select */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%20197.9c-3.1%203.1-7.2%204.7-11.4%204.7s-8.3-1.6-11.4-4.7L146.2%20101.4%2028.2%20197.9c-3.1%203.1-7.2%204.7-11.4%204.7s-8.3-1.6-11.4-4.7c-6.2-6.2-6.2-16.4%200-22.6L134.8%2070.7c6.2-6.2%2016.4-6.2%2022.6%200l118.4%20118.4c6.2%206.2%206.2%2016.4%200%2022.6z%22%2F%3E%3C%2Fsvg%3E'); /* Flecha personalizada */
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 0.6em auto;
+}
+
+.filter-group select:focus {
+    border-color: #ff9800;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.2);
+}
+
+/* --- Estilos para la Cuadrícula y las Cards de Mascota --- */
+.mascota-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 0px; /* Ya el padding está en el contenedor principal */
+    justify-content: center;
+}
+
+.admin-mascota-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden; /* Para que la imagen respete el border-radius */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-width: 280px;
+}
+
+.admin-mascota-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-image-wrapper {
+    width: 100%;
+    height: 200px; /* Altura fija para las imágenes */
+    position: relative;
+    overflow: hidden;
+    background-color: #f0f0f0; /* Fondo si la imagen no carga */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-mascota-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta la imagen para cubrir el área */
+    transition: transform 0.3s ease;
+}
+
+.admin-mascota-card:hover .card-mascota-imagen {
+    transform: scale(1.05); /* Zoom sutil al pasar el mouse */
+}
+
+.card-status {
+    
+    top: 15px;
+    right: 15px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 700;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.card-status.available {
+    background-color: #28a745; /* Verde para disponible */
+}
+
+.card-status.adopted {
+    background-color: #dc3545; /* Rojo para adoptado */
+}
+
+.card-content {
+    padding: 20px;
+    flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
+    display: flex;
+    flex-direction: column;
+}
+
+.card-title {
+    color: #007bff; /* Azul suave para el título */
+    margin-bottom: 12px;
+    font-size: 1.8em;
+    font-weight: 700;
+    text-align: left;
+}
+
+.card-info {
+    font-size: 0.95em;
+    color: #495057; /* Gris oscuro para la información */
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-info strong {
+    color: #343a40;
+    font-weight: 600;
+}
+
+.card-info .svg-inline--fa {
+    color: #ff9800; /* Iconos en color naranja */
+    font-size: 1.1em;
+}
+
+/* Estilos para los tags en la card */
+.card-tags {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.card-tags h4 {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tag-badge {
+    background-color: #e6f7ff; /* Azul claro muy suave */
+    color: #007bff; /* Azul texto */
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid #b3e0ff;
+}
+
+/* --- Botones de Acción --- */
+.card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    justify-content: center; /* Centra el único botón de eliminar */
+    /* Si solo hay un botón, puedes justificarlo al centro */
+}
+
+
+.btn-eliminar-admin {
+    background-color: #dc3545; /* Rojo de peligro */
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.btn-eliminar-admin:hover {
     background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.btn-edit-admin .svg-inline--fa,
+.btn-eliminar-admin .svg-inline--fa {
+    font-size: 1em;
+}
+
+/* Mensajes de estado */
+.loading-message-admin,
+.error-message-admin,
+.no-results-message {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.2em;
+    color: #6c757d;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-top: 30px;
+}
+
+.error-message-admin {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+
+/* --- Media Queries para Responsive --- */
+@media (max-width: 992px) {
+    .filtros-container {
+        padding: 25px;
+    }
+    .gestion-title {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 768px) {
+    .filtros-container {
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+    .filter-options {
+        grid-template-columns: 1fr; /* Una columna por filtro en móviles */
+    }
+    .gestion-mascotas {
+        padding: 20px 15px;
+    }
+    .gestion-title {
+        font-size: 1.8em;
+        margin-bottom: 30px;
+    }
+    .admin-mascota-card {
+        margin: auto; /* Centrar cards en pantallas pequeñas */
+        max-width: 350px; /* Limitar ancho para que no se estiren demasiado */
+    }
+}
+
+@media (max-width: 480px) {
+    .search-bar input[type="text"] {
+        font-size: 1em;
+    }
+    .card-title {
+        font-size: 1.5em;
+    }
+    .card-info {
+        font-size: 0.9em;
+    }
+    .btn-edit-admin,
+    .btn-eliminar-admin {
+        padding: 8px 15px;
+        font-size: 0.85em;
+    }
 }

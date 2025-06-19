@@ -175,6 +175,11 @@ class Solicitud {
             throw error;
         }
     }
+
+    static async count() {
+        const [rows] = await db.query('SELECT COUNT(*) AS total FROM adopciones');
+        return rows[0].total;
+    }
 }
 
 module.exports = Solicitud;

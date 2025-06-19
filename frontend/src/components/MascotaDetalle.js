@@ -31,28 +31,27 @@ const MascotaDetalle = () => {
     const [mascota, setMascota] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showAdoptSuccessModal, setShowAdoptSuccessModal] = useState(false); // Nuevo estado para el modal
+    const [showAdoptSuccessModal, setShowAdoptSuccessModal] = useState(false);
 
     useEffect(() => {
-    const fetchMascota = async () => {
-        try {
-            setLoading(true);
-            const res = await axios.get(`http://localhost:5000/api/mascotas/${id}`);
-            // AQUI: Parsear el campo 'tags' si existe y no es nulo/vacío
-            const fetchedMascota = {
-                ...res.data,
-                tags: res.data.tags ? JSON.parse(res.data.tags) : [] // Asegura que sea un array
-            };
-            setMascota(fetchedMascota);
-        } catch (err) {
-            console.error("Error al cargar detalles de la mascota:", err);
-            setError("No se pudo cargar la información de la mascota. Por favor, inténtalo de nuevo más tarde.");
-        } finally {
-            setLoading(false);
-        }
-    };
-    fetchMascota();
-}, [id]);
+        const fetchMascota = async () => {
+            try {
+                setLoading(true);
+                const res = await axios.get(`http://localhost:5000/api/mascotas/${id}`);
+                const fetchedMascota = {
+                    ...res.data,
+                    tags: res.data.tags ? JSON.parse(res.data.tags) : []
+                };
+                setMascota(fetchedMascota);
+            } catch (err) {
+                console.error("Error al cargar detalles de la mascota:", err);
+                setError("No se pudo cargar la información de la mascota. Por favor, inténtalo de nuevo más tarde.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchMascota();
+    }, [id]);
 
     const handleAdoptClick = async () => {
         const usuarioId = localStorage.getItem('userId');
@@ -99,7 +98,6 @@ const MascotaDetalle = () => {
         }
     };
 
-
     const handleShare = async () => {
         if (navigator.share) {
             try {
@@ -132,9 +130,7 @@ const MascotaDetalle = () => {
     const imageUrl = mascota.imagen_url
         ? `${UPLOADS_BASE_URL}${mascota.imagen_url}`
         : '/paw-icon.png';
-    // ESTO ES PARA DEPURAR: Confirma el estado del modal antes de renderizar
-    console.log('Estado actual de showAdoptSuccessModal antes de renderizar:', showAdoptSuccessModal);
-    // --- NUEVO: Asegura que los tags sean un array ---
+
     let tags = [];
     if (mascota && mascota.tags) {
         if (Array.isArray(mascota.tags)) {
@@ -142,7 +138,6 @@ const MascotaDetalle = () => {
         } else if (typeof mascota.tags === 'string') {
             try {
                 let parsed = JSON.parse(mascota.tags);
-                // Si el resultado es un string, parsea de nuevo
                 if (typeof parsed === 'string') {
                     parsed = JSON.parse(parsed);
                 }
@@ -152,8 +147,6 @@ const MascotaDetalle = () => {
             }
         }
     }
-    console.log('TAGS MascotaDetalle:', mascota.tags, '->', tags);
-    // Ahora tags SIEMPRE es un array
 
     return (
         <div className="mascota-detalle-container">
@@ -174,6 +167,7 @@ const MascotaDetalle = () => {
                         className="main-mascota-image"
                         onError={(e) => { e.target.onerror = null; e.target.src = '/paw-icon.png'; }}
                     />
+                    {/* Podrías añadir un gallery de miniaturas aquí si tuvieras múltiples imágenes */}
                 </div>
 
                 <div className="mascota-info-section">
@@ -218,10 +212,19 @@ const MascotaDetalle = () => {
                             <p><FontAwesomeIcon icon={faMapMarkerAlt} /> Ubicación:</p>
                             <span>{mascota.ubicacion}</span>
                         </div>
+                        {/* Nuevos campos de Vacunas y Esterilizado */}
+                        <div className="info-item">
+                            <p><FontAwesomeIcon icon={faSyringe} /> Vacunado:</p>
+                            <span>{mascota.vacunas ? 'Sí' : 'No'}</span>
+                        </div>
+                        <div className="info-item">
+                            <p><FontAwesomeIcon icon={faHeartCircleCheck} /> Esterilizado:</p>
+                            <span>{mascota.esterilizado ? 'Sí' : 'No'}</span>
+                        </div>
                     </div>
 
                     <div className="info-block">
-                        <h3>Sobre {mascota.nombre}</h3>
+                        <h3><FontAwesomeIcon icon={faPaw} /> Sobre {mascota.nombre}</h3>
                         <p>{mascota.descripcion}</p>
                     </div>
 
@@ -239,12 +242,14 @@ const MascotaDetalle = () => {
                         </div>
                     )}
 
-                    {/* NUEVO: Mostrar tags como badges */}
                     {tags && Array.isArray(tags) && tags.length > 0 && (
                         <div className="mascota-tags">
-                            {tags.map(tag => (
-                                <span key={tag} className="mascota-tag">{TAG_LABELS[tag] || tag}</span>
-                            ))}
+                            <h4>Características Destacadas:</h4> {/* Título para los tags */}
+                            <div className="tag-list-detail"> {/* Nuevo contenedor para los tags */}
+                                {tags.map(tag => (
+                                    <span key={tag} className="mascota-tag-detail">{TAG_LABELS[tag] || tag}</span>
+                                ))}
+                            </div>
                         </div>
                     )}
 
@@ -279,7 +284,7 @@ const MascotaDetalle = () => {
             </div>
 
             {/* Modal de éxito de adopción */}
-            {showAdoptSuccessModal && ( // <-- ESTO ES CLAVE
+            {showAdoptSuccessModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h2><FontAwesomeIcon icon={faHeartCircleCheck} /> ¡Solicitud Enviada!</h2>
@@ -289,7 +294,7 @@ const MascotaDetalle = () => {
                         <button
                             className="btn-primary-detail"
                             onClick={() => setShowAdoptSuccessModal(false)}
-                            style={{ marginTop: '20px' }} // Estilo inline simple para el botón del modal
+                            style={{ marginTop: '20px' }}
                         >
                             Cerrar y Volver
                         </button>

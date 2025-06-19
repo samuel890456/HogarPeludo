@@ -66,6 +66,37 @@ class Mascota {
     static async delete(id) {
         await db.query('DELETE FROM mascotas WHERE id = ?', [id]);
     }
+
+    static async getAdopcionesPorEspecie() {
+        return db.query(`
+            SELECT especie, COUNT(*) AS total
+            FROM mascotas
+            WHERE disponible = 0
+            GROUP BY especie
+            ORDER BY total DESC
+        `);
+    }
+
+    static async getAdopcionesPorMes() {
+        return db.query(`
+            SELECT DATE_FORMAT(fecha_publicacion, '%Y-%m') AS mes, COUNT(*) AS total
+            FROM mascotas
+            WHERE disponible = 0
+            GROUP BY mes
+            ORDER BY mes
+        `);
+    }
+
+    static async getTopPopulares(limit = 5) {
+        return db.query(`
+            SELECT m.id, m.nombre, m.especie, m.imagen_url, COUNT(a.id) AS solicitudes
+            FROM mascotas m
+            LEFT JOIN adopciones a ON m.id = a.mascota_id
+            GROUP BY m.id
+            ORDER BY solicitudes DESC
+            LIMIT ?
+        `, [limit]);
+    }
 }
 
 module.exports = Mascota;

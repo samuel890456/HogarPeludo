@@ -1,153 +1,286 @@
-/*frontend/src/styles/GestionUsuarios.css*/
-.gestion-usuarios {
-    padding: 2rem 3%;
+/* General Layout & Background */
+.gestion-usuarios-container {
+    padding: 40px 3%; /* More consistent padding */
     font-family: 'Inter', sans-serif;
-    background-color: #f4f6f8;
-    min-height: 100vh;
+    background-color: #f8f9fa; /* Lighter background */
+    min-height: calc(100vh - 60px); /* Adjust based on AdminNav height */
     color: #333;
 }
 
-.gestion-usuarios h2 {
-    font-size: 2rem;
+.gestion-usuarios-container h2 {
+    font-size: 2.5rem; /* Slightly larger heading */
     text-align: center;
-    margin-bottom: 2rem;
-    color: #1a202c;
+    margin-bottom: 3rem; /* More space below heading */
+    color: #2c3e50; /* Darker, more professional heading color */
+    font-weight: 700;
 }
 
-/* Tabla moderna */
-.gestion-usuarios table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 12px;
-    background: none;
-}
-
-.gestion-usuarios thead th {
-    text-align: left;
-    padding: 12px 20px;
-    font-size: 0.95rem;
-    color: #6b7280;
-}
-
-.gestion-usuarios tbody tr {
-    background-color: #fff;
+/* Loading and Error States */
+.loading-state, .error-state {
+    text-align: center;
+    padding: 50px;
+    font-size: 1.2rem;
+    color: #555;
+    background-color: #e9ecef;
     border-radius: 12px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-    transition: transform 0.2s ease;
+    margin: 50px auto;
+    max-width: 600px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.gestion-usuarios tbody tr:hover {
-    transform: scale(1.005);
+.loading-state svg { /* Spinner icon */
+    color: #1976d2;
+    margin-bottom: 15px;
 }
 
-.gestion-usuarios td {
-    padding: 14px 20px;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #eee;
+.error-state p {
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.retry-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.retry-button:hover {
+    background-color: #0056b3;
+}
+
+/* Table Container for Responsiveness */
+.table-responsive-container {
+    overflow-x: auto; /* Allows horizontal scrolling for tables on small screens */
+    -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */
+    margin: 0 auto; /* Center the table if it's narrower than container */
+    max-width: 1200px; /* Optional: constrain max width of table */
+}
+
+/* Table Styling */
+.gestion-usuarios-container table {
+    width: 100%;
+    min-width: 600px; /* Ensure table doesn't get too squished before responsive break */
+    border-collapse: separate;
+    border-spacing: 0 15px; /* More vertical space between rows */
+    background: none; /* No background on table itself */
+}
+
+.gestion-usuarios-container thead th {
+    text-align: left;
+    padding: 15px 25px; /* More padding */
+    font-size: 1rem; /* Slightly larger font */
+    color: #6c757d; /* Darker grey */
+    font-weight: 600;
+    text-transform: uppercase;
+    background-color: #f2f4f6; /* Light background for header */
+    border-top: 1px solid #e9ecef; /* Top border for header */
+    border-bottom: 1px solid #e9ecef; /* Bottom border for header */
+}
+
+.gestion-usuarios-container thead th:first-child { border-top-left-radius: 10px; }
+.gestion-usuarios-container thead th:last-child { border-top-right-radius: 10px; }
+
+
+.gestion-usuarios-container tbody tr {
+    background-color: #fff;
+    border-radius: 15px; /* Slightly more rounded corners for rows */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06); /* Softer, more pronounced shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gestion-usuarios-container tbody tr:hover {
+    transform: translateY(-3px); /* Subtle lift effect */
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+}
+
+.gestion-usuarios-container td {
+    padding: 16px 25px; /* More padding for cells */
+    font-size: 1rem;
+    border-bottom: none; /* Remove individual cell borders if row has shadow/radius */
     vertical-align: middle;
 }
 
-.gestion-usuarios td:last-child {
-    text-align: right;
+/* Specific cell styles for rounded corners in table body */
+.gestion-usuarios-container tbody tr td:first-child {
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.gestion-usuarios-container tbody tr td:last-child {
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    text-align: right; /* Align action button to the right */
 }
 
-/* Estado del usuario */
-.estado-activo {
-    color: #10b981;
-    font-weight: 600;
+/* Status Badges */
+.status-badge { /* Base class for all status badges */
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px; /* More space between icon and text */
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.estado-activo {
+    color: #28a745; /* Bootstrap success green */
+    background-color: #d4edda;
 }
 
 .estado-bloqueado {
-    color: #ef4444;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    color: #dc3545; /* Bootstrap danger red */
+    background-color: #f8d7da;
 }
 
-/* Botón de acción */
-.gestion-usuarios button {
-    padding: 8px 16px;
+/* Action Button */
+.action-button { /* Base class for all action buttons */
+    padding: 10px 20px; /* More padding */
     border: none;
-    border-radius: 6px;
-    font-weight: 500;
-    background-color: #3b82f6;
+    border-radius: 8px; /* Slightly more rounded */
+    font-weight: 600; /* Bolder text */
     color: white;
     cursor: pointer;
-    transition: background-color 0.2s ease;
-    display: flex;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex; /* Use inline-flex for button content alignment */
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px; /* Space for icon if added in the future */
+    min-width: 120px; /* Ensure consistent width */
 }
 
-.gestion-usuarios button:hover {
-    background-color: #2563eb;
+.action-button:hover {
+    transform: translateY(-1px); /* Subtle lift on hover */
 }
 
-.gestion-usuarios button.bloquear {
-    background-color: #ef4444;
+.action-button.bloquear { /* Specific style for block button */
+    background-color: #ffc107; /* Orange for 'Bloquear' */
+    color: #343a40; /* Dark text for contrast */
 }
 
-.gestion-usuarios button.bloquear:hover {
-    background-color: #dc2626;
+.action-button.bloquear:hover {
+    background-color: #e0a800;
 }
 
-.gestion-usuarios button.desbloquear {
-    background-color: #10b981;
+.action-button.desbloquear { /* Specific style for unblock button */
+    background-color: #28a745; /* Green for 'Desbloquear' */
 }
 
-.gestion-usuarios button.desbloquear:hover {
-    background-color: #059669;
+.action-button.desbloquear:hover {
+    background-color: #218838;
 }
 
-/* Responsive */
+/* No data message */
+.no-data-message {
+    padding: 30px;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+    font-size: 1.1rem;
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin-top: 30px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+
+/* Responsive Design for Tables */
+@media (max-width: 992px) { /* Adjust breakpoint for larger screens too */
+    .gestion-usuarios-container h2 {
+        font-size: 2.2rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .gestion-usuarios-container table {
+        min-width: 0; /* Allow table to shrink more on medium screens */
+    }
+
+    .gestion-usuarios-container thead th,
+    .gestion-usuarios-container td {
+        padding: 12px 15px; /* Reduce padding */
+        font-size: 0.9rem;
+    }
+}
+
+
 @media (max-width: 768px) {
-    .gestion-usuarios table,
-    .gestion-usuarios thead,
-    .gestion-usuarios tbody,
-    .gestion-usuarios th,
-    .gestion-usuarios td,
-    .gestion-usuarios tr {
+    .gestion-usuarios-container {
+        padding: 20px 15px;
+    }
+
+    .gestion-usuarios-container h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Force table to behave like blocks */
+    .gestion-usuarios-container table,
+    .gestion-usuarios-container thead,
+    .gestion-usuarios-container tbody,
+    .gestion-usuarios-container th,
+    .gestion-usuarios-container td,
+    .gestion-usuarios-container tr {
         display: block;
         width: 100%;
     }
 
-    .gestion-usuarios thead {
-        display: none;
+    .gestion-usuarios-container thead {
+        display: none; /* Hide table headers */
     }
 
-    .gestion-usuarios tr {
-        margin-bottom: 16px;
-        border-radius: 10px;
+    .gestion-usuarios-container tr {
+        margin-bottom: 20px; /* More space between "cards" */
+        border-radius: 12px;
         background-color: #fff;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-        padding: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 15px; /* Padding inside each "card" */
+        display: flex; /* Use flexbox for vertical stacking */
+        flex-direction: column;
+    }
+    
+    /* Remove redundant border radius for td as tr handles it */
+    .gestion-usuarios-container tbody tr td:first-child,
+    .gestion-usuarios-container tbody tr td:last-child {
+        border-radius: 0; 
     }
 
-    .gestion-usuarios td {
-        padding: 12px 10px 12px 50%;
+    .gestion-usuarios-container td {
+        padding: 10px 0; /* Vertical padding */
         position: relative;
-        border: none;
+        border: none; /* No borders between rows */
         text-align: left;
+        display: flex; /* Flex for content and label */
+        justify-content: space-between; /* Space out label and value */
+        align-items: center;
+        width: 100%; /* Ensure full width */
+        min-height: 40px; /* Minimum height for touch targets */
     }
 
-    .gestion-usuarios td::before {
+    .gestion-usuarios-container td::before {
         content: attr(data-label);
-        position: absolute;
-        left: 16px;
-        top: 12px;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         font-weight: 600;
-        color: #6b7280;
-        text-transform: capitalize;
+        color: #888; /* Softer label color */
+        text-transform: uppercase; /* Uppercase labels */
+        flex-shrink: 0; /* Don't let label shrink */
+        width: 100px; /* Fixed width for labels */
+        margin-right: 15px; /* Space between label and content */
     }
 
-    .gestion-usuarios button {
-        width: 100%;
-        margin-top: 10px;
-        justify-content: center;
+    .gestion-usuarios-container td:last-child {
+        text-align: left; /* Align action button left */
+        margin-top: 15px; /* Space from previous fields */
+        padding-top: 15px;
+        border-top: 1px dashed #e0e0e0; /* Separator for action */
+    }
+
+    .action-button {
+        width: 100%; /* Full width button on small screens */
+        justify-content: center; /* Center text within button */
+        margin-top: 0; /* Remove top margin from original CSS */
     }
 }

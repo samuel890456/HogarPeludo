@@ -11,7 +11,6 @@ exports.getResumenGeneral = async (req, res) => {
         const totalUsuarios = await Usuario.count();
         res.json({ totalMascotas, totalSolicitudes, totalUsuarios });
     } catch (error) {
-        console.error("Error en getResumenGeneral:", error); // Añadir log de error
         res.status(500).json({ error: error.message });
     }
 };
@@ -101,6 +100,33 @@ exports.updateSolicitud = async (req, res) => {
         const { estado } = req.body;
         await Solicitud.update(req.params.id, estado);
         res.json({ message: 'Solicitud actualizada correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getRankingAdopcionesPorEspecie = async (req, res) => {
+    try {
+        const [rows] = await Mascota.getAdopcionesPorEspecie();
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getAdopcionesPorMes = async (req, res) => {
+    try {
+        const [rows] = await Mascota.getAdopcionesPorMes();
+        res.json(rows);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getTopMascotasPopulares = async (req, res) => {
+    try {
+        const [rows] = await Mascota.getTopPopulares(5);
+        res.json(rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

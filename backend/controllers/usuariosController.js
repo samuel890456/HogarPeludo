@@ -39,3 +39,14 @@ exports.updateUsuario = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Eliminar un usuario
+exports.eliminarUsuario = async (req, res) => {
+    try {
+        const userId = req.usuario.id;
+        await Usuario.delete(userId);
+        res.json({ message: 'Cuenta eliminada correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
