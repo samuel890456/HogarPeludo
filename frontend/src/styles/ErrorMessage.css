@@ -1,0 +1,19 @@
+/* src/styles/ErrorMessage.css */
+.error-message-container {
+    padding: 1.5rem;
+    margin: 2rem auto;
+    max-width: 500px;
+    background-color: #ffebee; /* Rojo muy claro */
+    border: 1px solid #ef9a9a; /* Borde rojo claro */
+    border-radius: 8px;
+    color: #d32f2f; /* Rojo para el texto */
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.1);
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

@@ -1,38 +1,58 @@
 const jwt = require('jsonwebtoken');
+const Usuario = require('../models/usuariosModel'); // Make sure this path is correct
+require('dotenv').config();
 
-// Middleware para verificar el token JWT
-const verificarToken = (req, res, next) => {
-    // Obtener el token del encabezado de la solicitud
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-
-    // Si no hay token, devolver un error
-    if (!token) {
-        return res.status(401).json({ message: 'Acceso denegado. Token no proporcionado.' });
-    }
-
+// Middleware to verify the JWT token
+const verificarToken = async (req, res, next) => {
     try {
-        // Verificar y decodificar el token
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+
+        if (!token) {
+            return res.status(401).json({ message: 'Acceso denegado. Token no proporcionado.' });
+        }
+
+        // Verify and decode the token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Añadir el usuario decodificado a la solicitud
-        req.usuario = decoded;
+        // Fetch the user from the database. Use getByEmailWithRoles to get their associated roles
+        const usuario = await Usuario.getByEmailWithRoles(decoded.email); // Fetch by email to get roles
 
-        // Continuar con el siguiente middleware o controlador
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado.' });
+        }
+        if (usuario.estado === 'bloqueado' || usuario.activo === 0) {
+            return res.status(403).json({ message: 'Cuenta desactivada. Contacta con un administrador.' });
+        }
+
+        // Attach user data (including roles) to the request object
+        req.usuario = {
+            id: usuario.id,
+            email: usuario.email,
+            nombre: usuario.nombre,
+            telefono: usuario.telefono,
+            direccion: usuario.direccion,
+            estado: usuario.estado,
+            activo: usuario.activo,
+            // Crucial: Pass the array of roles
+            roles: usuario.roles || [] 
+        };
+        console.log('Usuario autenticado:', req.usuario);
+
         next();
     } catch (error) {
-        // Si el token es inválido, devolver un error
-        res.status(400).json({ message: 'Token inválido.' });
+        console.error('Error en verificarToken:', error.message);
+        res.status(400).json({ message: 'Token inválido o expirado.' });
     }
 };
 
-// Middleware para verificar si el usuario es un administrador
+// Middleware to verify if the user is an administrator
 const verificarAdmin = (req, res, next) => {
-    // Verificar si el usuario tiene el rol de administrador
-    if (req.usuario.rol_id !== 1) { // Suponiendo que el rol_id 1 es para administradores
+    // Check if the 'roles' array includes the admin role ID ('1')
+    if (!req.usuario.roles || !req.usuario.roles.includes('1')) { 
         return res.status(403).json({ message: 'Acceso denegado. Se requieren privilegios de administrador.' });
     }
+    console.log('Roles del usuario:', req.usuario.roles);
 
-    // Continuar con el siguiente middleware o controlador
     next();
 };
 

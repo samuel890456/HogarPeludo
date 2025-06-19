@@ -1,0 +1,213 @@
+/* General Layout */
+.gestion-solicitudes-container {
+    padding: 50px 25px; /* Increased padding for better spacing */
+    background-color: #f8f9fa; /* Lighter, more modern background */
+    min-height: calc(100vh - 60px); /* Adjust based on AdminNav height */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+.gestion-solicitudes-container h1 {
+    text-align: center;
+    font-size: 2.8rem; /* Larger, more prominent title */
+    color: #2c3e50;
+    margin-bottom: 40px; /* More space below heading */
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Loading, Error, and No Data States */
+.loading-state, .error-state, .no-data-state {
+    text-align: center;
+    padding: 60px 20px; /* Generous padding */
+    border-radius: 15px; /* Rounded corners */
+    margin: 50px auto;
+    max-width: 600px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Soft shadow */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.loading-state {
+    background-color: #e9f5ff; /* Light blue background */
+    color: #1976d2; /* Darker blue text */
+    font-size: 1.3rem;
+}
+
+.loading-state svg { /* Spinner icon */
+    color: #1976d2;
+}
+
+.error-state {
+    background-color: #ffebe9; /* Light red background */
+    color: #dc3545; /* Dark red text */
+    font-size: 1.2rem;
+}
+
+.error-state svg { /* Warning icon */
+    color: #dc3545;
+}
+
+.no-data-state {
+    background-color: #f0f0f0; /* Light grey background */
+    color: #777;
+    font-size: 1.2rem;
+    font-style: italic;
+}
+
+.no-data-state svg { /* Sad face icon */
+    color: #999;
+}
+
+.btn-retry { /* Button for error state */
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-retry:hover {
+    background-color: #0056b3;
+}
+
+
+/* Solicitud List Layout */
+.solicitud-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Slightly larger min-width for cards */
+    gap: 25px; /* More space between cards */
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 1200px; /* Keep max width consistent */
+}
+
+/* Solicitud Card Styling */
+.solicitud-card {
+    background-color: #ffffff;
+    border-radius: 15px; /* More rounded corners */
+    padding: 25px; /* More padding inside cards */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Softer, more pronounced shadow */
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column;
+    justify-content: space-between; /* Push buttons to bottom */
+}
+
+.solicitud-card:hover {
+    transform: translateY(-8px); /* More noticeable lift effect */
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+}
+
+.solicitud-card h3.solicitud-adoptante {
+    margin: 0 0 12px 0;
+    font-size: 1.5rem; /* Larger font for adoptante name */
+    color: #3f51b5; /* Primary blue color */
+    font-weight: 600;
+}
+
+.solicitud-card p.solicitud-mascota {
+    margin: 0 0 20px 0; /* More space before buttons */
+    font-size: 1.1rem; /* Slightly larger text */
+    color: #555;
+    line-height: 1.4;
+}
+
+.solicitud-card p span.mascota-label,
+.solicitud-card h3 span.adoptante-label {
+    font-weight: 400; /* Normal weight for labels */
+    color: #777;
+    margin-right: 5px;
+    font-size: 0.95rem; /* Smaller label font */
+}
+
+
+/* Buttons Styling */
+.solicitud-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* More space between buttons */
+    margin-top: auto; /* Push buttons to the bottom of the card */
+}
+
+.btn { /* Base button style */
+    flex: 1;
+    padding: 12px 15px; /* More padding */
+    border: none;
+    border-radius: 8px; /* Slightly more rounded */
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-size: 1rem;
+    display: inline-flex; /* Align icon and text */
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+.btn:hover {
+    transform: translateY(-2px); /* Subtle lift on hover */
+}
+
+.btn-aprobar {
+    background-color: #28a745; /* Modern green for approval */
+}
+
+.btn-aprobar:hover {
+    background-color: #218838;
+}
+
+.btn-rechazar {
+    background-color: #dc3545; /* Modern red for rejection */
+}
+
+.btn-rechazar:hover {
+    background-color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gestion-solicitudes-container {
+        padding: 30px 15px;
+    }
+
+    .gestion-solicitudes-container h1 {
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+    }
+
+    .solicitud-list {
+        grid-template-columns: 1fr; /* Single column layout on small screens */
+        gap: 20px;
+    }
+
+    .solicitud-card {
+        padding: 20px;
+    }
+
+    .solicitud-card h3.solicitud-adoptante {
+        font-size: 1.4rem;
+    }
+
+    .solicitud-card p.solicitud-mascota {
+        font-size: 1rem;
+    }
+
+    .solicitud-buttons {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 12px;
+        width: 100%; /* Full width buttons */
+    }
+}

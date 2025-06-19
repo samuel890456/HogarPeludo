@@ -10,4 +10,5 @@ router.get('/:id', authController.verificarToken, usuariosController.getUsuarioB
 // Actualizar un usuario existente (protegida)
 router.put('/:id', authController.verificarToken, usuariosController.updateUsuario);
 
+router.delete('/eliminar-cuenta', authController.verificarToken, usuariosController.eliminarUsuario);
 module.exports = router;

@@ -1,0 +1,280 @@
+/* General container for authentication pages */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Full viewport height */
+    background: linear-gradient(135deg, #f0f7f6 0%, #e8f5e9 100%); /* Soft gradient background */
+    padding: 20px;
+    box-sizing: border-box; /* Include padding in element's total width and height */
+    font-family: 'Segoe UI', 'Roboto', sans-serif; /* Consistent font */
+}
+
+/* Authentication Card - The main form area */
+.auth-card {
+    background-color: #ffffff;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Deeper, softer shadow */
+    padding: 40px;
+    max-width: 450px; /* Slightly wider cards */
+    width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+    position: relative; /* For potential future absolute positioning of elements */
+    z-index: 1; /* Ensure it's above the banner on smaller screens */
+    margin: 20px; /* Margin for spacing on larger screens */
+}
+
+.auth-card:hover {
+    transform: translateY(-5px); /* Gentle lift on hover */
+}
+
+/* Titles and subtitles */
+.auth-title {
+    color: #4A6B8A; /* Consistent brand blue-grey */
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.auth-subtitle {
+    color: #7B9BAE; /* Muted blue-grey for subtitle */
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+/* Error message styling */
+.auth-error-message {
+    color: #FF6B6B; /* Soft red for errors */
+    background-color: #FFECEC; /* Light red background */
+    border: 1px solid #FFC9C9;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    text-align: center;
+}
+
+/* Success message styling (for forgot password, etc.) */
+.auth-success-message {
+    color: #4CAF50; /* Green for success */
+    background-color: #E8F5E9; /* Light green background */
+    border: 1px solid #C8E6C9;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    text-align: center;
+}
+
+/* Form layout */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increased gap between form elements */
+    text-align: left; /* Align labels to the left */
+}
+
+.form-group {
+    margin-bottom: 10px; /* Spacing for each input group */
+}
+
+.form-group label {
+    display: block; /* Label on its own line */
+    margin-bottom: 8px;
+    color: #5B7B9A; /* Darker blue-grey for labels */
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.auth-form input {
+    width: 100%;
+    padding: 12px 15px; /* More generous padding */
+    border: 1px solid #B7D9D8; /* Soft teal border */
+    border-radius: 8px; /* More rounded input fields */
+    font-size: 1em;
+    color: #3C5A6A;
+    background-color: #F8FDFF; /* Very light background for input */
+    transition: all 0.3s ease;
+    box-sizing: border-box; /* Include padding and border in element's total width */
+}
+
+.auth-form input:focus {
+    outline: none;
+    border-color: #6BA8A5; /* Highlight border on focus */
+    box-shadow: 0 0 0 3px rgba(107, 168, 165, 0.3); /* Soft glow on focus */
+}
+
+/* Submit button */
+.auth-submit-button {
+    background-color: #4CAF50; /* A friendly green */
+    color: white;
+    padding: 14px 25px; /* More generous button padding */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 700;
+    margin-top: 20px; /* Space above button */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2); /* Soft shadow for the button */
+}
+
+.auth-submit-button:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3); /* Enhanced shadow on hover */
+}
+
+/* Separator for "OR" */
+.auth-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.auth-separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.auth-separator:not(:empty)::after {
+    margin-left: .25em;
+}
+
+.separator-text {
+    padding: 0 10px;
+    color: #999;
+    font-weight: 500;
+}
+
+/* Google Login Button Container */
+.google-login-button-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Space below button */
+    /* El botón de Google tiene estilos propios, pero este contenedor ayuda a centrarlo */
+    /* Puedes usar este contenedor si necesitas aplicar márgenes o alineación adicionales */
+}
+
+/* Links to other forms (login/register/forgot password) */
+.auth-link-text, .auth-additional-link {
+    margin-top: 25px;
+    color: #6C8CA7;
+    font-size: 1em;
+}
+
+.auth-additional-link {
+    margin-top: 15px; /* Adjust spacing for forgot password link */
+}
+
+.auth-link {
+    color: #A8DADC; /* Teal for links */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+    color: #8FD1D0; /* Darker teal on hover */
+    text-decoration: underline;
+}
+
+/* Image banner for visual appeal */
+.auth-image-banner {
+    flex-grow: 1; /* Takes remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    max-width: 500px; /* Limit image width */
+    margin-left: 50px; /* Space between card and image */
+}
+
+.auth-illustration {
+    width: 100%;
+    max-width: 350px; /* Control image size */
+    height: auto;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.1)); /* Add a subtle shadow to the image */
+}
+
+.banner-text {
+    color: #4A6B8A;
+    font-size: 1.5em;
+    font-weight: 600;
+    text-align: center;
+    max-width: 350px;
+    line-height: 1.4;
+}
+
+/* Reverse order for register page (optional, for visual variation) */
+.auth-image-banner.reverse-order {
+    order: 2; /* Puts the image on the right */
+    margin-left: 0;
+    margin-right: 50px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .auth-container {
+        flex-direction: column; /* Stack elements vertically on smaller screens */
+        justify-content: flex-start; /* Align to top for better scrolling */
+        padding: 40px 20px; /* More vertical padding */
+    }
+
+    .auth-card {
+        margin: 20px 0; /* Adjust margin for stacking */
+        padding: 30px;
+    }
+
+    .auth-image-banner,
+    .auth-image-banner.reverse-order {
+        margin: 20px 0; /* Adjust margin for stacking */
+        order: initial; /* Reset order for mobile */
+    }
+
+    .auth-illustration {
+        max-width: 250px; /* Smaller illustration on mobile */
+    }
+
+    .banner-text {
+        font-size: 1.3em;
+    }
+
+    .auth-title {
+        font-size: 2em;
+    }
+
+    .auth-subtitle {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 25px;
+    }
+
+    .auth-title {
+        font-size: 1.8em;
+    }
+
+    .auth-submit-button {
+        padding: 12px 20px;
+        font-size: 1.1em;
+    }
+
+    .auth-illustration {
+        max-width: 200px; /* Even smaller illustration on very small screens */
+    }
+}

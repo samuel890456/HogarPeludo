@@ -1,122 +1,244 @@
-/* ========================= */
-/* 🎨 ESTILOS DE TARJETA 🐾 */
-/* ========================= */
+/* frontend/src/styles/MascotaCard.css */
 
 .mascota-card {
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 1.2rem;
-    margin: 1rem;
-    max-width: 280px; /* Hace la tarjeta más flexible */
+    background-color: #ffffff; /* Fondo blanco limpio */
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* Bordes más redondeados */
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Sombra más suave y extendida */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Efecto de elevación */
-.mascota-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* ===================== */
-/* 🖼️ IMAGEN DE LA MASCOTA */
-/* ===================== */
-
-.mascota-card img {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     width: 100%;
-    height: 180px; /* Ligeramente más pequeño para mejor ajuste */
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 1rem;
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+    position: relative; /* Necesario para el badge de estado */
 }
 
-/* ====================== */
-/* 🐶 TEXTO Y DESCRIPCIÓN */
-/* ====================== */
-
-.mascota-card h2 {
-    font-size: 1.3rem;
-    margin: 0.5rem 0;
-    color: #333;
-    font-weight: bold;
+.mascota-card:hover {
+    transform: translateY(-8px); /* Elevación más notable */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* Sombra más intensa al hover */
 }
 
-.mascota-card p {
-    font-size: 1rem;
-    color: #666;
-    margin: 0.25rem 0;
+.mascota-image-wrapper {
+    position: relative; /* Para posicionar el badge de estado */
+    width: 100%;
+    height: 220px; /* Altura fija para todas las imágenes */
+    overflow: hidden;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-/* ===================== */
-/* 🔘 BOTÓN DE DETALLES */
-/* ===================== */
+.mascota-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Asegura que la imagen cubra sin distorsión */
+    border-top-left-radius: 10px; /* Redondea solo las esquinas superiores */
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
+}
 
-.mascota-card .btn-primary {
-    display: inline-block;
-    padding: 0.6rem 1.2rem;
-    background-color: #4CAF50;
+.mascota-card:hover .mascota-image {
+    transform: scale(1.05); /* Ligerísimo zoom al pasar el ratón */
+}
+
+/* Badge de Estado sobre la imagen */
+.mascota-status-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    border-radius: 20px; /* Estilo de píldora */
+    font-size: 0.85em;
+    font-weight: 700;
     color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mascota-status-badge.available {
+    background-color: #28a745; /* Verde fuerte */
+}
+
+.mascota-status-badge.adopted {
+    background-color: #dc3545; /* Rojo fuerte */
+}
+
+
+.mascota-info {
+    padding: 15px 20px 20px; /* Padding interno */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Espacio entre elementos */
+    width: 100%;
+}
+
+.mascota-name {
+    margin: 0 0 10px; /* Más espacio debajo */
+    color: #333;
+    font-size: 1.8em; /* Nombre más grande */
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.mascota-info p {
+    margin: 5px 0; /* Espacio entre líneas de información */
+    color: #666;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Más espacio entre icono y texto */
+    width: 100%; /* Para que el texto no se extienda demasiado */
+    justify-content: center; /* Centra el texto */
+    text-align: center;
+}
+
+.mascota-info p .svg-inline--fa { /* Estilo para los iconos */
+    color: #4CAF50; /* Color de acento para los iconos de info */
+    font-size: 1em;
+}
+
+/* Combina la información de salud en una línea */
+.mascota-health-info {
+    font-size: 0.9em;
+    color: #777;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Espacio entre Vacunado y Esterilizado */
+}
+.mascota-health-info .svg-inline--fa {
+    font-size: 0.9em;
+    color: #4CAF50;
+}
+
+
+/* Tags en la Card */
+.mascota-tags-card {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centra los tags */
+    gap: 5px;
+    width: 100%; /* Para que los tags no salgan del contenedor */
+}
+
+.mascota-tag-card {
+    background-color: #e3f2fd; /* Azul muy claro para los tags */
+    color: #1a237e; /* Azul oscuro para el texto */
+    padding: 4px 10px;
+    border-radius: 15px; /* Más redondeado */
+    font-size: 0.8em;
+    font-weight: 600;
+    border: 1px solid #bbdefb;
+    white-space: nowrap;
+}
+
+
+/* Botón "Ver Detalle" */
+.btn-detail-card {
+    display: block; /* Ocupa su propia línea */
+    background-color: #4CAF50; /* Verde principal */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px; /* Más redondeado */
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    transition: background 0.3s ease, transform 0.2s ease;
+    margin-top: auto; /* Empuja el botón al final de la tarjeta */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    font-weight: bold;
+    width: 90%; /* Ancho casi completo de la tarjeta */
+    box-sizing: border-box;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
 }
 
-.mascota-card .btn-primary:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+.btn-detail-card:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
 
-/* ===================== */
-/* 📱 DISEÑO RESPONSIVO */
-/* ===================== */
+/* Skeleton loader styles (para el placeholder) */
+.mascota-card.skeleton {
+    background-color: #f0f0f0; /* Color base más claro */
+    animation: pulse 1.5s infinite ease-in-out;
+    box-shadow: none; /* Sin sombra para el esqueleto */
+    border: none; /* Sin borde */
+}
 
+.skeleton-image {
+    background-color: #e0e0e0; /* Color del esqueleto de la imagen */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.skeleton-info {
+    padding: 15px;
+}
+
+.skeleton-line {
+    background-color: #e0e0e0;
+    margin-bottom: 10px;
+    height: 18px; /* Más alto para que se note */
+    border-radius: 4px;
+}
+
+.skeleton-line:nth-child(1) { width: 80%; height: 25px; margin-bottom: 15px; } /* Título */
+.skeleton-line:nth-child(2) { width: 60%; } /* Especie/raza */
+.skeleton-line:nth-child(3) { width: 75%; } /* Ubicación */
+.skeleton-line:nth-child(4) { width: 50%; } /* Sexo/edad */
+.skeleton-line:nth-child(5) { width: 90%; } /* Salud */
+.skeleton-line:nth-child(6) { width: 40%; height: 20px; margin-top: 15px; } /* Tags simulados */
+.skeleton-line:nth-child(7) { width: 100%; height: 40px; margin-top: 20px; } /* Botón simulado */
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.8; }
+}
+
+/* Responsive adjustments for MascotaCard */
 @media (max-width: 768px) {
     .mascota-card {
-        max-width: 100%;
-        padding: 1rem;
-        margin: 1rem auto; /* Centrar las tarjetas */
+        padding: 10px;
+        border-radius: 10px;
     }
-
-    .mascota-card img {
-        height: 150px;
+    .mascota-image-wrapper {
+        height: 180px; /* Un poco más pequeña en móviles */
     }
-
-    .mascota-card h2 {
-        font-size: 1.2rem;
+    .mascota-name {
+        font-size: 1.5em;
     }
-
-    .mascota-card p {
-        font-size: 0.9rem;
+    .mascota-info p {
+        font-size: 0.85em;
+        gap: 6px;
     }
-
-    .mascota-card .btn-primary {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
+    .mascota-health-info {
+        font-size: 0.8em;
+        gap: 8px;
+    }
+    .mascota-status-badge {
+        font-size: 0.8em;
+        padding: 5px 10px;
+        top: 10px;
+        right: 10px;
+    }
+    .mascota-tag-card {
+        font-size: 0.75em;
+        padding: 3px 8px;
+    }
+    .btn-detail-card {
+        padding: 8px 15px;
+        font-size: 0.9em;
     }
 }
 
 @media (max-width: 480px) {
     .mascota-card {
-        padding: 0.8rem;
-    }
-
-    .mascota-card img {
-        height: 130px;
-    }
-
-    .mascota-card h2 {
-        font-size: 1.1rem;
-    }
-
-    .mascota-card p {
-        font-size: 0.85rem;
-    }
-
-    .mascota-card .btn-primary {
-        font-size: 0.85rem;
-        padding: 0.4rem 0.8rem;
+        margin: 0 auto; /* Centra la tarjeta si está sola */
     }
 }

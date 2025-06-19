@@ -1,0 +1,583 @@
+/* frontend/src/styles/MascotaDetalle.css */
+
+.mascota-detalle-container {
+    max-width: 1100px; /* Un poco más ancho */
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px; /* Bordes más suaves */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada pero suave */
+    font-family: 'Quicksand', sans-serif;
+    color: #4a4a4a;
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.mascota-detalle-header {
+    text-align: center;
+    margin-bottom: 35px; /* Más espacio */
+    border-bottom: 2px solid #f0f0f0; /* Línea más sutil */
+    padding-bottom: 25px;
+}
+
+.mascota-detalle-header h1 {
+    font-size: 3.2em; /* Título más grande */
+    color: #2c3e50; /* Un color más oscuro y elegante */
+    margin-bottom: 12px;
+    font-weight: 800; /* Más audaz */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Ligera sombra de texto */
+}
+
+.mascota-status-detail {
+    font-size: 1.3em;
+    font-weight: 700; /* Más prominente */
+    margin-top: -10px;
+    color: #7f8c8d; /* Color gris para el texto "Estado:" */
+}
+
+.mascota-status-detail .available {
+    color: #27ae60; /* Verde más vibrante */
+    background-color: #e6ffee; /* Fondo suave para el estado */
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: inline-block; /* Para que el padding y border-radius funcionen */
+}
+
+.mascota-status-detail .adopted {
+    color: #e74c3c; /* Rojo más fuerte */
+    background-color: #ffebeb;
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.mascota-detalle-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px; /* Más espacio entre la imagen y la info */
+    align-items: flex-start; /* Alinea los elementos en la parte superior */
+}
+
+.mascota-image-gallery {
+    flex: 1;
+    min-width: 350px; /* Asegura un buen tamaño para la imagen */
+    position: sticky;
+    top: 30px; /* Ajusta la distancia del sticky */
+    align-self: flex-start;
+    border-radius: 15px; /* Bordes redondeados */
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Sombra más profunda */
+    background-color: #fff; /* Fondo blanco para la caja de la imagen */
+    padding: 10px; /* Padding interno para que la imagen no toque los bordes */
+}
+
+.main-mascota-image {
+    width: 100%;
+    height: auto;
+    max-height: 550px; /* Altura máxima ligeramente aumentada */
+    object-fit: cover;
+    border-radius: 12px; /* Bordes ligeramente más pequeños que el contenedor */
+    transition: transform 0.4s ease-in-out;
+}
+
+.main-mascota-image:hover {
+    transform: scale(1.03); /* Efecto de zoom un poco más pronunciado */
+}
+
+/* Puedes dejar los estilos de thumbnail-gallery si planeas añadir más imágenes en el futuro */
+.thumbnail-gallery {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: center;
+}
+
+.thumbnail-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #eee;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.thumbnail-image:hover, .thumbnail-image.active {
+    border-color: #ffb300; /* Un naranja-amarillo más cálido */
+}
+
+.mascota-info-section {
+    flex: 2;
+    min-width: 450px; /* Ancho mínimo para que la información no se comprima demasiado */
+    background-color: #ffffff;
+    padding: 10px; /* Ligero padding para el section */
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Columnas un poco más grandes */
+    gap: 25px; /* Más espacio entre items */
+    margin-bottom: 35px;
+    padding: 25px;
+    background-color: #fcfcfc; /* Fondo más claro */
+    border-radius: 12px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.03); /* Sombra interna más sutil */
+    border: 1px solid #f0f0f0; /* Borde suave */
+}
+
+.info-item {
+    padding: 12px 0;
+    border-bottom: 2px solid #f5f5f5; /* Línea divisoria más suave */
+    display: flex;
+    flex-direction: column; /* Apila el título y el valor */
+    align-items: flex-start; /* Alinea el texto a la izquierda */
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-item p {
+    font-weight: 700; /* Texto más audaz */
+    color: #555;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Más espacio entre icono y texto */
+    font-size: 0.95em; /* Un poco más pequeño para el label */
+}
+
+.info-item p .svg-inline--fa { /* Estilo para los iconos */
+    color: #4CAF50; /* Color de acento para los iconos de info */
+    font-size: 1.1em;
+}
+
+.info-item span {
+    font-size: 1.2em; /* Valor más grande */
+    color: #333;
+    font-weight: 600; /* Hace el valor más importante */
+}
+
+.info-block {
+    margin-bottom: 35px;
+    line-height: 1.8;
+    padding: 22px 18px;
+    background: linear-gradient(90deg, #f9fdf9 0%, #f9fdf9 100%);
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(255, 182, 73, 0.08);
+    border: 1.5px solid #f5f5f5;;
+    transition: box-shadow 0.2s;
+}
+
+.info-block h3 {
+    font-size: 2em;
+    color: #4CAF50;
+    margin-bottom: 14px;
+    border-bottom: 2px solid #f5f5f5;;
+    padding-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.info-block p {
+    font-size: 1.13em;
+    color: #5d4037;
+    text-align: justify;
+    margin: 0;
+    font-family: 'Quicksand', 'Nunito', sans-serif;
+    background: transparent;
+    border: none;
+    padding: 0;
+    word-break: break-word;
+}
+
+/* Sección de Tags */
+.mascota-tags {
+    margin: 30px 0; /* Más margen para separar */
+    padding: 20px;
+    background-color: #f9fdf9; /* Fondo muy suave para los tags */
+    border-radius: 10px;
+    border: 1px solid #e0f0e0;
+}
+
+.mascota-tags h4 {
+    font-size: 1.6em;
+    color: #4CAF50;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.tag-list-detail { /* Nuevo contenedor para los tags individuales */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Espacio entre los badges */
+}
+
+.mascota-tag-detail { /* Cambiado de .mascota-tag para evitar conflictos */
+    background: #e0f2f7; /* Un azul claro para los tags */
+    color: #0d47a1; /* Azul oscuro para el texto del tag */
+    border-radius: 20px; /* Más redondeado, como píldoras */
+    padding: 6px 15px;
+    font-size: 0.9em;
+    font-weight: 600;
+    border: 1px solid #bbdefb;
+    white-space: nowrap; /* Evita que los tags se rompan en varias líneas */
+    transition: background-color 0.2s ease;
+}
+
+.mascota-tag-detail:hover {
+    background-color: #c9e6f3;
+}
+
+
+.adoption-cta-section, .adopted-message-section {
+    background-color: #e8f5e9;
+    padding: 35px; /* Más padding */
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1); /* Sombra más definida */
+    margin-top: 40px; /* Más espacio superior */
+}
+
+.adopted-message-section {
+    background-color: #ffebee;
+    border: 1px solid #fbcac6; /* Borde para el estado "Adoptado" */
+}
+
+.adoption-cta-section h3, .adopted-message-section h3 {
+    color: #27ae60; /* Verde más vibrante para CTA */
+    font-size: 2.4em;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.adopted-message-section h3 {
+    color: #c0392b; /* Rojo más fuerte para "Adoptado" */
+}
+
+.adoption-cta-section p, .adopted-message-section p {
+    font-size: 1.15em; /* Texto más grande */
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.btn-primary-detail {
+    background-color: #4CAF50; /* Verde principal */
+    color: white;
+    padding: 16px 32px; /* Botón más grande */
+    border: none;
+    border-radius: 30px; /* Botón tipo píldora */
+    font-size: 1.3em; /* Texto más grande en botón */
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    margin-right: 20px; /* Más espacio */
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Más espacio para el icono */
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3); /* Sombra para el botón principal */
+}
+
+.btn-primary-detail:hover {
+    background-color: #388e3c;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+}
+
+.btn-secondary-detail {
+    background-color: #eceff1; /* Gris más claro */
+    color: #555;
+    padding: 16px 32px;
+    border: 1px solid #cfd8dc; /* Borde más suave */
+    border-radius: 30px; /* Botón tipo píldora */
+    font-size: 1.3em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary-detail:hover {
+    background-color: #dfe6ea;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.contact-tip {
+    margin-top: 30px; /* Más espacio */
+    font-size: 1.0em; /* Un poco más grande */
+    color: #777;
+}
+
+.contact-tip a {
+    color: #2196f3;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.contact-tip a:hover {
+    text-decoration: underline;
+    color: #1976d2;
+}
+
+.back-button-container {
+    text-align: center;
+    margin-top: 50px; /* Más espacio arriba */
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.btn-back {
+    background-color: #78909c; /* Un gris azulado */
+    color: white;
+    padding: 14px 28px; /* Más grande */
+    border: none;
+    border-radius: 25px; /* Más redondeado */
+    font-size: 1.15em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-back:hover {
+    background-color: #546e7a;
+    transform: translateY(-2px);
+}
+
+/* Estilos para el Modal de Confirmación */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo más oscuro para el modal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInOverlay 0.3s ease-out;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 45px; /* Más padding */
+    border-radius: 15px; /* Bordes más suaves */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); /* Sombra más prominente */
+    text-align: center;
+    max-width: 550px; /* Un poco más ancho */
+    width: 90%;
+    transform: translateY(-20px);
+    animation: slideInModal 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* Animación más "saltarina" */
+    position: relative;
+    border: 1px solid #eee; /* Borde sutil */
+}
+
+@keyframes slideInModal {
+    0% { opacity: 0; transform: translateY(-100px); }
+    70% { opacity: 1; transform: translateY(10px); }
+    100% { transform: translateY(0); }
+}
+
+
+.modal-content h2 {
+    color: #4CAF50;
+    font-size: 2.8em; /* Título del modal más grande */
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    font-weight: 800; /* Más audaz */
+}
+
+.modal-content p {
+    font-size: 1.2em; /* Texto del modal más grande */
+    color: #555;
+    margin-bottom: 20px;
+    line-height: 1.7;
+}
+
+.modal-content p strong { /* Para el nombre de la mascota en el modal */
+    color: #333;
+}
+
+/* Ajusta el botón del modal, usa el existente btn-primary-detail */
+.modal-content .btn-primary-detail {
+    margin-top: 30px; /* Más espacio */
+    width: auto;
+    padding: 14px 30px; /* Ajuste para el botón del modal */
+    font-size: 1.1em;
+    border-radius: 25px; /* Un poco menos redondo que el principal */
+    box-shadow: 0 3px 10px rgba(76, 175, 80, 0.2);
+}
+
+.modal-content .btn-primary-detail:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(76, 175, 80, 0.3);
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) { /* Ajuste para tablets y pantallas medianas */
+    .mascota-detalle-container {
+        margin: 30px;
+        padding: 25px;
+    }
+    .mascota-detalle-content {
+        flex-direction: column;
+        gap: 30px;
+        align-items: center; /* Centra los bloques en columna */
+    }
+    .mascota-image-gallery, .mascota-info-section {
+        min-width: unset;
+        width: 100%;
+        position: static;
+    }
+    .main-mascota-image {
+        max-height: 400px;
+    }
+    .mascota-detalle-header h1 {
+        font-size: 2.8em;
+    }
+    .info-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+    }
+    .btn-primary-detail, .btn-secondary-detail {
+        padding: 14px 25px;
+        font-size: 1.1em;
+        margin-right: 10px;
+        margin-bottom: 10px; /* Para que se apilen mejor si el ancho es pequeño */
+    }
+    .adoption-cta-section h3 {
+        font-size: 2em;
+    }
+    .modal-content {
+        padding: 35px;
+    }
+    .modal-content h2 {
+        font-size: 2.2em;
+        gap: 10px;
+    }
+    .modal-content p {
+        font-size: 1.1em;
+    }
+}
+
+
+@media (max-width: 768px) { /* Para móviles */
+    .mascota-detalle-container {
+        margin: 20px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    .mascota-detalle-header h1 {
+        font-size: 2.2em;
+    }
+    .mascota-status-detail {
+        font-size: 1.1em;
+    }
+    .mascota-image-gallery {
+        padding: 5px; /* Menos padding interno en móviles */
+    }
+    .main-mascota-image {
+        max-height: 300px;
+        border-radius: 8px;
+    }
+    .info-grid {
+        grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        padding: 15px;
+        gap: 10px;
+    }
+    .info-item p {
+        font-size: 0.9em;
+        gap: 8px;
+    }
+    .info-item span {
+        font-size: 1.05em;
+    }
+    .info-block {
+        padding: 18px 15px; /* Ajuste de padding */
+    }
+    .info-block h3 {
+        font-size: 1.8em;
+        gap: 10px;
+    }
+    .info-block p {
+        font-size: 1em;
+    }
+    .mascota-tags {
+        padding: 15px;
+        margin: 20px 0;
+    }
+    .mascota-tags h4 {
+        font-size: 1.4em;
+    }
+    .mascota-tag-detail {
+        padding: 5px 10px;
+        font-size: 0.8em;
+        border-radius: 15px;
+    }
+    .adoption-cta-section, .adopted-message-section {
+        padding: 25px;
+        margin-top: 30px;
+    }
+    .adoption-cta-section h3, .adopted-message-section h3 {
+        font-size: 1.8em;
+    }
+    .adoption-cta-section p, .adopted-message-section p {
+        font-size: 1em;
+        margin-bottom: 20px;
+    }
+    .btn-primary-detail, .btn-secondary-detail {
+        width: 100%;
+        margin: 0 0 15px 0; /* Espacio vertical entre botones */
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    .btn-back {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    .modal-content {
+        padding: 25px;
+    }
+    .modal-content h2 {
+        font-size: 1.8em;
+        gap: 8px;
+    }
+    .modal-content p {
+        font-size: 0.95em;
+    }
+    .modal-content .btn-primary-detail {
+        padding: 10px 20px;
+        font-size: 1em;
+        margin-top: 15px;
+    }
+}

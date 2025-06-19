@@ -8,7 +8,9 @@ router.post('/registrarse', authController.registrarUsuario);
 
 // Inicio de sesión
 router.post('/iniciar-sesion', authController.iniciarSesion);
-
+router.post('/forgot-password', authController.forgotPassword); // Para solicitar el envío del email
+router.post('/reset-password/:token', authController.resetPassword); // Para restablecer la contraseña con el token
+router.post('/google-login', authController.googleLogin); // Para iniciar sesión con Google
 // Ruta protegida (ejemplo)
 router.get('/ruta-protegida', authController.verificarToken, (req, res) => {
     res.json({ message: 'Esta es una ruta protegida', usuario: req.usuario });

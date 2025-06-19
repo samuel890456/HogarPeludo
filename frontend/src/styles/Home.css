@@ -1,73 +1,219 @@
-.home {
+/* ========================= */
+/* 🐾 ESTILOS GENERALES DE HOME 🐾 */
+/* ========================= */
+
+/* Contenedor principal de la página Home */
+.home-page-container {
+    width: 100%;
+    overflow-x: hidden; /* Evita el scroll horizontal */
+}
+
+/* Estilos para las secciones generales de la página */
+section {
+    padding: 60px 20px;
     text-align: center;
-    padding: 3rem 2rem;
 }
 
-/* Títulos responsivos */
-.home h1 {
+/* Alternar colores de fondo para las secciones para mejorar la distinción visual */
+section:nth-of-type(odd) { /* Asegura que la primera sección tenga un fondo neutro si es necesario */
+    background-color: #ffffff;
+}
+
+section:nth-of-type(even) {
+    background-color: #f8f8f8; /* Gris muy claro para contraste */
+}
+
+/* Contenedor centralizado para el contenido de las secciones */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Estilos para los títulos de las secciones */
+h2 {
     font-size: 2.5rem;
-    margin-bottom: 1rem;
-}
-
-/* Texto con mejor legibilidad */
-.home p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
     color: #333;
-    line-height: 1.5;
+    margin-bottom: 2.5rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 15px;
 }
 
-/* Botón principal */
-.btn-primary {
+/* Subrayado animado para los títulos de sección */
+h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 80px;
+    height: 4px;
+    background-color: #FF6600; /* Naranja de la marca */
+    border-radius: 2px;
+    transition: width 0.3s ease; /* Transición para un posible efecto hover/focus */
+}
+
+/* Estilos para los párrafos de texto */
+p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+/* Botón secundario utilizado en las secciones */
+.btn-secondary {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: #4CAF50;
+    padding: 12px 25px;
+    background-color: #4CAF50; /* Verde de la marca */
     color: white;
     text-decoration: none;
-    border-radius: 6px;
-    font-size: 1.2rem;
-    transition: background 0.3s ease, transform 0.2s ease;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin-top: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
-/* Efecto hover y clic */
-.btn-primary:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+.btn-secondary:hover {
+    background-color: #388E3C;
+    transform: translateY(-3px); /* Pequeño levantamiento al pasar el ratón */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary:active {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Sección "Cómo Funciona" --- */
+.how-it-works-section {
+    background-color: #edf7ed; /* Un verde muy claro para esta sección específica */
+}
+
+/* Contenedor de la cuadrícula de pasos */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* Estilos para cada item/paso individual */
+.step-item {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center; /* Asegura que el texto dentro esté centrado */
+}
+
+.step-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.step-item i {
+    font-size: 3.5rem; /* Tamaño grande para los iconos */
+    color: #FF6600; /* Color naranja de la marca para los iconos */
+    margin-bottom: 20px;
+    /* Animación sutil para los iconos al pasar el ratón sobre el item */
+    transition: transform 0.3s ease;
+}
+
+.step-item:hover i {
+    transform: scale(1.1); /* Ligeramente más grande al pasar el ratón */
+}
+
+.step-item h3 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.step-item p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 0; /* Eliminar margen inferior si es el último elemento */
 }
 
 /* ===================== */
-/* ⚡ DISEÑO RESPONSIVO ⚡ */
+/* ⚡ DISEÑO RESPONSIVO PARA SECCIONES DE HOME ⚡ */
 /* ===================== */
+
+@media (max-width: 992px) {
+    /* Ajustes generales para pantallas de tablet */
+    section {
+        padding: 50px 20px;
+    }
+    h2 {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+    }
+    p {
+        font-size: 1rem;
+    }
+}
+
 @media (max-width: 768px) {
-    .home {
-        padding: 2rem 1rem;
+    /* Ajustes para pantallas más pequeñas (móviles y tablets pequeñas) */
+    section {
+        padding: 40px 15px;
     }
-
-    .home h1 {
+    h2 {
         font-size: 2rem;
+        margin-bottom: 2rem;
     }
-
-    .home p {
-        font-size: 1rem;
+    h2::after {
+        width: 60px; /* Reducir el subrayado en móviles */
     }
-
-    .btn-primary {
-        font-size: 1rem;
-        padding: 0.6rem 1.2rem;
+    p {
+        font-size: 0.95rem;
+    }
+    .steps-grid {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+        gap: 20px;
+    }
+    .step-item {
+        padding: 25px;
+    }
+    .step-item i {
+        font-size: 3rem;
+    }
+    .step-item h3 {
+        font-size: 1.5rem;
+    }
+    .btn-secondary {
+        padding: 10px 20px;
+        font-size: 0.95rem;
     }
 }
 
 @media (max-width: 480px) {
-    .home h1 {
+    /* Ajustes para móviles muy pequeños */
+    h2 {
         font-size: 1.8rem;
+        margin-bottom: 1.5rem;
     }
-
-    .home p {
+    p {
         font-size: 0.9rem;
     }
-
-    .btn-primary {
+    .step-item i {
+        font-size: 2.5rem;
+    }
+    .step-item h3 {
+        font-size: 1.3rem;
+    }
+    .btn-secondary {
+        padding: 8px 18px;
         font-size: 0.9rem;
-        padding: 0.5rem 1rem;
     }
 }

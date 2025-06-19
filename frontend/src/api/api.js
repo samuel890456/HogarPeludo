@@ -1,4 +1,4 @@
-//src/api.js
+//file: frontend/src/api/api.js
 import axios from 'axios';
 
 const API_URL = 'http://localhost:5000/api'; // URL base del backend
@@ -13,7 +13,40 @@ export const getMascotas = async () => {
         throw error;
     }
 };
+// Nueva función para obtener mascotas por el ID del usuario
+export const getMascotasByUserId = async (userId) => {
+    try {
+        const token = localStorage.getItem('token'); // Necesitas el token para la autenticación
+        if (!token) {
+            throw new Error('No hay token de autenticación. Inicia sesión.');
+        }
 
+        const response = await axios.get(`${API_URL}/mascotas/usuario/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener las mascotas por ID de usuario:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+// ¡ELIMINAR MASCOTAS!
+export const deleteMascota = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`${API_URL}/mascotas/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al eliminar la mascota:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
 export const getMascotaById = async (id) => {
     try {
         const response = await axios.get(`${API_URL}/mascotas/${id}`);
@@ -24,19 +57,33 @@ export const getMascotaById = async (id) => {
     }
 };
 
-export const createMascota = async (mascota) => {
+export const createMascota = async (mascotaData) => { // Recibe FormData
     try {
         const token = localStorage.getItem('token');
-        
-        const response = await axios.post(`${API_URL}/mascotas`, mascota, {
+        const response = await axios.post(`${API_URL}/mascotas`, mascotaData, {
             headers: {
                 Authorization: `Bearer ${token}`,
-                "Content-Type": 'multipart/form-data',
+                // "Content-Type": 'multipart/form-data' // Axios lo establece automáticamente con FormData
             },
         });
         return response.data;
     } catch (error) {
-        console.error('Error al crear la mascota:', error);
+        console.error('Error al crear la mascota:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+export const updateMascota = async (id, mascotaData) => { // Recibe FormData
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.put(`${API_URL}/mascotas/${id}`, mascotaData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                // "Content-Type": 'multipart/form-data' // Axios lo establece automáticamente con FormData
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al actualizar la mascota:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
@@ -59,6 +106,7 @@ export const iniciarSesion = async (credenciales) => {
         const response = await axios.post(`${API_URL}/auth/iniciar-sesion`, credenciales); 
         localStorage.setItem('token', response.data.token); // Guardar el token
         localStorage.setItem('userId', response.data.id); // Guardar el userId
+        localStorage.setItem('rol_id', response.data.rol_id); // Guardar el rol_id
         return response.data;
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
@@ -66,21 +114,161 @@ export const iniciarSesion = async (credenciales) => {
     }
 };
 
+// NUEVA FUNCIÓN: Iniciar Sesión con Google
+export const googleLogin = async ({ idToken }) => {
+    try {
+        const response = await axios.post(`${API_URL}/auth/google-login`, { idToken });
+        // La respuesta del backend ya incluirá el token de tu app y los roles
+        return response.data;
+    } catch (error) {
+        console.error('Error al iniciar sesión con Google:', error);
+        throw error;
+    }
+};
+//funciones para restablecimiento de contraseña
+export const solicitarRestablecimientoContrasena = async (data) => {
+    const response = await axios.post(`${API_URL}/auth/forgot-password`, data);
+    return response.data;
+};
+
+export const restablecerContrasena = async (token, data) => {
+    const response = await axios.post(`${API_URL}/auth/reset-password/${token}`, data);
+    return response.data;
+};
 // Funciones para solicitudes de adopción
+
 export const crearSolicitud = async (solicitud) => {
     try {
-        const token = localStorage.getItem('token'); // Obtener el token del localStorage
+        const token = localStorage.getItem('token');
         const response = await axios.post(`${API_URL}/solicitudes`, solicitud, {
             headers: {
-                Authorization: `Bearer ${token}`, // Enviar el token en el encabezado
+                Authorization: `Bearer ${token}`,
             },
         });
         return response.data;
     } catch (error) {
-        console.error('Error al crear la solicitud:', error);
+        console.error('Error al crear la solicitud:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
+
+export const getSolicitudes = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/solicitudes`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener las solicitudes:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const updateSolicitudEstado = async (id, estado) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.put(`${API_URL}/solicitudes/${id}/estado`, { estado }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al actualizar el estado de la solicitud:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const deleteSolicitud = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`${API_URL}/solicitudes/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al eliminar la solicitud:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+//notificaciones
+// Función existente para obtener notificaciones no leídas
+export const getUnreadNotifications = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/notificaciones`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener notificaciones no leídas:', error);
+        throw error;
+    }
+};
+
+// Función existente para marcar una notificación específica como leída
+export const markNotificationAsRead = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.put(`${API_URL}/notificaciones/${id}/leida`, {}, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return true;
+    } catch (error) {
+        console.error('Error al marcar notificación como leída:', error);
+        throw error;
+    }
+};
+
+// NUEVAS FUNCIONES para la bandeja completa:
+
+// Obtener TODAS las notificaciones de un usuario
+export const getAllNotifications = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${API_URL}/notificaciones/todas`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener todas las notificaciones:', error);
+        throw error;
+    }
+};
+
+// Marcar TODAS las notificaciones de un usuario como leídas
+export const markAllNotificationsAsRead = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.put(`${API_URL}/notificaciones/marcar-todas-leidas`, {}, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return true;
+    } catch (error) {
+        console.error('Error al marcar todas las notificaciones como leídas:', error);
+        throw error;
+    }
+};
+
+// Eliminar una notificación específica
+export const deleteNotification = async (id) => {
+    try {
+        const token = localStorage.getItem('token');
+        await axios.delete(`${API_URL}/notificaciones/${id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+        return true;
+    } catch (error) {
+        console.error('Error al eliminar notificación:', error);
+        throw error;
+    }
+};
+
 
 // Funciones para el perfil del usuario
 export const obtenerPerfil = async () => {
@@ -98,20 +286,7 @@ export const obtenerPerfil = async () => {
     }
 };
 
-export const getSolicitudes = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${API_URL}/solicitudes`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error al obtener las solicitudes:', error);
-        throw error;
-    }
-};
+
 
 export const getUsuario = async (id) => {
     try {

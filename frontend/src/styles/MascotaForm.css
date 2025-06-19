@@ -1,138 +1,540 @@
-/* MascotaForm.css */
+/* ========================= */
+/* 📝 ESTILOS DE MASCOTA FORM 📝 */
+/* ========================= */
 
-/* Estilos generales del formulario */
-.mascota-form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.mascota-form-container {
+    max-width: 900px; /* Un poco más de ancho */
+    margin: 40px auto;
+    padding: 35px 40px; /* Más padding */
+    background-color: #ffffff;
+    border-radius: 18px; /* Bordes más suaves */
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12); /* Sombra más pronunciada */
+    border-left: 8px solid #4CAF50; /* Línea de acento verde */
+    transition: all 0.3s ease-in-out;
 }
 
-/* Estilos para los grupos de campos */
+.mascota-form-container:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+}
+
+.mascota-form-container h2 {
+    font-size: 2.4rem; /* Título más grande */
+    color: #2c3e50; /* Color de texto más oscuro */
+    text-align: center;
+    margin-bottom: 35px;
+    font-weight: 800; /* Más audaz */
+    letter-spacing: -0.5px;
+}
+
+.form-error-message {
+    background-color: #fce4ec; /* Rosa suave */
+    color: #c2185b; /* Rojo oscuro */
+    padding: 16px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #f8bbd0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Nuevas secciones para agrupar campos */
+.form-section {
+    background-color: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.form-section h3 {
+    font-size: 1.6rem;
+    color: #4CAF50; /* Verde vibrante */
+    margin-top: 0;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e8f5e9;
+    font-weight: 700;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* Ajuste de min-width */
+    gap: 30px; /* Más espacio entre campos */
+}
+
 .form-group {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Estilos para las etiquetas */
 .form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #333;
+    font-weight: 700; /* Más audaz */
+    color: #555; /* Gris oscuro para etiquetas */
+    margin-bottom: 10px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
 }
 
-/* Estilos para los inputs y textareas */
+.form-group label .required {
+    color: #e57373; /* Rojo suave para asterisco */
+    margin-left: 6px;
+    font-size: 1.1em;
+}
+
 .form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 10px;
+.form-group select,
+.form-group textarea {
+    padding: 13px 15px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    color: #555;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
+    border-radius: 10px; /* Bordes más redondeados */
+    font-size: 1.05rem; /* Fuente ligeramente más grande */
+    color: #333;
+    background-color: #ffffff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #999;
+    font-style: italic;
 }
 
 .form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #007bff;
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.25); /* Sombra de enfoque más suave */
     outline: none;
 }
 
-/* Estilos para el textarea */
 .form-group textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 100px; /* Altura mínima un poco mayor */
 }
 
-/* Estilos para el botón de enviar */
-.submit-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.field-tip {
+    font-size: 0.88rem;
+    color: #777;
+    margin-top: 8px;
+    line-height: 1.4;
 }
 
-.submit-button:hover {
-    background-color: #0056b3;
+/* Campos que ocupan todo el ancho en la cuadrícula */
+.form-group.full-width {
+    grid-column: 1 / -1;
 }
 
-/* Estilos para mensajes de error */
-.error-message {
-    color: #dc3545;
-    font-size: 14px;
-    margin-top: 5px;
+
+/* --- ESTILOS PARA CHECKBOXES EN FILA --- */
+/* Eliminamos la clase .checkbox-group-inline del HTML para este contenedor y creamos una nueva */
+.checkbox-options-row { /* <-- NUEVA CLASE */
+    grid-column: 1 / -1; /* Asegura que ocupe todo el ancho dentro del form-grid */
+    display: flex; /* Habilitamos flexbox */
+    flex-wrap: wrap; /* Permite que los checkboxes se envuelvan a la siguiente línea si no hay espacio */
+    gap: 20px; /* Reduce el espacio entre los checkboxes. Ajusta este valor si quieres más/menos */
+    align-items: center; /* Centra verticalmente los elementos si tienen diferentes alturas */
+    padding: 15px 0; /* Padding vertical para separación del resto del contenido */
+    justify-content: flex-start; /* Alinea los ítems al inicio de la fila */
 }
 
-/* Estilos para el contenedor de la imagen */
-.image-preview {
-    margin-top: 10px;
-    text-align: center;
-}
-
-.image-preview img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    padding: 5px;
-}
-
-/* Estilos responsive */
-@media (max-width: 768px) {
-    .mascota-form {
-        padding: 15px;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        font-size: 14px;
-    }
-
-    
-}
-/* Estilos para los botones */
-.form-buttons {
+/* Los estilos para .checkbox-label (los checkboxes individuales) permanecen iguales */
+.checkbox-label {
     display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s ease;
 }
 
-.submit-button {
+.checkbox-label:hover {
+    color: #4CAF50;
+}
+
+
+.checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #bbb;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Tick mark Unicode */
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* ========================= */
+/* 🖼️ Subida de Imagen 🖼️ */
+/* ========================= */
+.image-upload-section {
+    padding: 30px;
+    text-align: center;
+    border: 2px dashed #b0c4de; /* Azul suave */
+    background-color: #f8faff; /* Fondo azul claro */
+}
+
+.image-upload-section h3 {
+    color: #2c3e50; /* Título de sección más oscuro */
+    border-bottom: none; /* Sin borde inferior para esta sección */
+    margin-bottom: 25px;
+}
+
+.image-upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px; /* Altura mínima mayor */
+    background-color: #fcfdfe;
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+}
+
+.upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+.upload-placeholder .fas.fa-camera {
+    font-size: 3.5rem; /* Icono más grande */
+    color: #a0a0a0;
+    margin-bottom: 15px;
+}
+
+.upload-placeholder p {
+    font-size: 1.1rem;
+    color: #666;
+    max-width: 300px;
+}
+
+.upload-button {
     background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    color: white;
+    padding: 14px 30px; /* Más padding */
+    border-radius: 10px; /* Más redondeado */
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-weight: 700;
+    font-size: 1.05rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    border: none; /* Eliminar borde por defecto */
 }
 
-.submit-button:hover {
+.upload-button:hover {
     background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
 }
 
-.cancel-button {
-    background-color: #dc3545;
-    color: #fff;
+.upload-button i {
+    font-size: 1.3rem;
+}
+
+.upload-tip {
+    color: #777;
+    font-size: 0.95rem;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.image-preview-wrapper {
+    position: relative;
+    width: 180px; /* Tamaño de preview más grande */
+    height: 180px;
+    margin-bottom: 20px;
+    border: 3px solid #4CAF50; /* Borde verde para la imagen */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block; /* Eliminar espacio extra */
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(220, 53, 69, 0.9); /* Rojo oscuro */
+    color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
+    border-radius: 50%;
+    width: 30px; /* Botón más grande */
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 1.4rem; /* 'x' más grande */
+    line-height: 1;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-.cancel-button:hover {
-    background-color: #a71d2a;
+.remove-image-btn:hover {
+    background-color: #dc3545; /* Rojo sólido */
+    transform: scale(1.1);
+}
+
+/* React-Select Customization */
+.react-select-container .react-select__control {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 5px;
+    min-height: 48px;
+    box-shadow: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.react-select-container .react-select__control--is-focused {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 5px rgba(76, 175, 80, 0.25);
+}
+
+.react-select-container .react-select__multi-value {
+    background-color: #e8f5e9; /* Verde claro */
+    border-radius: 6px;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.react-select-container .react-select__multi-value__label {
+    color: #388e3c; /* Verde oscuro */
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
+.react-select-container .react-select__multi-value__remove {
+    color: #388e3c;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.react-select-container .react-select__multi-value__remove:hover {
+    background-color: #c8e6c9; /* Verde más claro al pasar el ratón */
+    color: #1b5e20;
+}
+
+.react-select-container .react-select__option--is-selected {
+    background-color: #4CAF50 !important; /* Verde al seleccionar */
+    color: white !important;
+}
+
+.react-select-container .react-select__option--is-focused {
+    background-color: #e8f5e9 !important; /* Verde claro al enfocar */
+    color: #333 !important;
+}
+
+/* ======== Botones de Acción del Formulario ======== */
+.form-actions {
+    display: flex;
+    justify-content: center; /* Centrar botones */
+    gap: 20px; /* Más espacio */
+    margin-top: 35px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.form-actions .btn-primary {
+    background-color: #FF6600; /* Naranja principal */
+    color: white;
+    padding: 14px 35px; /* Más padding */
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem; /* Fuente más grande */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 102, 0, 0.2);
+}
+
+.form-actions .btn-primary:hover {
+    background-color: #E65C00;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 102, 0, 0.3);
+}
+
+.form-actions .btn-primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.form-actions .btn-secondary {
+    background-color: #eceff1; /* Gris azulado suave */
+    color: #455a64; /* Gris oscuro para el texto */
+    padding: 14px 35px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: 1px solid #cfd8dc;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.form-actions .btn-secondary:hover {
+    background-color: #cfd8dc;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Mensaje de carga */
+.loading-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 50px;
+    font-weight: 500;
+}
+
+/* --- Contador de caracteres para textarea --- */
+.char-counter {
+    font-size: 0.93em;
+    color: #888;
+    margin-top: 4px;
+    text-align: right;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+    transition: color 0.2s;
+}
+.char-counter.limit {
+    color: #e57373;
+    font-weight: 700;
+}
+
+/* ========================= */
+/* 📱 RESPONSIVO DE FORMULARIO 📱 */
+/* ========================= */
+@media (max-width: 992px) {
+    .mascota-form-container {
+        padding: 30px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mascota-form-container {
+        margin: 20px auto;
+        padding: 25px;
+        border-radius: 15px;
+        border-left: 6px solid #4CAF50;
+    }
+    .mascota-form-container h2 {
+        font-size: 2rem;
+        margin-bottom: 25px;
+    }
+    .form-section {
+        padding: 20px 25px;
+        margin-bottom: 25px;
+    }
+    .form-section h3 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+    .form-grid {
+        grid-template-columns: 1fr; /* Una columna en móviles */
+        gap: 25px;
+    }
+    .form-group.full-width {
+        grid-column: auto; /* Desactiva full-width en móviles */
+    }
+    .checkbox-group-inline {
+        flex-direction: row; /* Manténlos en fila si hay espacio en pantallas pequeñas */
+        flex-wrap: wrap; /* Permitir que se envuelvan si no caben */
+        justify-content: flex-start;
+        gap: 15px; /* Ajusta el espacio para móviles si es necesario */
+    }
+    .image-preview-wrapper {
+        width: 150px;
+        height: 150px;
+    }
+    .remove-image-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 1.3rem;
+    }
+    .form-actions {
+        flex-direction: column; /* Apila los botones en móviles */
+        gap: 15px;
+        align-items: stretch; /* Estira los botones al ancho completo */
+        padding-top: 25px;
+    }
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        width: 100%;
+        text-align: center;
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    .upload-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mascota-form-container {
+        padding: 18px;
+        margin: 15px auto;
+    }
+    .mascota-form-container h2 {
+        font-size: 1.7rem;
+    }
+    .form-section {
+        padding: 18px 20px;
+    }
+    .form-section h3 {
+        font-size: 1.3rem;
+    }
+    .form-group label,
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .upload-button,
+    .form-actions .btn-primary,
+    .form-actions .btn-secondary {
+        font-size: 0.95rem;
+    }
+    .upload-placeholder .fas.fa-camera {
+        font-size: 3rem;
+    }
+    .upload-placeholder p {
+        font-size: 1rem;
+    }
 }
