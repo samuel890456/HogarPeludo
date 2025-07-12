@@ -1,19 +1,20 @@
-/* src/styles/ErrorMessage.css */
+/* ========================= */
+/* ❌ Estilos de Mensajes de Error ❌ */
+/* ========================= */
+
 .error-message-container {
-    padding: 1.5rem;
-    margin: 2rem auto;
-    max-width: 500px;
-    background-color: #ffebee; /* Rojo muy claro */
-    border: 1px solid #ef9a9a; /* Borde rojo claro */
-    border-radius: 8px;
-    color: #d32f2f; /* Rojo para el texto */
-    font-weight: 500;
+    background-color: #F8D7DA; /* Rojo claro */
+    color: #721C24; /* Rojo oscuro */
+    border: 1px solid #F5C6CB;
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) auto;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(211, 47, 47, 0.1);
-    animation: fadeIn 0.3s ease-out;
+    max-width: 600px;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.error-message-container p {
+    margin: 0;
 }

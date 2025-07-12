@@ -1,9 +1,8 @@
-// File: frontend/src/components/MascotaCard.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/MascotaCard.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Importar FontAwesomeIcon
-import { faMapMarkerAlt, faMars, faVenus, faHeartCircleCheck, faSyringe, faPaw } from '@fortawesome/free-solid-svg-icons'; // Importar iconos específicos
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapMarkerAlt, faMars, faVenus, faHeartCircleCheck, faSyringe, faPaw } from '@fortawesome/free-solid-svg-icons';
 
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
 
@@ -16,7 +15,6 @@ const TAG_LABELS = {
     jugueton: 'Le encanta jugar',
     tranquilo: 'Tranquilo y cariñoso',
     requiere_medicacion: 'Requiere medicación',
-    // ...etc
 };
 
 const MascotaCard = ({ mascota, showDetailButton = true }) => {
@@ -56,11 +54,12 @@ const MascotaCard = ({ mascota, showDetailButton = true }) => {
 
     return (
         <div className="mascota-card">
-            <div className="mascota-image-wrapper"> {/* Nuevo wrapper para la imagen y el estado */}
+            <div className="mascota-image-wrapper">
                 <img
                     src={imageUrl}
                     alt={`Foto de ${mascota.nombre}`}
                     className="mascota-image"
+                    loading="lazy"
                     onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = '/paw-icon.png';
@@ -89,16 +88,16 @@ const MascotaCard = ({ mascota, showDetailButton = true }) => {
 
 
                 {tags && Array.isArray(tags) && tags.length > 0 && (
-                    <div className="mascota-tags-card"> {/* Nuevo contenedor para los tags de la card */}
-                        {tags.slice(0, 3).map(tag => ( /* Mostrar solo los primeros 3 tags */
+                    <div className="mascota-tags-card">
+                        {tags.slice(0, 3).map(tag => (
                             <span key={tag} className="mascota-tag-card">{TAG_LABELS[tag] || tag}</span>
                         ))}
-                        {tags.length > 3 && <span className="mascota-tag-card">+{tags.length - 3} más</span>} {/* Si hay más, indica la cantidad */}
+                        {tags.length > 3 && <span className="mascota-tag-card">+{tags.length - 3} más</span>}
                     </div>
                 )}
 
                 {showDetailButton && (
-                    <Link to={`/mascotas/${mascota.id}`} className="btn-detail-card"> {/* Cambié a btn-detail-card */}
+                    <Link to={`/mascotas/${mascota.id}`} className="btn btn-primary btn-detail-card">
                         Ver Detalle
                     </Link>
                 )}

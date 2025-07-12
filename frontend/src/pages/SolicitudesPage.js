@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
 import { getSolicitudes, updateSolicitudEstado, deleteSolicitud } from '../api/api';
 import { toast } from 'react-toastify';
-import '../styles/SolicitudesPage.css'; // Make sure this path is correct
-
-const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
+import '../styles/SolicitudesPage.css';
 
 const SolicitudesPage = () => {
     const [solicitudes, setSolicitudes] = useState([]);
@@ -140,9 +137,6 @@ const SolicitudesPage = () => {
             {solicitudesAMostrar.length === 0 ? (
                 <div className="no-solicitudes-message">
                     <p>No hay solicitudes disponibles en esta sección.</p>
-                    <Link to="/">
-                        <img src="/images/nada.gif" alt="No hay solicitudes" className="empty-state-image" />
-                    </Link>
                 </div>
             ) : (
                 <div className="solicitudes-grid">
@@ -150,11 +144,7 @@ const SolicitudesPage = () => {
                         <div key={solicitud.id} className="solicitud-card">
                             <div className="card-header">
                                 <img
-                                    src={
-                                        solicitud.mascota_imagen_url
-                                            ? `${UPLOADS_BASE_URL}${solicitud.mascota_imagen_url}`
-                                            : '/nada.gif' // Default placeholder if no image
-                                    }
+                                    src={solicitud.mascota_imagen_url}
                                     alt={solicitud.mascota_nombre}
                                     className="mascota-img"
                                 />
@@ -179,7 +169,7 @@ const SolicitudesPage = () => {
                                     <>
                                         <h5 className="details-title">Detalles del Publicador:</h5>
                                         <p><strong>Publicador:</strong> {solicitud.publicador_nombre} ({solicitud.publicador_email})</p>
-                                        <p><strong>Ubicación Mascota:</strong> {solicitud.mascota_ubicacion || 'N/A'}</p> {/* Assuming mascota_ubicacion is available */}
+                                        <p><strong>Ubicación Mascota:</strong> {solicitud.mascota_ubicacion || 'N/A'}</p>
                                         <p><strong>Motivo de tu Solicitud:</strong> {solicitud.motivo || 'No especificado'}</p>
                                     </>
                                 )}
@@ -198,7 +188,7 @@ const SolicitudesPage = () => {
                                             <option value="rechazada">Rechazar</option>
                                         </select>
                                         {solicitud.publicador_id === userId && (isPublicador || isAdmin) && (
-                                            <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn btn-delete">
+                                            <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn btn-danger">
                                                 Eliminar Solicitud
                                             </button>
                                         )}
@@ -207,7 +197,7 @@ const SolicitudesPage = () => {
 
                                 {isAdoptante && activeTab === 'adoptante' && solicitud.adoptante_id === userId && solicitud.estado === 'pendiente' && (
                                     <div className="card-actions">
-                                        <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn btn-cancel">
+                                        <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn btn-outline-secondary">
                                             Cancelar Solicitud
                                         </button>
                                     </div>

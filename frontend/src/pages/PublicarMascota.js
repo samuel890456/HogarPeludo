@@ -1,7 +1,7 @@
 // frontend/src/pages/PublicarMascota.js
 import React from 'react';
 import MascotaForm from '../components/MascotaForm';
-import '../styles/MascotaForm.css'; // Usará los estilos del formulario
+
 
 const PublicarMascota = () => {
     return (

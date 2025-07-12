@@ -1,327 +1,189 @@
-/* Base container styling */
+/* ========================= */
+/* 📝 Estilos de la Página de Solicitudes 📝 */
+/* ========================= */
+
 .solicitudes-container {
-    padding: 30px;
+    padding: var(--spacing-lg) var(--spacing-md);
     max-width: 1200px;
-    margin: 30px auto;
-    background-color: #fcfaf8; /* Lighter, warmer background */
-    border-radius: 12px; /* More rounded corners */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer, more pronounced shadow */
-    font-family: 'Segoe UI', 'Roboto', sans-serif; /* Modern, readable font */
+    margin: 0 auto;
 }
 
-/* Page title */
 .page-title {
     text-align: center;
-    color: #4A6B8A; /* A soothing blue-grey */
-    margin-bottom: 40px;
-    font-size: 2.5em;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-lg);
+    font-size: 2.5rem;
 }
 
-/* Tab navigation for role-based views */
 .solicitudes-tabs-navigation {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    border-bottom: 2px solid #E0E7EB; /* Subtle line under tabs */
-    padding-bottom: 10px;
+    margin-bottom: var(--spacing-lg);
+    gap: var(--spacing-sm);
 }
 
 .tab-button {
-    background-color: #F0F3F7; /* Light grey background */
-    color: #6C8CA7; /* Muted blue text */
+    background-color: var(--color-medium-gray);
+    color: var(--color-dark-gray);
+    padding: var(--spacing-sm) var(--spacing-md);
     border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
+    border-radius: var(--border-radius-md);
     cursor: pointer;
-    font-size: 1.1em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1rem;
     font-weight: 600;
-    transition: all 0.3s ease;
-    flex-grow: 1; /* Make buttons expand */
-    max-width: 300px; /* Limit individual button width */
 }
 
 .tab-button:hover {
-    background-color: #E0E7EB; /* Slightly darker on hover */
-    color: #4A6B8A;
+    background-color: #CED4DA;
 }
 
 .tab-button.active {
-    background-color: #A8DAD7; /* Vibrant teal for active tab */
-    color: #2F5D62; /* Darker teal text */
-    box-shadow: 0 4px 10px rgba(0, 168, 155, 0.2); /* Soft shadow for active tab */
-    transform: translateY(-2px); /* Slight lift */
+    background-color: var(--color-primary);
+    color: var(--color-white);
 }
 
-/* Section title */
 .section-title {
     text-align: center;
-    color: #5B7B9A; /* A slightly darker blue-grey */
-    margin-top: 30px;
-    margin-bottom: 25px;
-    font-size: 1.8em;
-    font-weight: 600;
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1.8rem;
 }
 
-/* No solicitudes message */
 .no-solicitudes-message {
     text-align: center;
-    padding: 50px 20px;
-    background-color: #F0F3F7;
-    border-radius: 10px;
-    color: #6C8CA7;
-    font-size: 1.2em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px; /* Ensure it has some height */
+    padding: var(--spacing-lg);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-sm);
+    color: var(--color-text-light);
+    font-size: 1.1rem;
 }
 
-.no-solicitudes-message p {
-    margin-bottom: 20px;
-}
-
-.empty-state-image {
-    width: 150px; /* Adjust size as needed */
-    height: auto;
-    opacity: 0.6; /* Softer appearance */
-}
-
-/* Grid for solicitud cards */
 .solicitudes-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Slightly wider cards */
-    gap: 30px; /* Increased gap for better spacing */
-    padding: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
 }
 
-/* Individual solicitud card */
 .solicitud-card {
-    background-color: #ffffff;
-    border: 1px solid #E0E7EB; /* Lighter, subtle border */
-    border-radius: 10px; /* Softer edges */
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-md);
     overflow: hidden;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.07); /* Enhanced shadow */
     display: flex;
     flex-direction: column;
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
+    transition: transform 0.2s ease;
 }
 
 .solicitud-card:hover {
-    transform: translateY(-8px); /* More pronounced lift on hover */
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12); /* Stronger shadow on hover */
+    transform: translateY(-3px);
 }
 
-/* Card Header - Image and basic info */
-.card-header {
+.solicitud-card .card-header {
     display: flex;
     align-items: center;
-    padding: 18px;
-    background-color: #E6F3F2; /* Light teal background for header */
-    border-bottom: 1px solid #D2E7E5;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--color-medium-gray);
 }
 
-.mascota-img {
-    width: 90px; /* Slightly larger image */
-    height: 90px;
-    border-radius: 50%;
+.solicitud-card .mascota-img {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-md);
     object-fit: cover;
-    margin-right: 20px;
-    border: 3px solid #6BA8A5; /* Border matching new palette */
-    flex-shrink: 0; /* Prevent image from shrinking */
+    margin-right: var(--spacing-md);
 }
 
-.mascota-info {
+.solicitud-card .mascota-info h4 {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.solicitud-card .species-tag {
+    background-color: var(--color-medium-gray);
+    color: var(--color-dark-gray);
+    padding: 3px 8px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    margin-left: var(--spacing-xs);
+}
+
+.solicitud-card .card-date,
+.solicitud-card .card-status {
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+}
+
+.solicitud-card .card-status .status-pendiente {
+    color: var(--color-secondary); /* Amarillo para pendiente */
+}
+
+.solicitud-card .card-status .status-aceptada {
+    color: #28A745; /* Verde para aceptada */
+}
+
+.solicitud-card .card-status .status-rechazada {
+    color: #DC3545; /* Rojo para rechazada */
+}
+
+.solicitud-card .card-details {
+    padding: var(--spacing-md);
     flex-grow: 1;
 }
 
-.mascota-info h4 {
-    margin: 0;
-    color: #3C5A6A; /* Darker blue-grey for pet name */
-    font-size: 1.5em;
-    font-weight: 700;
-}
-
-.species-tag {
-    font-size: 0.9em;
-    color: #7B9BAE;
-    font-weight: 500;
-}
-
-.card-date, .card-status {
-    top: 15px;
-    right: 15px;
-    padding: 6px 12px;
-    border-radius: 20px; /* Estilo de píldora */
-    font-size: 0.85em;
-    font-weight: 700;
-    color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Status specific styling */
-.status-pendiente {
-    color: #FFB347; /* Warm yellow/orange for pending */
-    font-weight: bold;
-}
-
-.status-aceptada {
-    color: #4CAF50; /* Clear green for accepted */
-    font-weight: bold;
-}
-
-.status-rechazada {
-    color: #FF6B6B; /* Soft red for rejected */
-    font-weight: bold;
-}
-
-/* Card Details - User info and actions */
-.card-details {
-    padding: 18px;
-    line-height: 1.6;
-}
-
-.details-title {
-    margin-top: 15px;
-    margin-bottom: 10px;
-    color: #5B7B9A;
-    font-size: 1.2em;
+.solicitud-card .details-title {
+    font-size: 1rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
     font-weight: 600;
-    border-bottom: 1px solid #F0F3F7; /* Lighter separator */
-    padding-bottom: 5px;
 }
 
-.card-details p {
-    margin-bottom: 8px;
-    font-size: 0.98em;
-    color: #555;
+.solicitud-card .card-details p {
+    font-size: 0.95rem;
+    color: var(--color-dark-gray);
+    margin-bottom: var(--spacing-xs);
 }
 
-.card-details p strong {
-    color: #4A6B8A;
-}
-
-/* Card Actions */
-.card-actions {
-    margin-top: 25px;
+.solicitud-card .card-actions {
     display: flex;
-    flex-direction: column;
-    gap: 12px; /* Increased gap between elements */
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-md);
+    align-items: center;
 }
 
-.card-actions label {
-    font-weight: 600;
-    color: #4A6B8A;
-    margin-bottom: 5px;
-    display: block; /* Ensure label is on its own line */
+.solicitud-card .card-actions select {
+    padding: 0.5rem;
+    border: 1px solid var(--color-medium-gray);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    color: var(--color-dark-gray);
+    background-color: var(--color-white);
 }
 
-.card-actions select {
-    padding: 10px 15px;
-    border: 1px solid #B7D9D8; /* Soft teal border */
-    border-radius: 6px;
-    background-color: #F8FDFF; /* Very light blue/white */
-    font-size: 1em;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
-    appearance: none; /* Remove default arrow */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236C8CA7'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 20px;
-    transition: border-color 0.3s ease;
+.solicitud-card .card-actions .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
 }
 
-.card-actions select:focus {
-    outline: none;
-    border-color: #6BA8A5; /* Highlight on focus */
-    box-shadow: 0 0 0 3px rgba(107, 168, 165, 0.3);
-}
-
-/* General button styling */
-.btn {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1.05em;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-    display: inline-block; /* For proper padding and alignment */
-}
-
-.btn-delete {
-    background-color: #FF6B6B; /* Soft red for delete */
-    color: white;
-}
-
-.btn-delete:hover {
-    background-color: #E05A5A; /* Darker red on hover */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-}
-
-.btn-cancel {
-    background-color: #A8DADC; /* Teal for cancel/secondary actions */
-    color: #2F5D62; /* Darker teal text */
-}
-
-.btn-cancel:hover {
-    background-color: #8FD1D0; /* Darker teal on hover */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(168, 218, 220, 0.3);
-}
-
-/* Responsive adjustments */
+/* Responsive */
 @media (max-width: 768px) {
-    .solicitudes-container {
-        padding: 15px;
-        margin: 15px auto;
+    .page-title {
+        font-size: 2rem;
     }
-
+    .section-title {
+        font-size: 1.5rem;
+    }
     .solicitudes-tabs-navigation {
-        flex-direction: column;
-        gap: 10px;
+        flex-wrap: wrap;
     }
-
     .tab-button {
-        padding: 10px 15px;
-        font-size: 1em;
-        max-width: 100%; /* Full width for mobile tabs */
+        width: 100%;
+        margin-bottom: var(--spacing-xs);
     }
-
     .solicitudes-grid {
-        grid-template-columns: 1fr; /* Stack cards on smaller screens */
-        gap: 20px;
-    }
-
-    .solicitud-card {
-        margin: 0 auto; /* Center cards */
-        max-width: 400px; /* Prevent cards from stretching too wide on small screens */
-    }
-
-    .mascota-img {
-        width: 70px;
-        height: 70px;
-    }
-
-    .mascota-info h4 {
-        font-size: 1.3em;
-    }
-
-    .card-details p, .card-date, .card-status {
-        font-size: 0.9em;
-    }
-
-    .btn {
-        font-size: 1em;
-        padding: 10px 15px;
+        grid-template-columns: 1fr;
     }
 }

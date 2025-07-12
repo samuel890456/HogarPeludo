@@ -1,23 +1,26 @@
-/* src/styles/LoadingSpinner.css */
+/* ========================= */
+/* ⏳ Estilos del Spinner de Carga ⏳ */
+/* ========================= */
+
 .loading-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 200px; /* Ajusta según necesidad */
-    gap: 15px;
-    color: #555;
-    font-size: 1.1rem;
-    margin-top: 50px;
+    min-height: 200px;
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    padding: var(--spacing-lg);
 }
 
 .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #1976d2; /* Color principal de tu app */
+    border-left-color: var(--color-primary);
     border-radius: 50%;
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-md);
 }
 
 @keyframes spin {

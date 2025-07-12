@@ -1,12 +1,11 @@
 /* ========================= */
-/* 🐾 ESTILOS MEJORADOS DE HEADER 🐾 */
+/* 🐾 Estilos del Header 🐾 */
 /* ========================= */
 
-
 .header {
-    background-color: #E8F5E9;
-    padding: 10px 30px; /* Reducimos el padding vertical del header */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    background-color: var(--color-white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    box-shadow: var(--box-shadow-sm);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -16,11 +15,11 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* ======== Logo Container ======== */
+/* Logo Container */
 .logo {
     display: flex;
     align-items: center;
-    margin-right: 20px;
+    margin-right: var(--spacing-md);
 }
 
 .logo a {
@@ -28,55 +27,46 @@
     align-items: center;
     text-decoration: none;
     color: inherit;
-    /* Aumentamos la altura de este contenedor para que la imagen tenga más espacio */
-    height: 45px; /* <-- AUMENTADO (anteriormente 55px o 60px) */
-    /* Asegúrate de que esta altura sea suficiente para tu logo ampliado */
 }
 
-/* ======== Logo Image ======== */
 .logo-img {
-    height: 200%; /* El logo ocupará el 100% de la altura de su contenedor (.logo a) */
+    height: 45px; /* Ajustado para el nuevo diseño */
     width: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
-    margin-right: 12px;
+    margin-right: var(--spacing-xs);
 }
 
 .logo-img:hover {
     transform: scale(1.05);
 }
 
-/* ======== Logo Text Container ======== */
 .logo-text {
     display: flex;
-    flex-direction: column; /* Para que los spans estén uno debajo del otro */
-    line-height: 1.2; /* Ajusta el espaciado entre líneas */
-    color: #333; /* Un color oscuro para el texto del logo, puedes usar el verde de tu marca si quieres */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistencia de fuente */
+    flex-direction: column;
+    line-height: 1.2;
+    color: var(--color-dark-gray);
+    font-family: var(--font-family-heading);
 }
 
 .logo-main-text {
-    font-size: 24px; /* Tamaño del texto principal "HOGAR PELUDO" */
-    font-weight: 800; /* Más audaz */
-    letter-spacing: -0.5px; /* Ajuste para que se vea compacto */
-    color:#2E7D32; /* O un color más oscuro como #333 para contraste */
+    font-size: 1.5rem; /* Ajustado */
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--color-primary-dark);
 }
 
 .logo-sub-text {
-    font-size: 13px; /* Tamaño del texto secundario "ADOPCION ANIMAL" */
-    font-weight: 600; /* Ligeramente audaz */
-    color:  #4CAF50; /* Un gris más suave para el texto secundario */
-    text-transform: uppercase; /* Para que ADOPCION ANIMAL esté en mayúsculas */
+    font-size: 0.75rem; /* Ajustado */
+    font-weight: 600;
+    color: var(--color-text-light);
+    text-transform: uppercase;
 }
 
-
-/* ======== Menú de navegación ======== */
+/* Navigation Menu */
 .nav {
     display: flex;
     align-items: center;
-    position: static;
-    max-height: none;
-    overflow: visible;
     flex-direction: row;
     padding: 0;
     width: auto;
@@ -85,27 +75,25 @@
 .nav-list {
     display: flex;
     list-style: none;
-    gap: 30px; /* Más espacio entre los elementos del menú */
+    gap: var(--spacing-lg); /* Más espacio entre elementos */
     margin: 0;
     padding: 0;
 }
 
-/* ======== Ítems de navegación ======== */
 .nav-item a {
     text-decoration: none;
-    color: #4A6572; /* Color de texto más suave */
-    font-weight: 600; /* Ligeramente más grueso */
+    color: var(--color-dark-gray);
+    font-weight: 600;
     transition: color 0.3s ease, transform 0.2s ease;
-    position: relative; /* Para el efecto de subrayado */
-    padding-bottom: 5px; /* Espacio para el subrayado */
+    position: relative;
+    padding-bottom: 5px;
 }
 
 .nav-item a:hover {
-    color: #00796B; /* Mismo verde que el logo */
-    transform: translateY(-2px); /* Pequeño levantamiento */
+    color: var(--color-primary);
+    transform: translateY(-2px);
 }
 
-/* Efecto de subrayado al pasar el ratón */
 .nav-item a::after {
     content: '';
     position: absolute;
@@ -113,7 +101,7 @@
     bottom: 0;
     width: 0;
     height: 3px;
-    background-color: #00796B; /* Azul verdoso teal para el subrayado */
+    background-color: var(--color-primary);
     transition: width 0.3s ease-out;
 }
 
@@ -121,10 +109,9 @@
     width: 100%;
 }
 
-/* Enlace de administración */
+/* Admin Link Specifics */
 .nav-item.admin-link a {
-    color: #E64A19; /* Naranja para el enlace de admin */
-    font-weight: 700;
+    color: #E64A19; /* Un color distintivo para admin */
 }
 .nav-item.admin-link a:hover {
     color:#D84315;
@@ -133,87 +120,42 @@
     background-color:#E64A19;
 }
 
-
-/* ======== Botón menú hamburguesa ======== */
-.menu-toggle {
-    font-size: 28px; /* Tamaño de icono más grande */
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #555;
-    height: 40px;
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.3s ease;
-    display: none; /* Se oculta por defecto en escritorio */
-}
-
-.menu-toggle:hover {
-    color: #4CAF50;
-}
-
-/* ======== Botones de autenticación (Desktop) ======== */
+/* Auth Buttons (Desktop) */
 .auth-buttons {
     display: flex;
-    gap: 15px; /* Más espacio entre los botones */
-    margin-left: 20px; /* Espacio a la izquierda del menú */
+    gap: var(--spacing-sm);
+    margin-left: var(--spacing-md);
 }
 
-.auth-button {
-    padding: 10px 20px; /* Más padding */
-    border: none;
-    border-radius: 8px; /* Bordes más redondeados */
-    text-decoration: none;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    font-size: 1rem;
-}
-
-.auth-button-login {
-    background-color: #1976D2; /* Azul vibrante */
-    color: white;
-}
-.auth-button-login:hover {
-    background-color: #1565C0;
-    transform: translateY(-2px);
-}
-
-.auth-button-register {
-    background-color: #4CAF50; /* Verde principal */
-    color: white;
-}
-.auth-button-register:hover {
-    background-color: #4CAF50; /* Verde principal */
-    transform: translateY(-2px);
-}
-
-/* ======== Ocultar auth-mobile en escritorio ======== */
+/* Hide auth-mobile on desktop */
 .auth-mobile {
     display: none;
 }
 
-/* ======== Menú de usuario con dropdown ======== */
+/* User Menu Dropdown */
 .user-menu {
     position: relative;
-    margin-left: 20px;
+    margin-left: var(--spacing-md);
 }
 
 .user-button {
     background: none;
     border: none;
-    color: #4A6572;
+    color: var(--color-dark-gray);
     font-weight: 600;
     cursor: pointer;
-    transition: color 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: var(--spacing-xs);
     font-size: 1rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .user-button:hover {
-    color: #00796B;
+    background-color: var(--color-medium-gray);
+    color: var(--color-primary);
 }
 
 .dropdown-arrow {
@@ -226,11 +168,11 @@
 
 .dropdown-content {
     position: absolute;
-    top: 45px; /* Más espacio para el botón */
+    top: calc(100% + var(--spacing-xs));
     right: 0;
-    background-color: #F0F4F7; /* Un gris azulado muy claro */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18); /* Sombra más definida */
-    border-radius: 10px; /* Más redondeado */
+    background-color: var(--color-white);
+    box-shadow: var(--box-shadow-md);
+    border-radius: var(--border-radius-md);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -239,107 +181,106 @@
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    min-width: 180px; /* Ancho mínimo para el dropdown */
+    min-width: 180px;
 }
+
 .dropdown-content.active {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
+
 .dropdown-content a,
 .dropdown-content button {
-    padding: 12px 20px;
-    background-color: white;
-    color: #4A6572;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--color-white);
+    color: var(--color-dark-gray);
     text-align: left;
     text-decoration: none;
     border: none;
     cursor: pointer;
-    font-size: 15px;
-    transition: background-color 0.3s ease;
+    font-size: 0.95rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 .dropdown-content a:hover,
 .dropdown-content button:hover {
-    background-color: #E1F5FE; /* Azul claro */
-    color: #00796B;
+    background-color: var(--color-light-gray);
+    color: var(--color-primary);
 }
+
 .dropdown-content button {
-    border-top: 1px solid #eee; /* Separador para el botón de cerrar sesión */
+    border-top: 1px solid var(--color-medium-gray);
     font-weight: 600;
 }
-.dropdown-content button:hover {
-     background-color: #FFEBEE; /* Rojo muy suave */
-    color: #D32F2F; /* Rojo de cancelar */
-}
-/* ========================= */
-/* 🔔 ESTILOS DE NOTIFICACIONES 🔔 */
-/* ========================= */
 
+.dropdown-content button:hover {
+    background-color: #FFEBEE; /* Light red for logout */
+    color: #D32F2F; /* Darker red */
+}
+
+/* Notification Bell */
 .notification-icon-container {
     position: relative;
     cursor: pointer;
-    /* Asegúrate de que no haya conflicto con el gap de nav-list si ya lo tienes */
-    margin-right: 20px; /* Ajusta según el diseño general */
-    display: flex; /* Para alinear el icono y el badge */
+    margin-right: var(--spacing-md);
+    display: flex;
     align-items: center;
-    justify-content: center; /* Centrar contenido dentro del contenedor */
-    padding: 0 5px; /* Pequeño padding para el área de clic */
+    justify-content: center;
+    padding: 0 var(--spacing-xs);
 }
 
 .notification-bell {
-    font-size: 1.5em; /* Tamaño de la campana */
-    color: #457b9d; /* Color de la campana */
+    font-size: 1.5rem;
+    color: var(--color-dark-gray);
     transition: color 0.3s ease;
 }
 
 .notification-bell:hover {
-    color: #1d3557; /* Color al pasar el ratón */
+    color: var(--color-primary);
 }
 
 .notification-badge {
     position: absolute;
-    top: -5px; /* Posición vertical del badge */
-    right: -10px; /* Posición horizontal del badge */
-    background-color: #e63946; /* Rojo para el número de notificaciones */
-    color: white;
-    border-radius: 50%; /* Forma circular */
+    top: -5px;
+    right: -10px;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    border-radius: 50%;
     padding: 2px 7px;
     font-size: 0.7em;
     font-weight: bold;
-    min-width: 20px; /* Asegura un tamaño mínimo */
+    min-width: 20px;
     text-align: center;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    display: flex; /* Para centrar el número si es de un dígito */
+    box-shadow: var(--box-shadow-sm);
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .notifications-dropdown {
     position: absolute;
-    top: calc(100% + 15px); /* Posición debajo del icono de la campana */
+    top: calc(100% + var(--spacing-xs));
     right: 0;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
-    width: 320px; /* Ancho del desplegable */
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-md);
+    width: 320px;
     max-height: 400px;
-    overflow-y: auto; /* Scroll si hay muchas notificaciones */
-    z-index: 1001; /* Asegura que esté por encima de otros elementos */
-    padding: 10px 0;
+    overflow-y: auto;
+    z-index: 1001;
+    padding: var(--spacing-sm) 0;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease-out;
 }
 
-/* Activa la visibilidad y el efecto al mostrarse */
-.notification-icon-container .notifications-dropdown { /* Asegura que solo se active si el padre es el contenedor del icono */
+.notification-icon-container .notifications-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
-
 
 .notifications-dropdown ul {
     list-style: none;
@@ -348,124 +289,94 @@
 }
 
 .notifications-dropdown li {
-    padding: 12px 15px;
-    border-bottom: 1px solid #f0f0f0; /* Separador suave */
-    color: #333;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--color-medium-gray);
+    color: var(--color-dark-gray);
     cursor: pointer;
     transition: background-color 0.2s ease;
     display: flex;
-    flex-direction: column; /* Mensaje y fecha en líneas separadas */
+    flex-direction: column;
 }
 
 .notifications-dropdown li:hover {
-    background-color: #f1faee; /* Fondo suave al pasar el ratón */
+    background-color: var(--color-light-gray);
 }
 
 .notifications-dropdown li:last-child {
-    border-bottom: none; /* Elimina el borde inferior del último elemento */
+    border-bottom: none;
 }
 
 .notification-date {
     font-size: 0.8em;
-    color: #888;
+    color: var(--color-text-light);
     margin-top: 5px;
 }
 
 .no-notifications {
     text-align: center;
-    padding: 20px;
-    color: #777;
+    padding: var(--spacing-md);
+    color: var(--color-text-light);
     font-style: italic;
 }
 
-/* ========================= */
-/* 📱 RESPONSIVO NOTIFICACIONES 📱 */
-/* ========================= */
-@media (max-width: 768px) {
-    .notification-icon-container {
-        /* En móvil, la campana debería estar dentro del menú deslizante */
-        margin-right: 0; /* Eliminar margen extra */
-        width: 100%; /* Ocupar todo el ancho en el menú móvil */
-        justify-content: center; /* Centrar la campana */
-        padding: 10px 0; /* Padding para el elemento de lista */
-    }
-
-    .notification-badge {
-        /* Ajustar posición del badge para móvil si es necesario */
-        top: 5px; 
-        right: 25%; /* Ajustar la posición de la insignia en móvil */
-    }
-
-    .notifications-dropdown {
-        /* En móvil, el dropdown debería estar dentro del flujo del menú */
-        position: static; /* No flotar, sino parte del flujo */
-        width: 100%;
-        max-width: none;
-        box-shadow: none; /* Eliminar sombra */
-        border-radius: 0;
-        border-top: 1px solid #eee; /* Separador visual */
-        margin-top: 10px; /* Espacio */
-        opacity: 1; /* Siempre visible cuando el menú padre está activo */
-        visibility: visible;
-        transform: translateY(0);
-    }
+/* Mobile Menu Toggle */
+.menu-toggle {
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-dark-gray);
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+    display: none; /* Hidden by default on desktop */
 }
 
-/* ========================= */
-/* 📱 RESPONSIVO DEL HEADER 📱 */
-/* ========================= */
-@media (max-width: 768px) {
-    
-    .logo a {
-        height: 50px; /* Ajustar altura del contenedor en móvil */
-    }
-    .logo-img {
-        height: 45px; /* Tamaño del logo en móvil */
-        margin-right: 8px; /* Menos espacio en móvil */
-    }
-    .logo-main-text {
-        font-size: 20px; /* Tamaño del texto principal en móvil */
-    }
-    .logo-sub-text {
-        font-size: 11px; /* Tamaño del texto secundario en móvil */
-    }
-    .logo {
-        margin-right: 10px; /* Ajustar margen en móvil */
-    }
+.menu-toggle:hover {
+    color: var(--color-primary);
+}
 
+/* Responsive */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: flex; /* Show on mobile */
+    }
 
     .nav {
         position: absolute;
-        top: 70px; /* Debajo del header */
+        top: 65px; /* Adjust based on header height */
         right: 0;
-        background-color: #fff;
+        background-color: var(--color-white);
         width: 100%;
-        max-height: 0; /* Oculto por defecto */
+        max-height: 0; /* Hidden by default */
         overflow: hidden;
         flex-direction: column;
         align-items: flex-start;
-        padding: 0 20px;
+        padding: 0 var(--spacing-md);
         transition: max-height 0.4s ease-out, padding 0.4s ease-out;
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        border-radius: 0 0 10px 10px;
+        box-shadow: var(--box-shadow-md);
+        border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
     }
 
     .nav.active {
-        max-height: 400px; /* Altura máxima para mostrar el menú */
-        padding-top: 15px;
-        padding-bottom: 25px;
+        max-height: 400px; /* Max height to show menu */
+        padding-top: var(--spacing-md);
+        padding-bottom: var(--spacing-lg);
     }
 
     .nav-list {
         flex-direction: column;
         width: 100%;
-        gap: 15px; /* Espacio entre los elementos del menú en móvil */
+        gap: var(--spacing-sm);
         text-align: center;
     }
 
     .nav-item a {
-        padding: 10px 0;
-        display: block; /* Asegurar que el enlace ocupe todo el ancho */
+        padding: var(--spacing-xs) 0;
+        display: block;
         font-size: 1.1rem;
     }
 
@@ -475,55 +386,80 @@
     }
 
     .nav-item a:hover::after {
-        width: 80%; /* Un poco menos ancho para un mejor look móvil */
+        width: 80%;
     }
 
-    .auth-pc {
-        display: none; /* Ocultar botones de auth de escritorio */
+    .auth-buttons {
+        display: none; /* Hide desktop auth buttons on mobile */
     }
 
     .auth-mobile {
-        display: flex; /* Mostrar botones de auth móvil */
+        display: flex; /* Show mobile auth buttons */
         flex-direction: column;
         align-items: center;
-        gap: 12px;
-        margin-top: 20px; /* Espacio desde los elementos del menú */
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
         width: 100%;
     }
 
-    .auth-mobile .auth-button {
-        width: 80%; /* Los botones ocupan más ancho */
+    .auth-mobile .btn {
+        width: 80%;
         text-align: center;
     }
 
     .user-menu {
-        margin-left: 0; /* Eliminar margen en móvil */
-        width: 100%; /* Ocupar todo el ancho disponible */
+        margin-left: 0;
+        width: 100%;
         text-align: center;
     }
 
     .user-button {
         width: 100%;
-        justify-content: center; /* Centrar el texto del botón de usuario */
-        padding: 10px 0;
+        justify-content: center;
+        padding: var(--spacing-sm) 0;
         font-size: 1.1rem;
     }
 
     .dropdown-content {
-        position: static; /* No flotar, sino que esté dentro del flujo del menú */
+        position: static;
         width: 100%;
         max-width: none;
-        box-shadow: none; /* Eliminar sombra del dropdown */
+        box-shadow: none;
         border-radius: 0;
-        border-top: 1px solid #eee; /* Separador visual */
-        margin-top: 10px; /* Espacio del botón de usuario */
-        opacity: 1; /* Siempre visible cuando el menú está activo */
+        border-top: 1px solid var(--color-medium-gray);
+        margin-top: var(--spacing-sm);
+        opacity: 1;
         visibility: visible;
         transform: translateY(0);
     }
     .dropdown-content a,
     .dropdown-content button {
-        padding: 10px 0; /* Menos padding en móvil */
+        padding: var(--spacing-xs) 0;
         text-align: center;
+    }
+
+    .notification-icon-container {
+        margin-right: 0;
+        width: 100%;
+        justify-content: center;
+        padding: var(--spacing-xs) 0;
+    }
+
+    .notification-badge {
+        top: 5px;
+        right: 25%;
+    }
+
+    .notifications-dropdown {
+        position: static;
+        width: 100%;
+        max-width: none;
+        box-shadow: none;
+        border-radius: 0;
+        border-top: 1px solid var(--color-medium-gray);
+        margin-top: var(--spacing-sm);
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
 }

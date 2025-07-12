@@ -105,6 +105,7 @@ const Header = ({ isAuthenticated, user, onLogout }) => {
                 <ul className="nav-list">
                     <li className="nav-item"><Link to="/" onClick={() => setShowMenu(false)}>Inicio</Link></li>
                     <li className="nav-item"><Link to="/mascotas" onClick={() => setShowMenu(false)}>Mascotas</Link></li>
+                    <li className="nav-item"><Link to="/fundaciones" onClick={() => setShowMenu(false)}>Fundaciones</Link></li>
 
                     {/* Show Admin Panel link if user is an Admin */}
                     {isAuthenticated && hasRole('1') && (
@@ -150,8 +151,8 @@ const Header = ({ isAuthenticated, user, onLogout }) => {
 
                     {!isAuthenticated ? (
                         <div className="auth-buttons auth-pc">
-                            <Link to="/iniciar-sesion" className="auth-button auth-button-login" onClick={() => setShowMenu(false)}>Iniciar Sesión</Link>
-                            <Link to="/registrarse" className="auth-button auth-button-register" onClick={() => setShowMenu(false)}>Registrarse</Link>
+                            <Link to="/iniciar-sesion" className="btn auth-button auth-button-login" onClick={() => setShowMenu(false)}>Iniciar Sesión</Link>
+                            <Link to="/registrarse" className="btn auth-button auth-button-register" onClick={() => setShowMenu(false)}>Registrarse</Link>
                         </div>
                     ) : (
                         <div className="user-menu">
@@ -174,8 +175,8 @@ const Header = ({ isAuthenticated, user, onLogout }) => {
                 {/* Botones de autenticación para móvil dentro del menú deslizante */}
                 {!isAuthenticated && (
                     <div className="auth-menu auth-mobile">
-                        <Link to="/iniciar-sesion" className="auth-button auth-button-login" onClick={() => setShowMenu(false)}>Iniciar Sesión</Link>
-                        <Link to="/registrarse" className="auth-button auth-button-register" onClick={() => setShowMenu(false)}>Registrarse</Link>
+                        <Link to="/iniciar-sesion" className="btn auth-button auth-button-login" onClick={() => setShowMenu(false)}>Iniciar Sesión</Link>
+                        <Link to="/registrarse" className="btn auth-button auth-button-register" onClick={() => setShowMenu(false)}>Registrarse</Link>
                     </div>
                 )}
             </nav>

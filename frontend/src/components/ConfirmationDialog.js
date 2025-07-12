@@ -35,14 +35,14 @@ const ConfirmationDialog = ({
                 <p className="confirmation-dialog-message">{message}</p>
                 <div className="confirmation-dialog-actions">
                     <button
-                        className="btn-cancel"
+                        className="btn btn-secondary"
                         onClick={onCancel}
                         disabled={isLoading}
                     >
                         {cancelText}
                     </button>
                     <button
-                        className="btn-confirm"
+                        className="btn btn-danger"
                         onClick={onConfirm}
                         disabled={isLoading}
                     >

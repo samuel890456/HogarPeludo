@@ -1,10 +1,9 @@
-// frontend/src/pages/NotificationsPage.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle, faEnvelopeOpen, faTrashAlt, faBell } from '@fortawesome/free-solid-svg-icons';
 import { getAllNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '../api/api';
-import '../styles/NotificationsPage.css'; // Crea este archivo CSS
+import '../styles/NotificationsPage.css';
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
@@ -33,8 +32,8 @@ const NotificationsPage = () => {
     const handleMarkAsRead = async (id) => {
         try {
             await markNotificationAsRead(id);
-            setNotifications(prev => 
-                prev.map(notif => 
+            setNotifications(prev =>
+                prev.map(notif =>
                     notif.id === id ? { ...notif, leida: true } : notif
                 )
             );
@@ -47,14 +46,13 @@ const NotificationsPage = () => {
     const handleMarkAllAsRead = async () => {
         try {
             await markAllNotificationsAsRead();
-            setNotifications(prev => 
-                prev.map(notif => 
+            setNotifications(prev =>
+                prev.map(notif =>
                     notif.leida === false ? { ...notif, leida: true } : notif
                 )
             );
         } catch (err) {
             console.error('Error al marcar todas como leídas:', err);
-            // Opcional: mostrar un toast o mensaje de error
         }
     };
 
@@ -92,16 +90,14 @@ const NotificationsPage = () => {
                 <>
                     <div className="notification-actions">
                         {hasUnread && (
-                            <button 
-                                onClick={handleMarkAllAsRead} 
-                                className="btn-mark-all-read"
+                            <button
+                                onClick={handleMarkAllAsRead}
+                                className="btn btn-secondary"
                                 title="Marcar todas como leídas"
                             >
                                 <FontAwesomeIcon icon={faEnvelopeOpen} /> Marcar todas como leídas
                             </button>
                         )}
-                        {/* Puedes añadir un botón para eliminar todas las leídas aquí si lo deseas */}
-                        {/* <button className="btn-delete-read">Eliminar Leídas</button> */}
                     </div>
 
                     <ul className="notification-list">
@@ -115,8 +111,8 @@ const NotificationsPage = () => {
                                 </div>
                                 <div className="notification-actions-item">
                                     {!notif.leida && (
-                                        <button 
-                                            onClick={() => handleMarkAsRead(notif.id)} 
+                                        <button
+                                            onClick={() => handleMarkAsRead(notif.id)}
                                             className="btn-action btn-mark-read"
                                             title="Marcar como leída"
                                         >
@@ -124,17 +120,17 @@ const NotificationsPage = () => {
                                         </button>
                                     )}
                                     {notif.enlace && (
-                                        <Link 
-                                            to={notif.enlace} 
+                                        <Link
+                                            to={notif.enlace}
                                             className="btn-action btn-view-link"
-                                            onClick={() => handleMarkAsRead(notif.id)} // Opcional: marca como leída al navegar
+                                            onClick={() => handleMarkAsRead(notif.id)}
                                             title="Ver detalles"
                                         >
                                             <FontAwesomeIcon icon={faPaw} />
                                         </Link>
                                     )}
-                                    <button 
-                                        onClick={() => handleDeleteNotification(notif.id)} 
+                                    <button
+                                        onClick={() => handleDeleteNotification(notif.id)}
                                         className="btn-action btn-delete"
                                         title="Eliminar notificación"
                                     >

@@ -2,25 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import MascotaCard from '../components/MascotaCard'; // Tu componente de tarjeta
-import '../styles/Mascotas.css'; // Crearemos/actualizaremos este archivo CSS
-// Importar componentes de formulario si PublicarMascota es un componente separado
-import PublicarMascota from './PublicarMascota';
+import MascotaCard from '../components/MascotaCard';
+import '../styles/Mascotas.css';
 
 const Mascotas = () => {
     const [mascotas, setMascotas] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filtroNombre, setFiltroNombre] = useState('');
-    const [filtroEspecie, setFiltroEspecie] = useState('');
-    const [filtroRaza, setFiltroRaza] = useState('');
-    const [filtroSexo, setFiltroSexo] = useState('');
-    const [filtroEdadMin, setFiltroEdadMin] = useState('');
-    const [filtroEdadMax, setFiltroEdadMax] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Para mostrar botón de publicación
+    const [filters, setFilters] = useState({
+        nombre: '',
+        especie: '',
+        raza: '',
+        sexo: '',
+        edadMin: '',
+        edadMax: '',
+    });
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     useEffect(() => {
-        // Verificar autenticación (similar a como lo haces en App.js)
         const token = localStorage.getItem('token');
         if (token) {
             setIsAuthenticated(true);
@@ -28,9 +27,7 @@ const Mascotas = () => {
 
         const fetchMascotas = async () => {
             try {
-                // Aquí necesitarías una API real para obtener las mascotas
-                // Por ahora, usamos un placeholder o datos de prueba
-                const response = await axios.get('http://localhost:5000/api/mascotas'); // Ajusta tu endpoint API
+                const response = await axios.get('http://localhost:5000/api/mascotas');
                 setMascotas(response.data);
                 setLoading(false);
             } catch (err) {
@@ -43,34 +40,40 @@ const Mascotas = () => {
         fetchMascotas();
     }, []);
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        // Implementar la lógica de búsqueda aquí, quizás refetching de la API con parámetros
-        // o filtrado en el cliente si el dataset es pequeño.
-        console.log('Filtros aplicados:', {
-            filtroNombre, filtroEspecie, filtroRaza, filtroSexo, filtroEdadMin, filtroEdadMax
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            [name]: value
+        }));
+    };
+
+    const handleClearFilters = () => {
+        setFilters({
+            nombre: '',
+            especie: '',
+            raza: '',
+            sexo: '',
+            edadMin: '',
+            edadMax: '',
         });
-        // Aquí podrías refetch de la API con los query params
-        // O si ya tienes todas las mascotas, filtra en el cliente:
-        // const filtered = mascotas.filter(...)
-        // setMascotas(filtered); // Si filtras en cliente
     };
 
     if (loading) return <div className="loading-message">Cargando mascotas...</div>;
     if (error) return <div className="error-message">{error}</div>;
 
     const filteredMascotas = mascotas.filter(mascota => {
-        // Lógica de filtrado de ejemplo (adapta según tus datos y necesidades)
-        const nombreMatch = filtroNombre ? mascota.nombre.toLowerCase().includes(filtroNombre.toLowerCase()) : true;
-        const especieMatch = filtroEspecie ? mascota.especie.toLowerCase() === filtroEspecie.toLowerCase() : true;
-        const razaMatch = filtroRaza ? mascota.raza.toLowerCase().includes(filtroRaza.toLowerCase()) : true;
-        const sexoMatch = filtroSexo ? mascota.sexo.toLowerCase() === filtroSexo.toLowerCase() : true;
-        const edadMatchMin = filtroEdadMin ? mascota.edad >= parseInt(filtroEdadMin) : true;
-        const edadMatchMax = filtroEdadMax ? mascota.edad <= parseInt(filtroEdadMax) : true;
+        const { nombre, especie, raza, sexo, edadMin, edadMax } = filters;
+
+        const nombreMatch = nombre ? mascota.nombre.toLowerCase().includes(nombre.toLowerCase()) : true;
+        const especieMatch = especie ? mascota.especie.toLowerCase() === especie.toLowerCase() : true;
+        const razaMatch = raza ? mascota.raza.toLowerCase().includes(raza.toLowerCase()) : true;
+        const sexoMatch = sexo ? mascota.sexo.toLowerCase() === sexo.toLowerCase() : true;
+        const edadMatchMin = edadMin ? mascota.edad >= parseInt(edadMin) : true;
+        const edadMatchMax = edadMax ? mascota.edad <= parseInt(edadMax) : true;
 
         return nombreMatch && especieMatch && razaMatch && sexoMatch && edadMatchMin && edadMatchMax;
     });
-
 
     return (
         <div className="mascotas-page">
@@ -78,30 +81,32 @@ const Mascotas = () => {
                 <h1>Encuentra a tu Nuevo Compañero</h1>
                 <p>Navega entre nuestros adorables animales en busca de un hogar amoroso.</p>
                 {isAuthenticated && (
-                    <Link to="/publicar-mascota" className="btn-primary publish-btn">
+                    <Link to="/publicar-mascota" className="btn btn-primary publish-btn">
                         <i className="fas fa-plus-circle"></i> Publicar una Mascota
                     </Link>
                 )}
             </div>
 
             <div className="filters-section">
-                <form onSubmit={handleSearch} className="filters-form">
+                <form className="filters-form">
                     <div className="filter-group">
                         <label htmlFor="nombre">Nombre:</label>
                         <input
                             type="text"
                             id="nombre"
+                            name="nombre"
                             placeholder="Buscar por nombre..."
-                            value={filtroNombre}
-                            onChange={(e) => setFiltroNombre(e.target.value)}
+                            value={filters.nombre}
+                            onChange={handleFilterChange}
                         />
                     </div>
                     <div className="filter-group">
                         <label htmlFor="especie">Especie:</label>
                         <select
                             id="especie"
-                            value={filtroEspecie}
-                            onChange={(e) => setFiltroEspecie(e.target.value)}
+                            name="especie"
+                            value={filters.especie}
+                            onChange={handleFilterChange}
                         >
                             <option value="">Todas</option>
                             <option value="perro">Perro</option>
@@ -114,17 +119,19 @@ const Mascotas = () => {
                         <input
                             type="text"
                             id="raza"
+                            name="raza"
                             placeholder="Buscar por raza..."
-                            value={filtroRaza}
-                            onChange={(e) => setFiltroRaza(e.target.value)}
+                            value={filters.raza}
+                            onChange={handleFilterChange}
                         />
                     </div>
                     <div className="filter-group">
                         <label htmlFor="sexo">Sexo:</label>
                         <select
                             id="sexo"
-                            value={filtroSexo}
-                            onChange={(e) => setFiltroSexo(e.target.value)}
+                            name="sexo"
+                            value={filters.sexo}
+                            onChange={handleFilterChange}
                         >
                             <option value="">Cualquiera</option>
                             <option value="macho">Macho</option>
@@ -136,26 +143,21 @@ const Mascotas = () => {
                         <input
                             type="number"
                             placeholder="Min"
-                            value={filtroEdadMin}
-                            onChange={(e) => setFiltroEdadMin(e.target.value)}
+                            name="edadMin"
+                            value={filters.edadMin}
+                            onChange={handleFilterChange}
                             min="0"
                         />
                         <input
                             type="number"
                             placeholder="Max"
-                            value={filtroEdadMax}
-                            onChange={(e) => setFiltroEdadMax(e.target.value)}
+                            name="edadMax"
+                            value={filters.edadMax}
+                            onChange={handleFilterChange}
                             min="0"
                         />
                     </div>
-                    <button type="submit" className="btn-secondary filter-btn">
-                        <i className="fas fa-filter"></i> Aplicar Filtros
-                    </button>
-                    <button type="button" className="btn-clear-filters" onClick={() => {
-                        setFiltroNombre(''); setFiltroEspecie(''); setFiltroRaza('');
-                        setFiltroSexo(''); setFiltroEdadMin(''); setFiltroEdadMax('');
-                        // Opcional: refetch de todas las mascotas aquí
-                    }}>
+                    <button type="button" className="btn btn-secondary filter-btn" onClick={handleClearFilters}>
                         Limpiar Filtros
                     </button>
                 </form>
@@ -164,12 +166,9 @@ const Mascotas = () => {
             {filteredMascotas.length === 0 ? (
                 <div className="no-mascotas-message">
                     <p>No se encontraron mascotas que coincidan con tus criterios.</p>
-                    <button className="btn-secondary" onClick={() => {
-                        setFiltroNombre(''); setFiltroEspecie(''); setFiltroRaza('');
-                        setFiltroSexo(''); setFiltroEdadMin(''); setFiltroEdadMax('');
-                        // Aquí deberías re-cargar todas las mascotas si filtras en cliente
-                        // o simplemente el usuario ya limpió los filtros con el botón de limpiar
-                    }}>Ver todas las mascotas</button>
+                    <button className="btn btn-secondary" onClick={handleClearFilters}>
+                        Ver todas las mascotas
+                    </button>
                 </div>
             ) : (
                 <div className="mascotas-grid">

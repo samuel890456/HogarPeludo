@@ -1,208 +1,133 @@
-/* frontend/src/styles/Footer.css */
-
 /* ========================= */
-/* FOOTER GENERAL STYLES */
+/* 🦶 Estilos del Footer 🦶 */
 /* ========================= */
 
 .footer {
-    background-color: #2c3e50; /* Un gris azulado oscuro, más moderno */
-    color: #ecf0f1; /* Color de texto claro */
-    padding: 3rem 2rem;
-    font-family: 'Roboto', sans-serif; /* Usar una fuente más moderna y legible */
-    border-top: 5px solid #ff6600; /* Línea naranja distintiva en la parte superior */
+    background-color: var(--color-dark-gray);
+    color: var(--color-white);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    font-family: var(--font-family-body);
+    border-top: 5px solid var(--color-secondary);
 }
 
-/* Contenido principal del footer, flexbox para organizar secciones */
 .footer-content {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    gap: 2.5rem; /* Aumentar espacio entre secciones */
+    gap: var(--spacing-lg);
     max-width: 1200px;
     margin: 0 auto;
-    text-align: center; /* Por defecto centrado para móviles */
+    text-align: center;
 }
 
-/* Estilos para cada sección individual del footer */
 .footer-section {
     flex: 1;
-    min-width: 280px; /* Ancho mínimo ajustado para evitar que se aplasten */
-    margin-bottom: 1.5rem; /* Espacio inferior para secciones en modo wrap */
+    min-width: 250px;
+    margin-bottom: var(--spacing-md);
 }
 
 .footer-section h3 {
-    font-size: 1.6rem; /* Títulos ligeramente más grandes */
-    margin-bottom: 1.2rem;
-    color: #ffffff;
-    border-bottom: 2px solid #ff6600; /* Subrayado de marca */
-    padding-bottom: 0.7rem;
-    display: inline-block; /* Para que el borde se ajuste al texto */
+    font-size: 1.4rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-white);
+    border-bottom: 2px solid var(--color-secondary);
+    padding-bottom: var(--spacing-xs);
+    display: inline-block;
     font-weight: 600;
 }
 
 .footer-section p {
     font-size: 0.95rem;
     line-height: 1.7;
-    margin-bottom: 1rem;
-    color: #bdc3c7; /* Color de texto más suave */
+    color: var(--color-text-light);
 }
 
-/* --- Sección de Enlaces Rápidos --- */
-.footer-links ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.footer-section ul li {
+    margin-bottom: var(--spacing-xs);
 }
 
-.footer-links ul li {
-    margin-bottom: 0.8rem;
-}
-
-.footer-links ul li a {
-    color: #ecf0f1;
+.footer-section ul li a {
+    color: var(--color-white);
     text-decoration: none;
     transition: color 0.3s ease, transform 0.2s ease;
     font-size: 1rem;
-    display: inline-block; /* Permite aplicar transformaciones */
+    display: inline-block;
 }
 
-.footer-links ul li a:hover {
-    color: #ff6600; /* Color al pasar el ratón */
-    transform: translateX(5px); /* Pequeño desplazamiento al pasar el ratón */
+.footer-section ul li a:hover {
+    color: var(--color-secondary);
+    transform: translateX(5px);
 }
 
-/* --- Redes Sociales --- */
 .social-links {
-    margin-top: 1.5rem;
+    margin-top: var(--spacing-md);
     display: flex;
-    justify-content: center; /* Centrar iconos en el diseño de una columna */
-    gap: 1.5rem; /* Espacio entre los iconos */
+    justify-content: center;
+    gap: var(--spacing-md);
 }
 
 .social-links a {
-    color: #ecf0f1;
-    font-size: 2rem; /* Iconos más grandes */
+    color: var(--color-white);
+    font-size: 1.8rem;
     transition: color 0.3s ease, transform 0.2s ease;
     text-decoration: none;
-    display: inline-flex; /* Para centrar el icono si hay padding, aunque no lo hay aquí */
-    align-items: center;
-    justify-content: center;
 }
 
 .social-links a:hover {
-    color: #007bff; /* Un azul vibrante para los hover de social */
-    transform: translateY(-5px) scale(1.1); /* Efecto de levitación y escala */
+    color: var(--color-secondary);
+    transform: translateY(-3px) scale(1.1);
 }
 
-/* --- Información de Contacto --- */
-.footer-contact p {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Centrar iconos y texto en móviles */
-    gap: 0.8rem; /* Espacio entre el icono y el texto */
-    margin-bottom: 0.8rem;
-    color: #bdc3c7;
-}
-
-.footer-contact .svg-inline--fa { /* Estilo específico para los iconos de FontAwesome */
-    color: #ff6600; /* Color de icono para la marca */
-    font-size: 1.1rem;
-    width: 20px; /* Asegura un ancho fijo para alinear el texto */
-    text-align: center;
-}
-
-/* --- Sección inferior del footer (Copyright y enlaces legales) --- */
 .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Separador sutil */
-    padding-top: 1.8rem;
-    margin-top: 3rem; /* Más espacio por encima */
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    padding-top: var(--spacing-md);
+    margin-top: var(--spacing-lg);
     text-align: center;
     font-size: 0.85rem;
-    color: #95a5a6; /* Gris más oscuro para el texto de copyright */
+    color: var(--color-text-light);
 }
 
-.footer-bottom .legal-links {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* Permitir que los enlaces se envuelvan en pantallas pequeñas */
-    gap: 15px; /* Espacio entre enlaces */
-}
-
-.footer-bottom .legal-links a {
-    color: #95a5a6;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-bottom .legal-links a:hover {
-    color: #ff6600;
-}
-
-/* ========================= */
-/* ⚡ DISEÑO RESPONSIVO DEL FOOTER ⚡ */
-/* ========================= */
-
+/* Responsive */
 @media (min-width: 769px) {
     .footer-content {
-        text-align: left; /* Alinear a la izquierda en escritorio */
+        text-align: left;
     }
 
     .footer-section {
-        min-width: auto; /* Desactivar min-width fijo en escritorio para un flex más natural */
-    }
-
-    .footer-contact p {
-        justify-content: flex-start; /* Alinear iconos y texto a la izquierda en escritorio */
+        min-width: auto;
     }
 
     .social-links {
-        justify-content: flex-start; /* Alinear iconos sociales a la izquierda en escritorio */
+        justify-content: flex-start;
     }
 }
 
 @media (max-width: 768px) {
     .footer {
-        padding: 2rem 1rem;
+        padding: var(--spacing-lg) var(--spacing-md);
     }
     .footer-section {
-        min-width: 100%; /* Una columna en pantallas pequeñas */
+        min-width: 100%;
         text-align: center;
     }
     .footer-section h3 {
-        font-size: 1.4rem;
-        margin-bottom: 0.8rem;
+        font-size: 1.2rem;
     }
     .social-links a {
-        font-size: 1.7rem;
-        margin: 0 0.8rem;
-    }
-    .footer-contact p {
-        flex-direction: row; /* Mantener en fila, ajustar si el texto es muy largo */
-        justify-content: center;
+        font-size: 1.5rem;
     }
 }
 
 @media (max-width: 480px) {
     .footer-section h3 {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     .footer-section p,
-    .footer-links ul li a,
-    .footer-contact p,
-    .footer-bottom p,
-    .footer-bottom .legal-links a {
+    .footer-section ul li a,
+    .footer-bottom p {
         font-size: 0.8rem;
     }
     .social-links a {
-        font-size: 1.5rem;
-        margin: 0 0.6rem;
-    }
-    .footer-contact .svg-inline--fa {
-        font-size: 1rem;
-    }
-    .legal-links {
-        flex-direction: column; /* Apilar enlaces legales en pantallas muy pequeñas */
-        gap: 8px;
+        font-size: 1.3rem;
     }
 }

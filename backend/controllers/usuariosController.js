@@ -1,21 +1,6 @@
 const Usuario = require('../models/usuariosModel');
 const bcrypt = require('bcrypt');
 
-// Registrar un nuevo usuario
-exports.registrarUsuario = async (req, res) => {
-    try {
-        const { nombre, email, contraseña, telefono, direccion, rol_id } = req.body;
-
-        // Hash de la contraseña
-        const hashedPassword = await bcrypt.hash(contraseña, 10);
-
-        const id = await Usuario.create(nombre, email, hashedPassword, telefono, direccion, rol_id);
-        res.status(201).json({ id, nombre, email, telefono, direccion, rol_id });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
 // Obtener un usuario por su ID
 exports.getUsuarioById = async (req, res) => {
     try {

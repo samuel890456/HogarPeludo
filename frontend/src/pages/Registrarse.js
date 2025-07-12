@@ -41,7 +41,7 @@ const Registrarse = () => {
             </div>
             <div className="auth-card">
                 <h1 className="auth-title">Regístrate</h1>
-                <p className="auth-subtitle">Únete a nuestra comunidad y encuentra a tu compañero ideal.</p>
+                <p className="auth-subtitle">Únete a nuestra comunidad y encuentra a tu compañero ideal en Hogar Peludo.</p>
 
                 {error && <p className="auth-error-message">{error}</p>}
 
@@ -85,7 +85,7 @@ const Registrarse = () => {
                         />
                     </div>
                     
-                    <button type="submit" className="auth-submit-button">
+                    <button type="submit" className="btn auth-submit-button">
                         Crear Cuenta
                     </button>
                 </form>

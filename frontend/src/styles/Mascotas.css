@@ -1,73 +1,63 @@
 /* ========================= */
-/* 🐾 ESTILOS DE PÁGINA MASCOTAS 🐾 */
+/* 🐾 Estilos de la Página de Mascotas 🐾 */
 /* ========================= */
 
 .mascotas-page {
-    padding: 30px 20px;
-    max-width: 1400px; /* Ancho máximo para el contenido principal */
+    padding: var(--spacing-lg) var(--spacing-md);
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 .mascotas-header-section {
     text-align: center;
-    margin-bottom: 40px;
-    padding: 20px 0;
-    background-color: #f7fbf7; /* Fondo suave para el encabezado */
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-sm);
 }
 
 .mascotas-header-section h1 {
-    font-size: 3rem;
-    color: #333;
-    margin-bottom: 10px;
-    font-weight: 800;
+    font-size: 2.5rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
 }
 
 .mascotas-header-section p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-bottom: 25px;
+    font-size: 1.1rem;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-lg);
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
 }
 
-.mascotas-header-section .publish-btn {
-    padding: 14px 30px;
-    font-size: 1.1rem;
-    background-color: #FF6600; /* Naranja llamativo */
-    color: white;
+.publish-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 1rem;
     border-radius: 50px; /* Botón tipo píldora */
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--box-shadow-sm);
 }
 
-.mascotas-header-section .publish-btn:hover {
-    background-color: #E65C00;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+.publish-btn:hover {
+    box-shadow: var(--box-shadow-md);
 }
 
-/* ======== Sección de Filtros ======== */
+/* Filters Section */
 .filters-section {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 40px;
-    border-left: 5px solid #4CAF50; /* Línea decorativa verde */
+    background-color: var(--color-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-md);
+    margin-bottom: var(--spacing-xl);
+    border-left: 5px solid var(--color-secondary);
 }
 
 .filters-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    align-items: flex-end; /* Alinea los elementos al final */
+    gap: var(--spacing-md);
+    align-items: flex-end;
 }
 
 .filter-group {
@@ -77,116 +67,70 @@
 
 .filter-group label {
     font-weight: 600;
-    color: #4CAF50; /* Verde para las etiquetas */
-    margin-bottom: 8px;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-xs);
     font-size: 0.95rem;
 }
 
 .filter-group input,
 .filter-group select {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    color: #333;
-    background-color: #fdfdfd;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.filter-group input:focus,
-.filter-group select:focus {
-    border-color: #4CAF50;
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-    outline: none;
+    /* Ya extiende estilos base de input/select */
+    padding: var(--spacing-sm);
 }
 
 .filter-group.age-filters {
-    flex-direction: row; /* Inputs de edad en la misma línea */
-    gap: 10px;
-    align-items: center; /* Alinea los inputs con la etiqueta */
-}
-.filter-group.age-filters label {
-    margin-bottom: 0; /* Elimina margen inferior de la etiqueta en este grupo */
-}
-
-.filter-group.age-filters input {
-    flex-grow: 1; /* Permite que los inputs de edad crezcan */
-}
-
-
-.filter-btn, .btn-clear-filters {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    font-size: 1rem;
-    display: inline-flex;
+    flex-direction: row;
+    gap: var(--spacing-xs);
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 10px; /* Para alinear con los inputs si es necesario */
+}
+
+.filter-group.age-filters label {
+    margin-bottom: 0;
 }
 
 .filter-btn {
-    background-color: #007bff; /* Azul para filtrar */
-    color: white;
-}
-.filter-btn:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 1rem;
+    margin-top: var(--spacing-xs);
 }
 
-.btn-clear-filters {
-    background-color: #f0f0f0; /* Gris claro */
-    color: #555;
-    border: 1px solid #ccc;
-}
-.btn-clear-filters:hover {
-    background-color: #e0e0e0;
-    transform: translateY(-2px);
-}
-
-
-/* ======== Cuadrícula de Mascotas ======== */
+/* Mascotas Grid */
 .mascotas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Columnas responsivas */
-    gap: 30px; /* Espacio entre tarjetas */
-    padding: 20px 0;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md) 0;
 }
 
-/* Mensajes de estado */
-.loading-message, .error-message, .no-mascotas-message {
+/* No Mascotas Message */
+.no-mascotas-message {
     text-align: center;
-    font-size: 1.3rem;
-    color: #777;
-    padding: 50px 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    margin-top: 40px;
+    font-size: 1.2rem;
+    color: var(--color-text-light);
+    padding: var(--spacing-xl);
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-sm);
+    margin-top: var(--spacing-lg);
 }
 
 .no-mascotas-message p {
     font-size: 1.1rem;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
 }
-.no-mascotas-message .btn-secondary {
-    padding: 10px 20px;
+
+.no-mascotas-message .btn {
+    padding: var(--spacing-sm) var(--spacing-md);
     font-size: 1rem;
 }
 
-
-/* ========================= */
-/* 📱 RESPONSIVO DE PÁGINA MASCOTAS 📱 */
-/* ========================= */
+/* Responsive */
 @media (max-width: 992px) {
     .mascotas-header-section h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
     .mascotas-header-section p {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     .filters-form {
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -195,54 +139,51 @@
 
 @media (max-width: 768px) {
     .mascotas-page {
-        padding: 20px 15px;
+        padding: var(--spacing-md) var(--spacing-sm);
     }
     .mascotas-header-section h1 {
         font-size: 2rem;
     }
-    .mascotas-header-section .publish-btn {
-        font-size: 1rem;
-        padding: 12px 25px;
+    .publish-btn {
+        font-size: 0.9rem;
+        padding: var(--spacing-xs) var(--spacing-md);
     }
     .filters-section {
-        padding: 20px;
+        padding: var(--spacing-md);
     }
     .filters-form {
-        grid-template-columns: 1fr; /* Una columna en móviles */
+        grid-template-columns: 1fr;
     }
     .filter-group.age-filters {
-        flex-direction: column; /* Apila los inputs de edad en móviles */
+        flex-direction: column;
         gap: 0;
     }
     .filter-group.age-filters input {
-        margin-top: 10px; /* Espacio entre ellos */
+        margin-top: var(--spacing-xs);
     }
     .filter-group.age-filters label {
         width: 100%;
         text-align: left;
     }
-    .filter-btn, .btn-clear-filters {
-        width: 100%; /* Botones de filtro de ancho completo */
-        margin-top: 15px;
+    .filter-btn {
+        width: 100%;
+        margin-top: var(--spacing-md);
     }
     .mascotas-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
+        gap: var(--spacing-md);
     }
 }
 
 @media (max-width: 480px) {
-    .mascotas-header-section {
-        padding: 15px 0;
-    }
     .mascotas-header-section h1 {
         font-size: 1.8rem;
     }
     .mascotas-header-section p {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
     }
     .mascotas-grid {
-        grid-template-columns: 1fr; /* Solo una columna en móviles muy pequeños */
-        gap: 15px;
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
     }
 }

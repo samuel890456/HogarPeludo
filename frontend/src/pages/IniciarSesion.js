@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { iniciarSesion, googleLogin } from '../api/api.js'; // <--- Importa googleLogin
-import { GoogleLogin } from '@react-oauth/google'; // <--- Importa GoogleLogin
+import { iniciarSesion, googleLogin } from '../api/api.js';
+import { GoogleLogin } from '@react-oauth/google';
 import '../styles/AuthForms.css';
 
 const IniciarSesion = ({ onLogin }) => {
@@ -12,13 +12,12 @@ const IniciarSesion = ({ onLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(''); 
+        setError('');
         try {
-            const userData = await iniciarSesion({ email, contraseña: password }); 
+            const userData = await iniciarSesion({ email, contraseña: password });
             onLogin(userData);
         } catch (err) {
             console.error('Error al iniciar sesión:', err);
-            // Captura el mensaje de error del backend si existe
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
             } else {
@@ -27,16 +26,13 @@ const IniciarSesion = ({ onLogin }) => {
         }
     };
 
-    // Función que se ejecuta al iniciar sesión con Google exitosamente
     const handleGoogleSuccess = async (credentialResponse) => {
         setError('');
         try {
-            // Envía el ID Token de Google a tu backend
             const userData = await googleLogin({ idToken: credentialResponse.credential });
-            onLogin(userData); // Maneja el login con los datos de tu app
+            onLogin(userData);
         } catch (err) {
             console.error('Error al iniciar sesión con Google:', err);
-            // Captura el mensaje de error del backend si existe
             if (err.response && err.response.data && err.response.data.message) {
                 setError(`Error al iniciar sesión con Google: ${err.response.data.message}`);
             } else {
@@ -45,7 +41,6 @@ const IniciarSesion = ({ onLogin }) => {
         }
     };
 
-    // Función que se ejecuta si falla el inicio de sesión con Google
     const handleGoogleFailure = (error) => {
         console.error('Fallo el inicio de sesión con Google:', error);
         setError('Fallo el inicio de sesión con Google. Inténtalo de nuevo.');
@@ -55,7 +50,7 @@ const IniciarSesion = ({ onLogin }) => {
         <div className="auth-container">
             <div className="auth-card">
                 <h1 className="auth-title">Inicia Sesión</h1>
-                <p className="auth-subtitle">¡Bienvenido de nuevo a Huellitas de Esperanza!</p>
+                <p className="auth-subtitle">¡Bienvenido de nuevo a Hogar Peludo!</p>
 
                 {error && <p className="auth-error-message">{error}</p>}
 
@@ -72,7 +67,7 @@ const IniciarSesion = ({ onLogin }) => {
                             aria-label="Correo electrónico"
                         />
                     </div>
-                    
+
                     <div className="form-group">
                         <label htmlFor="password-login">Contraseña</label>
                         <input
@@ -85,27 +80,25 @@ const IniciarSesion = ({ onLogin }) => {
                             aria-label="Contraseña"
                         />
                     </div>
-                    
-                    <button type="submit" className="auth-submit-button">
+
+                    <button type="submit" className="btn auth-submit-button">
                         Iniciar Sesión
                     </button>
                 </form>
 
-                {/* Separador o texto "O" */}
                 <div className="auth-separator">
                     <span className="separator-text">O</span>
                 </div>
 
-                {/* Botón de Google Login */}
                 <div className="google-login-button-container">
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
                         onError={handleGoogleFailure}
-                        text="signin_with" // Cambia el texto del botón (opcional)
-                        width="350px" // Ajusta el ancho para que coincida con el formulario
-                        type="standard" // 'standard' o 'icon'
-                        size="large" // 'small', 'medium', 'large'
-                        theme="filled_blue" // 'outline' o 'filled_blue'
+                        text="signin_with"
+                        width="350px"
+                        type="standard"
+                        size="large"
+                        theme="filled_blue"
                     />
                 </div>
 

@@ -1,99 +1,123 @@
-// frontend/src/api/adminApi.js
-const API_URL = 'http://localhost:5000/admin';
+import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
-const getAuthHeaders = () => {
+const adminApi = axios.create({
+    baseURL: `${API_BASE_URL}/admin`
+});
+
+adminApi.interceptors.request.use(config => {
     const token = localStorage.getItem('token');
-    return {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-    };
-};
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+}, error => {
+    return Promise.reject(error);
+});
 
 // ✅ RESUMEN
 export const fetchResumen = async () => {
-    const response = await fetch(`${API_URL}/resumen`, {
-        headers: getAuthHeaders()
-    });
+    try {
+        const response = await adminApi.get(`/resumen`);
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Error al obtener resumen');
+        if (response.status !== 200) {
+            throw new Error(response.data.message || 'Error al obtener resumen');
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener resumen:', error.response ? error.response.data : error.message);
+        throw error;
     }
-
-    return response.json();
 };
 
 // ✅ MASCOTAS
 export async function fetchMascotas() {
-    const response = await fetch(`${API_URL}/mascotas`, {
-        headers: getAuthHeaders()
-    });
+    try {
+        const response = await adminApi.get(`/mascotas`);
 
-    if (!response.ok) throw new Error('Error al obtener mascotas');
-    return await response.json();
+        if (response.status !== 200) throw new Error('Error al obtener mascotas');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener mascotas:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 }
 
 export const eliminarMascota = async (id) => {
-    return fetch(`${API_URL}/mascotas/${id}`, {
-        method: 'DELETE',
-        headers: getAuthHeaders()
-    });
+    try {
+        return adminApi.delete(`/mascotas/${id}`);
+    } catch (error) {
+        console.error('Error al eliminar mascota:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 };
 
 // ✅ SOLICITUDES
 export async function fetchSolicitudes() {
-    const response = await fetch(`${API_URL}/solicitudes`, {
-        headers: getAuthHeaders()
-    });
+    try {
+        const response = await adminApi.get(`/solicitudes`);
 
-    if (!response.ok) throw new Error('Error al obtener solicitudes');
-    return await response.json();
+        if (response.status !== 200) throw new Error('Error al obtener solicitudes');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener solicitudes:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 }
 
 export const aprobarSolicitud = async (id) => {
-    return fetch(`${API_URL}/solicitudes/${id}/aprobar`, {
-        method: 'PUT',
-        headers: getAuthHeaders()
-    });
+    try {
+        return adminApi.put(`/solicitudes/${id}/aprobar`);
+    } catch (error) {
+        console.error('Error al aprobar solicitud:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 };
 
 export const rechazarSolicitud = async (id) => {
-    return fetch(`${API_URL}/solicitudes/${id}/rechazar`, {
-        method: 'PUT',
-        headers: getAuthHeaders()
-    });
+    try {
+        return adminApi.put(`/solicitudes/${id}/rechazar`);
+    } catch (error) {
+        console.error('Error al rechazar solicitud:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 };
 
 // ✅ USUARIOS
 export async function fetchUsuarios() {
-    const response = await fetch(`${API_URL}/usuarios`, {
-        headers: getAuthHeaders()
-    });
+    try {
+        const response = await adminApi.get(`/usuarios`);
 
-    if (!response.ok) throw new Error('Error al obtener usuarios');
-    return await response.json();
+        if (response.status !== 200) throw new Error('Error al obtener usuarios');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 }
 export const getUsuarios = async () => {
-    const response = await fetch(`${API_URL}/usuarios`, {
-        headers: getAuthHeaders()
-    });
-    
-    if (!response.ok) throw new Error('Error al obtener usuarios');
-    return await response.json();
+    try {
+        const response = await adminApi.get(`/usuarios`);
+        
+        if (response.status !== 200) throw new Error('Error al obtener usuarios');
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error.response ? error.response.data : error.message);
+        throw error;
+    }
 };
 export const toggleUsuario = async (id) => {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`http://localhost:5000/admin/usuarios/${id}/toggle`, {
-        method: 'PUT',
-        headers: {
-            'Authorization': `Bearer ${token}`
+    try {
+        const response = await adminApi.put(`/usuarios/${id}/toggle`);
+
+        if (response.status !== 200) {
+            throw new Error(response.data.message || 'Error al cambiar estado del usuario');
         }
-    });
 
-    if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Error al cambiar estado del usuario');
+        return response.data;
+    } catch (error) {
+        console.error('Error al cambiar estado del usuario:', error.response ? error.response.data : error.message);
+        throw error;
     }
-
-    return await response.json();
 };

@@ -53,7 +53,7 @@ const OlvideContrasena = () => {
                         />
                     </div>
                     
-                    <button type="submit" className="auth-submit-button" disabled={loading}>
+                    <button type="submit" className="btn auth-submit-button" disabled={loading}>
                         {loading ? 'Enviando...' : 'Enviar Enlace'}
                     </button>
                 </form>
@@ -65,7 +65,7 @@ const OlvideContrasena = () => {
             {/* Puedes usar la misma imagen o una diferente para esta página */}
             <div className="auth-image-banner">
                 <Link to="/">
-                    <img src="/images/forgot-password-illustration.png" alt="Persona pensando en contraseña" className="auth-illustration" />
+                    <img src="/images/forgot-password-illustration.png" alt="Mascota con signo de interrogación" className="auth-illustration" />
                 </Link>
                 <p className="banner-text">Recupera el acceso a tu cuenta</p>
             </div>

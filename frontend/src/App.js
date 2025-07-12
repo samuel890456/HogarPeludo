@@ -1,5 +1,9 @@
 // src/App.js
-import React, { useState, useEffect } from 'react';  
+import React, { useState, useEffect, lazy, Suspense } from 'react'; 
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
+const GestionMascotas = lazy(() => import('./pages/admin/GestionMascotas'));
+const GestionSolicitudes = lazy(() => import('./pages/admin/GestionSolicitudes'));
+const GestionUsuarios = lazy(() => import('./pages/admin/GestionUsuarios')); 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; 
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import Header from './components/Header';
@@ -11,23 +15,20 @@ import SolicitudesPage from './pages/SolicitudesPage';
 import NotificationsPage from './pages/NotificationsPage'; 
 import IniciarSesion from './pages/IniciarSesion';
 import Registrarse from './pages/Registrarse';
-import OlvideContrasena from './pages/OlvideContrasena'; // <--- Nueva importación
-import RestablecerContrasena from './pages/RestablecerContrasena'; // <--- Nueva importación
+import OlvideContrasena from './pages/OlvideContrasena'; 
+import RestablecerContrasena from './pages/RestablecerContrasena'; 
 import Perfil from './pages/Perfil';
 import MascotaDetalle from './components/MascotaDetalle';
 import PublicarMascota from './pages/PublicarMascota';
 import MisPublicaciones from './pages/MisPublicaciones';
 import MascotaForm from './components/MascotaForm'; 
-import './styles/App.css';
-//import for admin dashboard
-import Dashboard from './pages/admin/Dashboard';
-import GestionMascotas from './pages/admin/GestionMascotas';
-import GestionSolicitudes from './pages/admin/GestionSolicitudes';
-import GestionUsuarios from './pages/admin/GestionUsuarios';
+import Fundaciones from './pages/Fundaciones';
+import FundacionDetail from './pages/FundacionDetail'; 
 import RutaPrivada from './components/RutaPrivada';
 import AdminNav from './components/admin/AdminNav'; 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './styles/App.css';
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -108,7 +109,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home />} />
 
-            {/* Admin routes protected by checking for admin role (ID '1') */}
+                        {/* Admin routes protected by checking for admin role (ID '1') */}
                 <Route path="/admin" element={
           <RutaPrivada allowedRoles={['1']}> {/* Pass array of allowed roles */}
             <AdminNav />
@@ -116,22 +117,30 @@ const App = () => {
         } />
         <Route path="/admin/dashboard" element={
           <RutaPrivada allowedRoles={['1']}>
-            <Dashboard />
+            <Suspense fallback={<div>Cargando Dashboard...</div>}>
+              <Dashboard />
+            </Suspense>
           </RutaPrivada>
         } />
         <Route path="/admin/mascotas" element={
           <RutaPrivada allowedRoles={['1']}>
-            <GestionMascotas />
+            <Suspense fallback={<div>Cargando Gestión de Mascotas...</div>}>
+              <GestionMascotas />
+            </Suspense>
           </RutaPrivada>
         } />
         <Route path="/admin/solicitudes" element={
           <RutaPrivada allowedRoles={['1']}>
-            <GestionSolicitudes />
+            <Suspense fallback={<div>Cargando Gestión de Solicitudes...</div>}>
+              <GestionSolicitudes />
+            </Suspense>
           </RutaPrivada>
         } />
         <Route path="/admin/usuarios" element={
           <RutaPrivada allowedRoles={['1']}>
-            <GestionUsuarios />
+            <Suspense fallback={<div>Cargando Gestión de Usuarios...</div>}>
+              <GestionUsuarios />
+            </Suspense>
           </RutaPrivada>
         } />
         
@@ -171,6 +180,8 @@ const App = () => {
                         <MisPublicaciones user={user} />
                     </RutaPrivada>
                 } />
+            <Route path="/fundaciones" element={<Fundaciones />} />
+            <Route path="/fundaciones/:id" element={<FundacionDetail />} />
           </Routes>
         </main>
         <Footer />

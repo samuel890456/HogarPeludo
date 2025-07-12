@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Importa useNavigate
 import MascotaCard from '../components/MascotaCard';
-// import MascotaForm from '../components/MascotaForm'; // Ya no lo importamos aquí directamente para edición
+
 import { getMascotasByUserId, deleteMascota as apiDeleteMascota } from '../api/api';
 import { toast } from 'react-toastify';
 import '../styles/MisPublicaciones.css';
@@ -82,7 +82,7 @@ const MisPublicaciones = () => {
                 {misMascotas.length === 0 ? (
                     <div className="no-mascotas-message">
                         <p>No tienes publicaciones activas.</p>
-                        <Link to="/publicar-mascota" className="btn-primary">Publicar mi primera mascota</Link>
+                        <Link to="/publicar-mascota" className="btn btn-primary">Publicar mi primera mascota</Link>
                     </div>
                 ) : (
                     <div className="mascotas-grid-mis-publicaciones">
@@ -90,10 +90,10 @@ const MisPublicaciones = () => {
                             <div key={mascota.id} className="mi-publicacion-item-wrapper">
                                 <MascotaCard mascota={mascota} showDetailButton={false} />
                                 <div className="item-actions">
-                                    <button className="btn-edit" onClick={() => handleEditClick(mascota)}>
+                                    <button className="btn btn-primary" onClick={() => handleEditClick(mascota)}>
                                         <i className="fas fa-edit"></i> Editar
                                     </button>
-                                    <button className="btn-delete" onClick={() => handleDeleteClick(mascota.id)}>
+                                    <button className="btn btn-danger" onClick={() => handleDeleteClick(mascota.id)}>
                                         <i className="fas fa-trash"></i> Eliminar
                                     </button>
                                 </div>
@@ -107,7 +107,7 @@ const MisPublicaciones = () => {
                     <div className="modal-content">
                         <p>¿Estás seguro de que quieres eliminar esta publicación?</p>
                         <div className="modal-actions">
-                            <button className="btn btn-cancel" onClick={cancelDelete}>Cancelar</button>
+                            <button className="btn btn-secondary" onClick={cancelDelete}>Cancelar</button>
                             <button className="btn btn-danger" onClick={confirmDelete}>Sí, eliminar</button>
                         </div>
                     </div>

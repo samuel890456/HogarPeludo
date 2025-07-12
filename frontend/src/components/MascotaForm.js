@@ -46,7 +46,8 @@ const MascotaForm = () => {
         descripcion: '',
         estado_salud: '',
         historia: '',
-        ubicacion: '',
+        ciudad: '',
+        pais: '',
         imagen: null,
         imagen_url_preview: null,
         disponible: true,
@@ -55,6 +56,11 @@ const MascotaForm = () => {
         clear_imagen: false,
         tags: [],
     });
+    const [countries, setCountries] = useState([
+        'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba', 'Ecuador',
+        'El Salvador', 'España', 'Guatemala', 'Honduras', 'México', 'Nicaragua', 'Panamá',
+        'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana', 'Uruguay', 'Venezuela'
+    ]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
@@ -67,6 +73,17 @@ const MascotaForm = () => {
             const fetchMascota = async () => {
                 try {
                     const mascota = await getMascotaById(id);
+                    let ciudad = '';
+                    let pais = '';
+                    if (mascota.ubicacion) {
+                        const parts = mascota.ubicacion.split(', ');
+                        if (parts.length > 1) {
+                            ciudad = parts[0];
+                            pais = parts[1];
+                        } else {
+                            ciudad = mascota.ubicacion;
+                        }
+                    }
                     setFormData({
                         nombre: mascota.nombre || '',
                         especie: mascota.especie || '',
@@ -79,8 +96,9 @@ const MascotaForm = () => {
                         descripcion: mascota.descripcion || '',
                         estado_salud: mascota.estado_salud || '',
                         historia: mascota.historia || '',
-                        ubicacion: mascota.ubicacion || '',
-                        imagen: null, // No precargar el archivo, solo el preview
+                        ciudad: ciudad,
+                        pais: pais,
+                        imagen: null,
                         imagen_url_preview: mascota.imagen_url ? `${UPLOADS_BASE_URL}${mascota.imagen_url}` : null,
                         disponible: mascota.disponible,
                         esterilizado: mascota.esterilizado === 1,
@@ -101,7 +119,7 @@ const MascotaForm = () => {
             setIsEditing(false);
             setFormData({
                 nombre: '', especie: '', raza: '', edad: '', sexo: '', tamano: '', peso: '', color: '',
-                descripcion: '', estado_salud: '', historia: '', ubicacion: '', imagen: null,
+                descripcion: '', estado_salud: '', historia: '', ciudad: '', pais: '', imagen: null,
                 imagen_url_preview: null, disponible: true, esterilizado: false, vacunas: false, clear_imagen: false, tags: []
             });
         }
@@ -152,10 +170,16 @@ const MascotaForm = () => {
                 data.append('imagen', formData.imagen);
             } else if (key === 'tags') {
                 data.append('tags', JSON.stringify(formData.tags));
+            } else if (key === 'ciudad' || key === 'pais') {
+                // No añadir directamente, se manejará la ubicación combinada
             } else if (key !== 'imagen_url_preview' && key !== 'imagen') {
                 data.append(key, formData[key]);
             }
         }
+
+        // Combinar ciudad y país en el campo de ubicación
+        const ubicacionCompleta = `${formData.ciudad.trim()}, ${formData.pais.trim()}`;
+        data.append('ubicacion', ubicacionCompleta);
         
         // Si se limpió la imagen en el modo de edición, enviar la señal al backend
         if (isEditing && formData.clear_imagen && !formData.imagen) {
@@ -284,8 +308,17 @@ const MascotaForm = () => {
                             </div>
                         </div>
                         <div className="form-group full-width">
-                            <label htmlFor="ubicacion">Ubicación (Ciudad, País)<span className="required">*</span></label>
-                            <input type="text" id="ubicacion" name="ubicacion" value={formData.ubicacion} onChange={handleChange} required placeholder="Ej: Medellín, Colombia" />
+                            <label htmlFor="ciudad">Ciudad<span className="required">*</span></label>
+                            <input type="text" id="ciudad" name="ciudad" value={formData.ciudad} onChange={handleChange} required placeholder="Ej: Medellín" />
+                        </div>
+                        <div className="form-group full-width">
+                            <label htmlFor="pais">País<span className="required">*</span></label>
+                            <select id="pais" name="pais" value={formData.pais} onChange={handleChange} required>
+                                <option value="">Selecciona un país</option>
+                                {countries.map(country => (
+                                    <option key={country} value={country}>{country}</option>
+                                ))}
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -397,10 +430,10 @@ const MascotaForm = () => {
                 </div>
 
                 <div className="form-actions">
-                    <button type="submit" className="btn-primary" disabled={loading}>
+                    <button type="submit" className="btn btn-primary" disabled={loading}>
                         {loading ? 'Guardando...' : (isEditing ? 'Guardar Cambios' : 'Publicar Mascota')}
                     </button>
-                    <button type="button" className="btn-secondary" onClick={() => navigate('/mis-publicaciones')} disabled={loading}>
+                    <button type="button" className="btn btn-secondary" onClick={() => navigate('/mis-publicaciones')} disabled={loading}>
                         Cancelar
                     </button>
                 </div>

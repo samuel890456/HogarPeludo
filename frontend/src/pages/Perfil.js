@@ -1,25 +1,14 @@
-// src/pages/Perfil.js
 import React, { useState, useEffect } from 'react';
 import Switch from "react-switch";
-import { useUserProfile } from '../hooks/useUserProfile.js'; // Importa el hook personalizado
-import ConfirmationDialog from '../components/ConfirmationDialog.js'; // Importa el nuevo componente
-import LoadingSpinner from '../components/LoadingSpinner.js'; // Asume que tienes un spinner básico
-import ErrorMessage from '../components/ErrorMessage.js'; // Asume que tienes un componente para mensajes de error
+import { useUserProfile } from '../hooks/useUserProfile.js';
+import ConfirmationDialog from '../components/ConfirmationDialog.js';
+import LoadingSpinner from '../components/LoadingSpinner.js';
+import ErrorMessage from '../components/ErrorMessage.js';
 import '../styles/Perfil.css';
 
-/**
- * Componente principal para gestionar y mostrar el perfil del usuario.
- * Utiliza el hook `useUserProfile` para la lógica de datos y `ConfirmationDialog` para la eliminación de cuenta.
- *
- * @param {object} props - Propiedades del componente.
- * @param {object} props.user - Objeto de usuario autenticado (debería contener al menos el 'id').
- */
 const Perfil = ({ user }) => {
-    // Obtenemos el ID del usuario de las props. Si no está, intentamos de localStorage (como fallback)
-    // Es crucial que 'user' se pase correctamente desde el componente principal (App.js)
     const userId = user?.id || localStorage.getItem('userId');
 
-    // Usamos el hook personalizado para toda la lógica de gestión del perfil
     const {
         userData,
         loading,
@@ -30,7 +19,6 @@ const Perfil = ({ user }) => {
         deleteAccount,
     } = useUserProfile(userId);
 
-    // Estados locales para los campos del formulario, inicializados con los datos del hook
     const [formData, setFormData] = useState({
         nombre: '',
         email: '',
@@ -40,10 +28,8 @@ const Perfil = ({ user }) => {
         notificarWeb: true,
     });
 
-    // Estado para controlar la visibilidad del diálogo de confirmación
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-    // Actualiza el estado del formulario cuando userData cambie (ej. al cargar el perfil)
     useEffect(() => {
         if (userData) {
             setFormData({
@@ -51,13 +37,12 @@ const Perfil = ({ user }) => {
                 email: userData.email || '',
                 telefono: userData.telefono || '',
                 direccion: userData.direccion || '',
-                notificarEmail: userData.notificarEmail, // Ya mapeado a booleano por el hook
-                notificarWeb: userData.notificarWeb,     // Ya mapeado a booleano por el hook
+                notificarEmail: userData.notificarEmail,
+                notificarWeb: userData.notificarWeb,
             });
         }
-    }, [userData]); // Solo se ejecuta cuando `userData` cambia
+    }, [userData]);
 
-    // Manejador genérico para cambios en los campos de texto
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -66,7 +51,6 @@ const Perfil = ({ user }) => {
         }));
     };
 
-    // Manejador para los switches (react-switch pasa directamente el valor booleano)
     const handleSwitchChange = (checked, name) => {
         setFormData(prev => ({
             ...prev,
@@ -74,45 +58,38 @@ const Perfil = ({ user }) => {
         }));
     };
 
-    // Manejador del envío del formulario de actualización
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Llamar a la función de actualización del hook
         await updateProfile(formData);
     };
 
-    // Manejador para iniciar el proceso de eliminación (mostrar diálogo)
     const handleInitiateDelete = () => {
         setShowDeleteConfirm(true);
     };
 
-    // Manejador para confirmar la eliminación
     const handleConfirmDelete = async () => {
         await deleteAccount();
-        // El hook se encarga de la redirección y limpieza
-        setShowDeleteConfirm(false); // Ocultar el diálogo independientemente del resultado (para evitar que se quede pegado)
+        setShowDeleteConfirm(false);
     };
 
-    // Manejador para cancelar la eliminación
     const handleCancelDelete = () => {
         setShowDeleteConfirm(false);
     };
 
     if (loading) {
-        return <LoadingSpinner message="Cargando perfil..." />; // Componente de carga
+        return <LoadingSpinner message="Cargando perfil..." />;
     }
 
-    if (error && !userData) { // Solo muestra el error si no hay datos cargados en absoluto
-        return <ErrorMessage message={error} />; // Componente de error
+    if (error && !userData) {
+        return <ErrorMessage message={error} />;
     }
 
-    // Si hay un error, pero ya se cargaron datos (ej. error al actualizar), lo mostramos en el formulario
     return (
         <div className="perfil-container">
             <div className="perfil-card">
                 <h1>Mi Perfil</h1>
 
-                {error && <p className="form-error-message">{error}</p>} {/* Error específico del formulario */}
+                {error && <p className="form-error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group">
@@ -128,7 +105,6 @@ const Perfil = ({ user }) => {
                             aria-invalid={error ? "true" : "false"}
                             aria-describedby={error ? "nombre-error" : undefined}
                         />
-                        {/* {error && <span id="nombre-error" className="input-error-text">{error}</span>} */}
                     </div>
 
                     <div className="form-group">
@@ -150,7 +126,7 @@ const Perfil = ({ user }) => {
                         <label htmlFor="telefono">Teléfono</label>
                         <input
                             id="telefono"
-                            type="tel" // Use type "tel" for phone numbers
+                            type="tel"
                             name="telefono"
                             placeholder="Tu número de teléfono (opcional)"
                             value={formData.telefono}
@@ -207,13 +183,13 @@ const Perfil = ({ user }) => {
                         </label>
                     </div>
 
-                    <button type="submit" className="btn-primary" disabled={isSaving}>
+                    <button type="submit" className="btn btn-primary" disabled={isSaving}>
                         {isSaving ? 'Guardando...' : 'Guardar Cambios'}
                     </button>
                 </form>
 
                 <button
-                    className="btn-delete-account"
+                    className="btn btn-danger"
                     onClick={handleInitiateDelete}
                     disabled={isDeleting}
                 >
@@ -221,7 +197,6 @@ const Perfil = ({ user }) => {
                 </button>
             </div>
 
-            {/* Diálogo de confirmación para eliminar cuenta */}
             <ConfirmationDialog
                 isOpen={showDeleteConfirm}
                 title="Confirmar Eliminación de Cuenta"

@@ -1,4 +1,3 @@
-// File: frontend/src/components/MascotaDetalle.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -22,7 +21,6 @@ const TAG_LABELS = {
     jugueton: 'Le encanta jugar',
     tranquilo: 'Tranquilo y cariñoso',
     requiere_medicacion: 'Requiere medicación',
-    // ...etc
 };
 
 const MascotaDetalle = () => {
@@ -102,7 +100,7 @@ const MascotaDetalle = () => {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: `¡Adopta a ${mascota.nombre} en Huellitas de Esperanza!`,
+                    title: `¡Adopta a ${mascota.nombre} en Hogar Peludo!`,
                     text: `Conoce a ${mascota.nombre}, un(a) ${mascota.especie} de ${mascota.edad} años, que busca un hogar lleno de amor.`,
                     url: window.location.href,
                 });
@@ -165,9 +163,9 @@ const MascotaDetalle = () => {
                         src={imageUrl}
                         alt={`Foto de ${mascota.nombre}`}
                         className="main-mascota-image"
+                        loading="lazy"
                         onError={(e) => { e.target.onerror = null; e.target.src = '/paw-icon.png'; }}
                     />
-                    {/* Podrías añadir un gallery de miniaturas aquí si tuvieras múltiples imágenes */}
                 </div>
 
                 <div className="mascota-info-section">
@@ -212,7 +210,6 @@ const MascotaDetalle = () => {
                             <p><FontAwesomeIcon icon={faMapMarkerAlt} /> Ubicación:</p>
                             <span>{mascota.ubicacion}</span>
                         </div>
-                        {/* Nuevos campos de Vacunas y Esterilizado */}
                         <div className="info-item">
                             <p><FontAwesomeIcon icon={faSyringe} /> Vacunado:</p>
                             <span>{mascota.vacunas ? 'Sí' : 'No'}</span>
@@ -244,8 +241,8 @@ const MascotaDetalle = () => {
 
                     {tags && Array.isArray(tags) && tags.length > 0 && (
                         <div className="mascota-tags">
-                            <h4>Características Destacadas:</h4> {/* Título para los tags */}
-                            <div className="tag-list-detail"> {/* Nuevo contenedor para los tags */}
+                            <h4>Características Destacadas:</h4>
+                            <div className="tag-list-detail">
                                 {tags.map(tag => (
                                     <span key={tag} className="mascota-tag-detail">{TAG_LABELS[tag] || tag}</span>
                                 ))}
@@ -258,15 +255,15 @@ const MascotaDetalle = () => {
                             <h3>¡Quiero Adoptar a {mascota.nombre}!</h3>
                             <p>Si estás listo para darle un hogar lleno de amor a {mascota.nombre}, haz clic en "Solicitar Adopción". ¡Es el primer paso hacia una hermosa amistad!</p>
                             <button
-                                className="btn-primary-detail"
+                                className="btn btn-primary"
                                 onClick={handleAdoptClick}
                             >
                                 <FontAwesomeIcon icon={faHeartCircleCheck} /> Solicitar Adopción
                             </button>
-                            <button className="btn-secondary-detail" onClick={handleShare}>
+                            <button className="btn btn-secondary" onClick={handleShare}>
                                 <FontAwesomeIcon icon={faShareNodes} /> Compartir Publicación
                             </button>
-                            <p className="contact-tip">¿Dudas sobre el proceso? Visita nuestra sección <Link to="/#ComoFunciona">"Cómo Adoptar"</Link> o <Link to="/contacto">contáctanos</Link>.</p>
+                            <p className="contact-tip">¿Dudas sobre el proceso? Visita nuestra sección <Link to="/#como-funciona">"Cómo Adoptar"</Link> o <Link to="/contacto">contáctanos</Link>.</p>
                         </div>
                     ) : (
                         <div className="adopted-message-section">
@@ -283,7 +280,6 @@ const MascotaDetalle = () => {
                 </button>
             </div>
 
-            {/* Modal de éxito de adopción */}
             {showAdoptSuccessModal && (
                 <div className="modal-overlay">
                     <div className="modal-content">
@@ -292,7 +288,7 @@ const MascotaDetalle = () => {
                         <p>El publicador de la mascota ha sido notificado y pronto se pondrá en contacto contigo para los siguientes pasos.</p>
                         <p>Agradecemos tu interés en darle un hogar amoroso a una mascota. ¡Te deseamos mucha suerte!</p>
                         <button
-                            className="btn-primary-detail"
+                            className="btn btn-primary"
                             onClick={() => setShowAdoptSuccessModal(false)}
                             style={{ marginTop: '20px' }}
                         >

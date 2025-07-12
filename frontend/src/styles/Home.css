@@ -1,47 +1,67 @@
 /* ========================= */
-/* 🐾 ESTILOS GENERALES DE HOME 🐾 */
+/* 🏠 Estilos de la Página Home 🏠 */
 /* ========================= */
 
-/* Contenedor principal de la página Home */
-.home-page-container {
+.home-container {
     width: 100%;
     overflow-x: hidden; /* Evita el scroll horizontal */
 }
 
-/* Estilos para las secciones generales de la página */
+/* Sección Hero */
+.hero-section {
+    background-image: url('https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=2043&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; /* Efecto parallax */
+    color: var(--color-white);
+    padding: var(--spacing-xl) var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh; /* Altura mínima para la sección hero */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para el texto */
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-white); /* Asegura que el título sea blanco */
+    font-family: var(--font-family-heading);
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-white); /* Asegura que el párrafo sea blanco */
+}
+
+/* Secciones Generales */
 section {
-    padding: 60px 20px;
+    padding: var(--spacing-xl) var(--spacing-lg);
     text-align: center;
 }
 
-/* Alternar colores de fondo para las secciones para mejorar la distinción visual */
-section:nth-of-type(odd) { /* Asegura que la primera sección tenga un fondo neutro si es necesario */
-    background-color: #ffffff;
+section:nth-of-type(odd) {
+    background-color: var(--color-white);
 }
 
 section:nth-of-type(even) {
-    background-color: #f8f8f8; /* Gris muy claro para contraste */
+    background-color: var(--color-light-gray);
 }
 
-/* Contenedor centralizado para el contenido de las secciones */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* Estilos para los títulos de las secciones */
-h2 {
+section h2 {
     font-size: 2.5rem;
-    color: #333;
-    margin-bottom: 2.5rem;
-    font-weight: 700;
+    margin-bottom: var(--spacing-lg);
     position: relative;
-    padding-bottom: 15px;
+    padding-bottom: var(--spacing-sm);
 }
 
-/* Subrayado animado para los títulos de sección */
-h2::after {
+section h2::after {
     content: '';
     position: absolute;
     left: 50%;
@@ -49,171 +69,116 @@ h2::after {
     bottom: 0;
     width: 80px;
     height: 4px;
-    background-color: #FF6600; /* Naranja de la marca */
+    background-color: var(--color-secondary);
     border-radius: 2px;
-    transition: width 0.3s ease; /* Transición para un posible efecto hover/focus */
 }
 
-/* Estilos para los párrafos de texto */
-p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #555;
-    margin-bottom: 1.5rem;
-}
-
-/* Botón secundario utilizado en las secciones */
-.btn-secondary {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #4CAF50; /* Verde de la marca */
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    margin-top: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-}
-
-.btn-secondary:hover {
-    background-color: #388E3C;
-    transform: translateY(-3px); /* Pequeño levantamiento al pasar el ratón */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.btn-secondary:active {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* --- Sección "Cómo Funciona" --- */
+/* Sección Cómo Funciona */
 .how-it-works-section {
-    background-color: #edf7ed; /* Un verde muy claro para esta sección específica */
+    background-color: var(--color-medium-gray);
 }
 
-/* Contenedor de la cuadrícula de pasos */
 .steps-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
 }
 
-/* Estilos para cada item/paso individual */
 .step-item {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    background-color: var(--color-white);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-md);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center; /* Asegura que el texto dentro esté centrado */
 }
 
 .step-item:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    box-shadow: var(--box-shadow-lg);
 }
 
 .step-item i {
-    font-size: 3.5rem; /* Tamaño grande para los iconos */
-    color: #FF6600; /* Color naranja de la marca para los iconos */
-    margin-bottom: 20px;
-    /* Animación sutil para los iconos al pasar el ratón sobre el item */
-    transition: transform 0.3s ease;
-}
-
-.step-item:hover i {
-    transform: scale(1.1); /* Ligeramente más grande al pasar el ratón */
+    font-size: 3.5rem;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
 }
 
 .step-item h3 {
     font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
 }
 
 .step-item p {
     font-size: 1rem;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 0; /* Eliminar margen inferior si es el último elemento */
+    color: var(--color-text-light);
 }
 
-/* ===================== */
-/* ⚡ DISEÑO RESPONSIVO PARA SECCIONES DE HOME ⚡ */
-/* ===================== */
-
-@media (max-width: 992px) {
-    /* Ajustes generales para pantallas de tablet */
-    section {
-        padding: 50px 20px;
-    }
-    h2 {
-        font-size: 2.2rem;
-        margin-bottom: 2rem;
-    }
-    p {
-        font-size: 1rem;
-    }
+/* Sección Testimonios */
+.testimonials-section {
+    background-color: var(--color-white);
 }
 
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.testimonial-item {
+    background-color: var(--color-light-gray);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow-sm);
+    font-style: italic;
+    position: relative;
+}
+
+.testimonial-item p {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-dark-gray);
+}
+
+.testimonial-item h4 {
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    margin-top: var(--spacing-sm);
+}
+
+/* Sección Fundaciones */
+.foundations-section {
+    background-color: var(--color-medium-gray);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    /* Ajustes para pantallas más pequeñas (móviles y tablets pequeñas) */
-    section {
-        padding: 40px 15px;
+    .hero-content h1 {
+        font-size: 2.5rem;
     }
-    h2 {
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+    section h2 {
         font-size: 2rem;
-        margin-bottom: 2rem;
     }
-    h2::after {
-        width: 60px; /* Reducir el subrayado en móviles */
-    }
-    p {
-        font-size: 0.95rem;
-    }
-    .steps-grid {
-        grid-template-columns: 1fr; /* Una columna en móviles */
-        gap: 20px;
-    }
-    .step-item {
-        padding: 25px;
-    }
-    .step-item i {
-        font-size: 3rem;
-    }
-    .step-item h3 {
-        font-size: 1.5rem;
-    }
-    .btn-secondary {
-        padding: 10px 20px;
-        font-size: 0.95rem;
+    .steps-grid,
+    .testimonials-grid {
+        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 480px) {
-    /* Ajustes para móviles muy pequeños */
-    h2 {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    .hero-content p {
+        font-size: 1rem;
+    }
+    section h2 {
         font-size: 1.8rem;
-        margin-bottom: 1.5rem;
-    }
-    p {
-        font-size: 0.9rem;
-    }
-    .step-item i {
-        font-size: 2.5rem;
-    }
-    .step-item h3 {
-        font-size: 1.3rem;
-    }
-    .btn-secondary {
-        padding: 8px 18px;
-        font-size: 0.9rem;
     }
 }

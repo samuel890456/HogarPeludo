@@ -81,7 +81,7 @@ const RestablecerContrasena = () => {
                         />
                     </div>
                     
-                    <button type="submit" className="auth-submit-button" disabled={loading}>
+                    <button type="submit" className="btn auth-submit-button" disabled={loading}>
                         {loading ? 'Restableciendo...' : 'Restablecer Contraseña'}
                     </button>
                 </form>
@@ -92,7 +92,7 @@ const RestablecerContrasena = () => {
             </div>
             <div className="auth-image-banner">
                 <Link to="/">
-                    <img src="/images/reset-password-illustration.png" alt="Candado y llave de seguridad" className="auth-illustration" />
+                    <img src="/images/reset-password-illustration.png" alt="Mascota con candado de seguridad" className="auth-illustration" />
                 </Link>
                 <p className="banner-text">Asegura tu cuenta</p>
             </div>
