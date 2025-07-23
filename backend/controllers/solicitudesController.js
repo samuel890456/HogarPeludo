@@ -109,6 +109,7 @@ const solicitudesController = {
                     let notifMensaje = '';
                     if (estado === 'aceptada') {
                         notifMensaje = `¡Felicidades! Tu solicitud para adoptar a ${mascotaInfo.nombre} ha sido ACEPTADA.`;
+                        await Mascota.updateDisponibilidad(mascotaInfo.id, 0); // Marcar mascota como no disponible
                     } else if (estado === 'rechazada') {
                         notifMensaje = `Tu solicitud para adoptar a ${mascotaInfo.nombre} ha sido RECHAZADA.`;
                     } else {

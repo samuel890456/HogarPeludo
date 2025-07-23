@@ -2,6 +2,7 @@
 const Mascota = require('../models/mascotasModel');
 const Solicitud = require('../models/solicitudesModel');
 const Usuario = require('../models/usuariosModel');
+const Fundacion = require('../models/fundacionesModel'); // Importar el modelo de Fundacion
 
 
 exports.getResumenGeneral = async (req, res) => {
@@ -9,7 +10,8 @@ exports.getResumenGeneral = async (req, res) => {
         const totalMascotas = await Mascota.count();
         const totalSolicitudes = await Solicitud.count();
         const totalUsuarios = await Usuario.count();
-        res.json({ totalMascotas, totalSolicitudes, totalUsuarios });
+        const totalFundaciones = await Fundacion.count(); // Obtener el total de fundaciones
+        res.json({ totalMascotas, totalSolicitudes, totalUsuarios, totalFundaciones }); // Incluir totalFundaciones en la respuesta
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -17,8 +19,12 @@ exports.getResumenGeneral = async (req, res) => {
 
 exports.getMascotas = async (req, res) => {
     try {
-        const mascotas = await Mascota.getAll();
-        res.json(mascotas);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const offset = (page - 1) * limit;
+
+        const { mascotas, total } = await Mascota.getAllIncludingUnavailable(limit, offset);
+        res.json({ mascotas, total, page, limit });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -26,7 +32,8 @@ exports.getMascotas = async (req, res) => {
 
 exports.getSolicitudes = async (req, res) => {
     try {
-        const solicitudes = await Solicitud.getAll();
+        const { searchTerm, estado, especie } = req.query;
+        const solicitudes = await Solicitud.getAll(searchTerm, estado, especie);
         res.json(solicitudes);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -128,6 +135,105 @@ exports.getTopMascotasPopulares = async (req, res) => {
         const [rows] = await Mascota.getTopPopulares(5);
         res.json(rows);
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Métodos para manejar solicitudes de rol
+exports.getSolicitudesRolPendientes = async (req, res) => {
+    try {
+        const solicitudes = await Usuario.getPendingRoleRequests();
+        res.json(solicitudes);
+    } catch (error) {
+        console.error('Error al obtener solicitudes de rol pendientes:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.aprobarSolicitudRol = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Cambiar el estado de la solicitud a aprobada
+        await Usuario.saveRoleRequest(id, null, 'aprobada');
+        
+        // Asignar el rol de refugio al usuario (rol_id = 2)
+        await Usuario.assignRole(id, 2);
+        
+        res.json({ message: 'Solicitud de rol aprobada correctamente' });
+    } catch (error) {
+        console.error('Error al aprobar solicitud de rol:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.rechazarSolicitudRol = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Cambiar el estado de la solicitud a rechazada
+        await Usuario.saveRoleRequest(id, null, 'rechazada');
+        
+        res.json({ message: 'Solicitud de rol rechazada correctamente' });
+    } catch (error) {
+        console.error('Error al rechazar solicitud de rol:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Métodos para la gestión de fundaciones
+exports.getFundaciones = async (req, res) => {
+    try {
+        const { searchTerm, estado, ciudad } = req.query;
+        const fundaciones = await Fundacion.findAll(searchTerm, estado, ciudad);
+        res.json(fundaciones);
+    } catch (error) {
+        console.error('Error al obtener fundaciones:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.aprobarFundacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Fundacion.updateStatus(id, 'aprobada'); // Asumiendo que hay un método updateStatus en Fundacion model
+        res.json({ message: 'Fundación aprobada correctamente' });
+    } catch (error) {
+        console.error('Error al aprobar fundación:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.rechazarFundacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Fundacion.updateStatus(id, 'rechazada'); // Asumiendo que hay un método updateStatus en Fundacion model
+        res.json({ message: 'Fundación rechazada correctamente' });
+    } catch (error) {
+        console.error('Error al rechazar fundación:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.eliminarFundacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Fundacion.delete(id);
+        res.json({ message: 'Fundación eliminada correctamente' });
+    } catch (error) {
+        console.error('Error al eliminar fundación:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.updateFundacion = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const fundacionData = req.body;
+        await Fundacion.update(id, fundacionData);
+        res.json({ message: 'Fundación actualizada correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar fundación:', error);
         res.status(500).json({ error: error.message });
     }
 };

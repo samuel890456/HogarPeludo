@@ -2,6 +2,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuariosModel');
+const Fundacion = require('../models/fundacionesModel');
 const crypto = require('crypto'); // Para generar tokens seguros
 const enviarCorreo = require('../utils/correoUtils'); // <--- Importa tu utilidad de correo
 
@@ -11,11 +12,14 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); // Inicializa con
 // Registro de un nuevo usuario
 exports.registrarUsuario = async (req, res) => {
     try {
-        const { nombre, email, contraseña, telefono, direccion } = req.body;
+        const { nombre, email, contraseña, telefono, direccion, tipoUsuario } = req.body;
 
         const usuarioExistente = await Usuario.getByEmail(email);
         if (usuarioExistente) {
-            return res.status(400).json({ message: 'El correo electrónico ya está registrado' });
+            return res.status(400).json({ 
+                success: false, 
+                message: 'El correo electrónico ya está registrado' 
+            });
         }
 
         const hashedPassword = await bcrypt.hash(contraseña, 10);
@@ -23,10 +27,27 @@ exports.registrarUsuario = async (req, res) => {
         // Crear el usuario sin rol_id en la tabla usuarios
         const id = await Usuario.create(nombre, email, hashedPassword, telefono, direccion);
 
-        // Asignar los roles por defecto (ej: 'publicador' y 'adoptante')
-        const defaultRoles = ['2', '3']; // IDs de los roles 'publicador' y 'adoptante'
-        for (const rolId of defaultRoles) {
-            await Usuario.assignRole(id, rolId);
+        // Asignar rol basado en tipoUsuario
+        let rolId;
+        if (tipoUsuario === 'fundacion') {
+            rolId = '3'; // ID del rol 'refugio'
+        } else {
+            rolId = '2'; // ID del rol 'usuario'
+        }
+        await Usuario.assignRole(id, rolId);
+
+        // Si es una fundación, crear también una entrada en la tabla fundaciones
+        if (tipoUsuario === 'fundacion') {
+            await Fundacion.create({
+                nombre: nombre, // Usar el nombre del usuario como nombre inicial de la fundación
+                email: email, // Usar el email del usuario como email inicial de la fundación
+                telefono: telefono, // Usar el teléfono del usuario como teléfono inicial de la fundación
+                direccion: direccion, // Usar la dirección del usuario como dirección inicial de la fundación
+                descripcion: '', // Descripción inicial vacía
+                sitio_web: '', // Sitio web inicial vacío
+                logo_url: '', // URL del logo inicial vacía
+                usuario_id: id // Vincular con el ID del usuario recién creado
+            });
         }
 
         // Obtener los roles del usuario recién creado para el token
@@ -35,9 +56,21 @@ exports.registrarUsuario = async (req, res) => {
         // Generar un token JWT con el ARRAY de roles
         const token = jwt.sign({ id, email, roles: userRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.status(201).json({ id, nombre, email, token, roles: userRoles });
+        res.status(201).json({ 
+            success: true, 
+            message: 'Usuario registrado exitosamente',
+            id, 
+            nombre, 
+            email, 
+            token, 
+            roles: userRoles 
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error en registro:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: error.message || 'Error interno del servidor' 
+        });
     }
 };
 
@@ -66,7 +99,7 @@ exports.iniciarSesion = async (req, res) => {
         const token = jwt.sign({ id: usuario.id, email: usuario.email, roles: userRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Devolver la respuesta con el token y el ARRAY de roles
-        res.json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email, token, roles: userRoles });
+        res.json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email, token, roles: userRoles, biografia: usuario.biografia, foto_perfil_url: usuario.foto_perfil_url, notificarEmail: usuario.notificarEmail, notificarWeb: usuario.notificarWeb });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -150,6 +183,24 @@ exports.verificarToken = (req, res, next) => {
         next();
     } catch (error) {
         res.status(400).json({ message: 'Token inválido.' });
+    }
+};
+
+// Middleware para verificar roles
+exports.checkRole = (allowedRoles) => (req, res, next) => {
+    if (!req.usuario || !req.usuario.roles) {
+        return res.status(403).json({ message: 'Acceso denegado. No tienes los roles necesarios.' });
+    }
+
+    const userRoles = req.usuario.roles; // Esto ya es un array de IDs de rol (strings)
+
+    // Verificar si el usuario tiene al menos uno de los roles permitidos
+    const hasPermission = allowedRoles.some(role => userRoles.includes(role));
+
+    if (hasPermission) {
+        next();
+    } else {
+        res.status(403).json({ message: 'Acceso denegado. No tienes los roles necesarios.' });
     }
 };
 
@@ -245,4 +296,3 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Error en el servidor al restablecer la contraseña. Por favor, inténtalo de nuevo.' });
     }
 };
-

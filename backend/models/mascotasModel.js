@@ -8,8 +8,15 @@ class Mascota {
     }
 
     static async getAll() {
-        const [rows] = await db.query('SELECT * FROM mascotas');
+        const [rows] = await db.query('SELECT * FROM mascotas WHERE disponible = 1 ORDER BY fecha_publicacion DESC');
         return rows;
+    }
+
+    // Obtener todas las mascotas (incluyendo no disponibles) - para administradores
+    static async getAllIncludingUnavailable(limit, offset) {
+        const [rows] = await db.query('SELECT * FROM mascotas ORDER BY fecha_publicacion DESC LIMIT ? OFFSET ?', [limit, offset]);
+        const [totalRows] = await db.query('SELECT COUNT(*) AS total FROM mascotas');
+        return { mascotas: rows, total: totalRows[0].total };
     }
 
     static async getById(id) {
@@ -97,6 +104,15 @@ class Mascota {
             LIMIT ?
         `, [limit]);
     }
+
+    // Nuevo método para actualizar solo la disponibilidad de la mascota
+    static async updateDisponibilidad(id, disponible) {
+        await db.query('UPDATE mascotas SET disponible = ? WHERE id = ?', [disponible, id]);
+    }
+
+    
 }
 
 module.exports = Mascota;
+
+    

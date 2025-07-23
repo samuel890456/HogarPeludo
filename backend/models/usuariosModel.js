@@ -3,8 +3,18 @@ const db = require('../config/db');
 
 class Usuario {
     static async getAll() {
-        const [rows] = await db.query('SELECT * FROM usuarios');
-        return rows;
+        const [rows] = await db.query(
+            `SELECT u.*, GROUP_CONCAT(r.nombre_rol) AS roles_nombres, GROUP_CONCAT(r.id) AS roles_ids
+             FROM usuarios u 
+             LEFT JOIN usuario_roles ur ON u.id = ur.usuario_id 
+             LEFT JOIN roles r ON ur.rol_id = r.id 
+             GROUP BY u.id`
+        );
+        return rows.map(row => ({
+            ...row,
+            roles: row.roles_nombres ? row.roles_nombres.split(',') : [],
+            roles_ids: row.roles_ids ? row.roles_ids.split(',') : []
+        }));
     }
 
     static async count() {
@@ -70,12 +80,37 @@ class Usuario {
         return rows.map(row => row.id.toString()); // Devolver IDs de rol como strings
     }
 
-    static async update(id, nombre, email, telefono, direccion) {
+    static async update(id, nombre, email, telefono, direccion, biografia, foto_perfil_url, clear_foto_perfil, notificarEmail, notificarWeb) {
+        let query = 'UPDATE usuarios SET nombre = ?, email = ?, telefono = ?, direccion = ?, biografia = ?, notificarEmail = ?, notificarWeb = ?';
+        let params = [nombre, email, telefono, direccion, biografia, notificarEmail, notificarWeb];
+
+        if (foto_perfil_url) {
+            query += ', foto_perfil_url = ?';
+            params.push(foto_perfil_url);
+        } else if (clear_foto_perfil) {
+            query += ', foto_perfil_url = NULL';
+        }
+
+        query += ' WHERE id = ?';
+        params.push(id);
+
+        await db.query(query, params);
+    }
+
+    static async updatePassword(id, newHashedPassword) {
         await db.query(
-            'UPDATE usuarios SET nombre = ?, email = ?, telefono = ?, direccion = ? WHERE id = ?',
-            [nombre, email, telefono, direccion, id]
+            'UPDATE usuarios SET contraseña = ? WHERE id = ?',
+            [newHashedPassword, id]
         );
     }
+
+    static async saveRoleRequest(userId, motivacion, status) {
+        await db.query(
+            'UPDATE usuarios SET solicitud_rol_refugio_estado = ?, solicitud_rol_refugio_motivacion = ? WHERE id = ?',
+            [status, motivacion, userId]
+        );
+    }
+
     // Nuevo método para actualizar la contraseña y limpiar el token de restablecimiento
     static async updatePasswordAndClearToken(id, newHashedPassword) {
         await db.query(
@@ -108,6 +143,22 @@ class Usuario {
     // Nuevo método para eliminar un usuario
     static async delete(id) {
         await db.query('DELETE FROM usuarios WHERE id = ?', [id]);
+    }
+
+    static async updateUserRole(userId, newRoleId) {
+        // Primero, eliminar todos los roles existentes para el usuario
+        await db.query('DELETE FROM usuario_roles WHERE usuario_id = ?', [userId]);
+        // Luego, asignar el nuevo rol
+        await db.query('INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (?, ?)', [userId, newRoleId]);
+    }
+
+    static async getPendingRoleRequests() {
+        const [rows] = await db.query(
+            `SELECT u.id, u.nombre, u.email, u.fecha_registro, u.solicitud_rol_refugio_motivacion, u.solicitud_rol_refugio_estado
+             FROM usuarios u
+             WHERE u.solicitud_rol_refugio_estado = 'pendiente_aprobacion_admin'`
+        );
+        return rows;
     }
 }
 

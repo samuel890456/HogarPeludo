@@ -3,9 +3,9 @@ const db = require('../config/db');
 
 class Solicitud {
     // Obtener todas las solicitudes (posiblemente solo para administradores o para el publicador de la mascota)
-    static async getAll() {
+    static async getAll(searchTerm = '', estado = '', especie = '') {
     try {
-        const [rows] = await db.query(`
+        let query = `
             SELECT
                 a.id,
                 a.fecha_solicitud,
@@ -15,6 +15,7 @@ class Solicitud {
                 m.nombre AS mascota_nombre,
                 m.especie AS mascota_especie,
                 m.imagen_url AS mascota_imagen_url,
+                m.ubicacion AS mascota_ubicacion,
                 u.id AS adoptante_id,
                 u.nombre AS adoptante_nombre,
                 u.email AS adoptante_email,
@@ -26,9 +27,26 @@ class Solicitud {
             JOIN mascotas m ON a.mascota_id = m.id
             JOIN usuarios u ON a.adoptante_id = u.id
             JOIN usuarios u_publicador ON m.publicado_por_id = u_publicador.id
-            ORDER BY a.fecha_solicitud DESC
-        `);
+            WHERE 1=1
+        `;
+        const params = [];
 
+        if (searchTerm) {
+            query += ' AND (m.nombre LIKE ? OR u.nombre LIKE ? OR u.email LIKE ?)';
+            params.push(`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`);
+        }
+        if (estado) {
+            query += ' AND a.estado = ?';
+            params.push(estado);
+        }
+        if (especie) {
+            query += ' AND m.especie = ?';
+            params.push(especie);
+        }
+
+        query += ' ORDER BY a.fecha_solicitud DESC';
+
+        const [rows] = await db.query(query, params);
         return rows;
     } catch (error) {
         console.error('Error en Solicitud.getAll:', error);
@@ -70,12 +88,14 @@ class Solicitud {
                     m.nombre AS mascota_nombre,
                     m.especie AS mascota_especie,
                     m.imagen_url AS mascota_imagen_url,
+                    m.ubicacion AS mascota_ubicacion,
                     u.id AS adoptante_id,
                     u.nombre AS adoptante_nombre,
                     u.email AS adoptante_email,
                     u.telefono AS adoptante_telefono,
                     u_publicador.id AS publicador_id,
-                    u_publicador.nombre AS publicador_nombre
+                    u_publicador.nombre AS publicador_nombre,
+                    u_publicador.email AS publicador_email
                 FROM adopciones a
                 JOIN mascotas m ON a.mascota_id = m.id
                 JOIN usuarios u ON a.adoptante_id = u.id
@@ -102,12 +122,14 @@ class Solicitud {
                     m.nombre AS mascota_nombre,
                     m.especie AS mascota_especie,
                     m.imagen_url AS mascota_imagen_url,
+                    m.ubicacion AS mascota_ubicacion,
                     u.id AS adoptante_id,
                     u.nombre AS adoptante_nombre,
                     u.email AS adoptante_email,
                     u.telefono AS adoptante_telefono,
                     u_publicador.id AS publicador_id,
-                    u_publicador.nombre AS publicador_nombre
+                    u_publicador.nombre AS publicador_nombre,
+                    u_publicador.email AS publicador_email
                 FROM adopciones a
                 JOIN mascotas m ON a.mascota_id = m.id
                 JOIN usuarios u ON a.adoptante_id = u.id

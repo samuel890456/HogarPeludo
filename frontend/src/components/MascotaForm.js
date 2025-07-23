@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createMascota, getMascotaById, updateMascota } from '../api/api';
 import { toast } from 'react-toastify';
 import Select from 'react-select';
-import '../styles/MascotaForm.css';
+import { PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 // Definir la URL base de tus uploads del backend
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
@@ -56,14 +57,52 @@ const MascotaForm = () => {
         clear_imagen: false,
         tags: [],
     });
-    const [countries, setCountries] = useState([
-        'Argentina', 'Bolivia', 'Brasil', 'Chile', 'Colombia', 'Costa Rica', 'Cuba', 'Ecuador',
-        'El Salvador', 'España', 'Guatemala', 'Honduras', 'México', 'Nicaragua', 'Panamá',
-        'Paraguay', 'Perú', 'Puerto Rico', 'República Dominicana', 'Uruguay', 'Venezuela'
-    ]);
+    const [paises, setPaises] = useState([]);
+    const [estados, setEstados] = useState([]);
+    const [ciudades, setCiudades] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+        const fetchPaises = async () => {
+            try {
+                const response = await axios.get('https://api.countrystatecity.in/v1/countries', {
+                    headers: { 'X-CSCAPI-KEY': 'eXVOOU1JV0V6azU3VWJCMXlQeUZoT25Rd2RuQnRKZDBQTjNQSllldw==' }
+                });
+                setPaises(response.data);
+            } catch (error) {
+                console.error('Error fetching countries:', error);
+            }
+        };
+        fetchPaises();
+    }, []);
+
+    const handlePaisChange = async (paisIso2) => {
+        setFormData(prev => ({ ...prev, pais: paisIso2, estado: '', ciudad: '' }));
+        try {
+            const response = await axios.get(`https://api.countrystatecity.in/v1/countries/${paisIso2}/states`, {
+                headers: { 'X-CSCAPI-KEY': 'eXVOOU1JV0V6azU3VWJCMXlQeUZoT25Rd2RuQnRKZDBQTjNQSllldw==' }
+            });
+            setEstados(response.data);
+            setCiudades([]);
+        } catch (error) {
+            console.error('Error fetching states:', error);
+        }
+    };
+
+    const handleEstadoChange = async (estadoIso2) => {
+        const paisIso2 = formData.pais;
+        setFormData(prev => ({ ...prev, estado: estadoIso2, ciudad: '' }));
+        try {
+            const response = await axios.get(`https://api.countrystatecity.in/v1/countries/${paisIso2}/states/${estadoIso2}/cities`, {
+                headers: { 'X-CSCAPI-KEY': 'eXVOOU1JV0V6azU3VWJCMXlQeUZoT25Rd2RuQnRKZDBQTjNQSllldw==' }
+            });
+            setCiudades(response.data);
+        } catch (error) {
+            console.error('Error fetching cities:', error);
+        }
+    };
 
     useEffect(() => {
         if (id) {
@@ -176,9 +215,19 @@ const MascotaForm = () => {
                 data.append(key, formData[key]);
             }
         }
+        
+        // Para nuevas mascotas siempre disponible, para edición usar el valor del formulario
+        if (isEditing) {
+            data.set('disponible', formData.disponible ? 'true' : 'false');
+        } else {
+            data.set('disponible', 'true'); // Nuevas mascotas siempre disponibles
+        }
 
         // Combinar ciudad y país en el campo de ubicación
-        const ubicacionCompleta = `${formData.ciudad.trim()}, ${formData.pais.trim()}`;
+        const paisNombre = paises.find(p => p.iso2 === formData.pais)?.name || formData.pais;
+        const estadoNombre = estados.find(e => e.iso2 === formData.estado)?.name || formData.estado;
+
+        const ubicacionCompleta = `${formData.ciudad}, ${estadoNombre}, ${paisNombre}`;
         data.append('ubicacion', ubicacionCompleta);
         
         // Si se limpió la imagen en el modo de edición, enviar la señal al backend
@@ -212,24 +261,24 @@ const MascotaForm = () => {
     // Filtra las opciones de tags seleccionadas para el componente Select
     const selectedTags = TAG_OPTIONS.filter(opt => formData.tags.includes(opt.value));
 
-    if (loading && isEditing) return <div className="loading-message">Cargando datos de la mascota...</div>;
+    if (loading && isEditing) return <div className="text-center py-8 text-lg text-gray-600">Cargando datos de la mascota...</div>;
 
     return (
-        <div className="mascota-form-container">
-            <h2>{isEditing ? 'Editar Publicación' : 'Publicar Nueva Mascota'}</h2>
-            {error && <div className="form-error-message">{error}</div>}
-            <form onSubmit={handleSubmit}>
+        <div className="container mx-auto p-6 bg-white rounded-xl shadow-2xl my-8 max-w-4xl">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">{isEditing ? 'Editar Publicación' : 'Publicar Nueva Mascota'}</h2>
+            {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">{error}</div>}
+            <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Sección de Información Básica */}
-                <div className="form-section">
-                    <h3>Información Básica</h3>
-                    <div className="form-grid">
-                        <div className="form-group">
-                            <label htmlFor="nombre">Nombre<span className="required">*</span></label>
-                            <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
+                <div className="space-y-6 p-6 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+                    <h3 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Información Básica</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">Nombre<span className="text-red-500">*</span></label>
+                            <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="especie">Especie<span className="required">*</span></label>
-                            <select id="especie" name="especie" value={formData.especie} onChange={handleChange} required>
+                        <div>
+                            <label htmlFor="especie" className="block text-sm font-medium text-gray-700 mb-1">Especie<span className="text-red-500">*</span></label>
+                            <select id="especie" name="especie" value={formData.especie} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
                                 <option value="">Selecciona</option>
                                 <option value="Perro">Perro</option>
                                 <option value="Gato">Gato</option>
@@ -238,48 +287,48 @@ const MascotaForm = () => {
                                 <option value="Otro">Otro</option>
                             </select>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="raza">Raza</label>
-                            <input type="text" id="raza" name="raza" value={formData.raza} onChange={handleChange} />
+                        <div>
+                            <label htmlFor="raza" className="block text-sm font-medium text-gray-700 mb-1">Raza</label>
+                            <input type="text" id="raza" name="raza" value={formData.raza} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="edad">Edad (años)<span className="required">*</span></label>
-                            <input type="number" id="edad" name="edad" value={formData.edad} onChange={handleChange} min="0" required />
+                        <div>
+                            <label htmlFor="edad" className="block text-sm font-medium text-gray-700 mb-1">Edad (años)<span className="text-red-500">*</span></label>
+                            <input type="number" id="edad" name="edad" value={formData.edad} onChange={handleChange} min="0" required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="sexo">Sexo<span className="required">*</span></label>
-                            <select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange} required>
+                        <div>
+                            <label htmlFor="sexo" className="block text-sm font-medium text-gray-700 mb-1">Sexo<span className="text-red-500">*</span></label>
+                            <select id="sexo" name="sexo" value={formData.sexo} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
                                 <option value="">Selecciona</option>
                                 <option value="Macho">Macho</option>
                                 <option value="Hembra">Hembra</option>
                             </select>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="tamano">Tamaño</label>
-                            <select id="tamano" name="tamano" value={formData.tamano} onChange={handleChange}>
+                        <div>
+                            <label htmlFor="tamano" className="block text-sm font-medium text-gray-700 mb-1">Tamaño</label>
+                            <select id="tamano" name="tamano" value={formData.tamano} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
                                 <option value="">Selecciona</option>
                                 <option value="Pequeño">Pequeño</option>
                                 <option value="Mediano">Mediano</option>
                                 <option value="Grande">Grande</option>
                             </select>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="peso">Peso (kg)</label>
-                            <input type="number" id="peso" name="peso" value={formData.peso} onChange={handleChange} step="0.1" min="0" />
+                        <div>
+                            <label htmlFor="peso" className="block text-sm font-medium text-gray-700 mb-1">Peso (kg)</label>
+                            <input type="number" id="peso" name="peso" value={formData.peso} onChange={handleChange} step="0.1" min="0" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="color">Color</label>
-                            <input type="text" id="color" name="color" value={formData.color} onChange={handleChange} />
+                        <div>
+                            <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                            <input type="text" id="color" name="color" value={formData.color} onChange={handleChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
                         </div>
                     </div>
                 </div>
 
                 {/* Sección de Descripción e Historia */}
-                <div className="form-section">
-                    <h3>Más Detalles</h3>
-                    <div className="form-grid">
-                        <div className="form-group full-width">
-                            <label htmlFor="descripcion">Descripción<span className="required">*</span></label>
+                <div className="space-y-6 p-6 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+                    <h3 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Más Detalles</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="md:col-span-2">
+                            <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700 mb-1">Descripción<span className="text-red-500">*</span></label>
                             <textarea
                                 id="descripcion"
                                 name="descripcion"
@@ -288,13 +337,14 @@ const MascotaForm = () => {
                                 required
                                 placeholder="Describe a la mascota: su personalidad, qué le gusta hacer, si es activa o tranquila, etc."
                                 maxLength={MAX_DESCRIPCION}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2 h-32 resize-none"
                             />
-                            <div className={`char-counter${formData.descripcion.length === MAX_DESCRIPCION ? ' limit' : ''}`}>
+                            <div className={`text-right text-xs ${formData.descripcion.length === MAX_DESCRIPCION ? 'text-red-500' : 'text-gray-500'}`}>
                                 {formData.descripcion.length}/{MAX_DESCRIPCION} caracteres
                             </div>
                         </div>
-                        <div className="form-group full-width">
-                            <label htmlFor="historia">Historia</label>
+                        <div className="md:col-span-2">
+                            <label htmlFor="historia" className="block text-sm font-medium text-gray-700 mb-1">Historia</label>
                             <textarea
                                 id="historia"
                                 name="historia"
@@ -302,33 +352,48 @@ const MascotaForm = () => {
                                 onChange={handleChange}
                                 placeholder="¿Cómo llegó a ti? ¿Tiene alguna historia especial? (Opcional)"
                                 maxLength={MAX_HISTORIA}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2 h-32 resize-none"
                             />
-                            <div className={`char-counter${formData.historia.length === MAX_HISTORIA ? ' limit' : ''}`}>
+                            <div className={`text-right text-xs ${formData.historia.length === MAX_HISTORIA ? 'text-red-500' : 'text-gray-500'}`}>
                                 {formData.historia.length}/{MAX_HISTORIA} caracteres
                             </div>
                         </div>
-                        <div className="form-group full-width">
-                            <label htmlFor="ciudad">Ciudad<span className="required">*</span></label>
-                            <input type="text" id="ciudad" name="ciudad" value={formData.ciudad} onChange={handleChange} required placeholder="Ej: Medellín" />
-                        </div>
-                        <div className="form-group full-width">
-                            <label htmlFor="pais">País<span className="required">*</span></label>
-                            <select id="pais" name="pais" value={formData.pais} onChange={handleChange} required>
+                        <div>
+                            <label htmlFor="pais" className="block text-sm font-medium text-gray-700 mb-1">País<span className="text-red-500">*</span></label>
+                            <select id="pais" name="pais" value={formData.pais} onChange={(e) => handlePaisChange(e.target.value)} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
                                 <option value="">Selecciona un país</option>
-                                {countries.map(country => (
-                                    <option key={country} value={country}>{country}</option>
+                                {paises.map(pais => (
+                                    <option key={pais.iso2} value={pais.iso2}>{pais.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="estado" className="block text-sm font-medium text-gray-700 mb-1">Estado/Departamento<span className="text-red-500">*</span></label>
+                            <select id="estado" name="estado" value={formData.estado} onChange={(e) => handleEstadoChange(e.target.value)} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
+                                <option value="">Selecciona un estado</option>
+                                {estados.map(estado => (
+                                    <option key={estado.iso2} value={estado.iso2}>{estado.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div>
+                            <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700 mb-1">Ciudad<span className="text-red-500">*</span></label>
+                            <select id="ciudad" name="ciudad" value={formData.ciudad} onChange={handleChange} required className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2">
+                                <option value="">Selecciona una ciudad</option>
+                                {ciudades.map(ciudad => (
+                                    <option key={ciudad.id} value={ciudad.name}>{ciudad.name}</option>
                                 ))}
                             </select>
                         </div>
                     </div>
                 </div>
 
-                 {/* --- SECCIÓN DE SALUD Y ESTATUS (CAMBIO AQUÍ) --- */}
-                <div className="form-section">
-                    <h3>Salud y Estatus</h3>
-                    <div className="form-grid"> {/* Mantén el form-grid para consistencia de layout */}
-                        <div className="form-group full-width">
-                            <label htmlFor="estado_salud">Estado de Salud</label>
+                {/* --- SECCIÓN DE SALUD Y ESTATUS (CAMBIO AQUÍ) --- */}
+                <div className="space-y-6 p-6 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+                    <h3 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Salud y Estatus</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* Mantén el form-grid para consistencia de layout */}
+                        <div className="md:col-span-2">
+                            <label htmlFor="estado_salud" className="block text-sm font-medium text-gray-700 mb-1">Estado de Salud</label>
                             <textarea
                                 id="estado_salud"
                                 name="estado_salud"
@@ -336,104 +401,149 @@ const MascotaForm = () => {
                                 onChange={handleChange}
                                 placeholder="Información relevante sobre su salud, alergias o condiciones médicas."
                                 maxLength={MAX_ESTADO_SALUD}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2 h-32 resize-none"
                             />
-                            <div className={`char-counter${formData.estado_salud.length === MAX_ESTADO_SALUD ? ' limit' : ''}`}>
+                            <div className={`text-right text-xs ${formData.estado_salud.length === MAX_ESTADO_SALUD ? 'text-red-500' : 'text-gray-500'}`}>
                                 {formData.estado_salud.length}/{MAX_ESTADO_SALUD} caracteres
                             </div>
                         </div>
                         {/* Nuevo contenedor para los checkboxes específicos */}
-                        <div className="checkbox-options-row full-width"> {/* <-- Nueva clase y full-width para ocupar el espacio */}
-                            <label htmlFor="esterilizado" className="checkbox-label">
+                        <div className="md:col-span-2 flex flex-wrap gap-x-6 gap-y-4 items-center"> {/* <-- Nueva clase y full-width para ocupar el espacio */}
+                            <label htmlFor="esterilizado" className="inline-flex items-center text-gray-700 text-sm font-medium cursor-pointer">
                                 <input
                                     type="checkbox"
                                     id="esterilizado"
                                     name="esterilizado"
                                     checked={formData.esterilizado}
                                     onChange={handleChange}
+                                    className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                                 />
-                                Esterilizado/Castrado
+                                <span className="ml-2">Esterilizado/Castrado</span>
                             </label>
-                            <label htmlFor="vacunas" className="checkbox-label">
+                            <label htmlFor="vacunas" className="inline-flex items-center text-gray-700 text-sm font-medium cursor-pointer">
                                 <input
                                     type="checkbox"
                                     id="vacunas"
                                     name="vacunas"
                                     checked={formData.vacunas}
                                     onChange={handleChange}
+                                    className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                                 />
-                                Vacunas al día
+                                <span className="ml-2">Vacunas al día</span>
                             </label>
-                            <label htmlFor="disponible" className="checkbox-label">
-                                <input type="checkbox" id="disponible" name="disponible" checked={formData.disponible} onChange={handleChange} />
-                                Disponible para Adopción
-                            </label>
+                            {isEditing && (
+                                <>
+                                    <label htmlFor="disponible" className="inline-flex items-center text-gray-700 text-sm font-medium cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            id="disponible"
+                                            name="disponible"
+                                            checked={formData.disponible}
+                                            onChange={handleChange}
+                                            className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                                        />
+                                        <span className="ml-2">Disponible para adopción</span>
+                                    </label>
+                                    <p className="text-gray-500 text-xs mt-2 w-full">Desmarca esta opción si la mascota ya no está disponible (ej: ya fue adoptada, en proceso de adopción, etc.)</p>
+                                </>
+                            )}
                         </div> {/* <-- Fin del nuevo contenedor */}
                     </div>
                 </div>
                 {/* --- FIN CAMBIO EN SECCIÓN DE SALUD Y ESTATUS --- */}
 
                 {/* Sección de Personalidad y Comportamiento (Tags) */}
-                <div className="form-section">
-                    <h3>Personalidad y Comportamiento</h3>
-                    <div className="form-group full-width">
-                        <label>Características (tags)</label>
+                <div className="space-y-6 p-6 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+                    <h3 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Personalidad y Comportamiento</h3>
+                    <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Características (tags)</label>
                         <Select
                             isMulti
                             name="tags"
                             options={TAG_OPTIONS}
-                            className="react-select-container"
-                            classNamePrefix="react-select"
+                            className="basic-multi-select"
+                            classNamePrefix="select"
                             value={selectedTags} // Usa las opciones filtradas
                             onChange={handleTagsChange}
                             placeholder="Selecciona características de la mascota..."
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    borderColor: '#d1d5db', // gray-300
+                                    boxShadow: 'none',
+                                    '&:hover': { borderColor: '#f97316' }, // orange-500
+                                    '&:focus': { borderColor: '#f97316', boxShadow: '0 0 0 1px #f97316' }, // orange-500
+                                    borderRadius: '0.375rem', // rounded-md
+                                    minHeight: '2.5rem', // py-2 px-3
+                                }),
+                                multiValue: (base) => ({
+                                    ...base,
+                                    backgroundColor: '#fed7aa', // orange-200
+                                }),
+                                multiValueLabel: (base) => ({
+                                    ...base,
+                                    color: '#c2410c', // orange-800
+                                }),
+                                multiValueRemove: (base) => ({
+                                    ...base,
+                                    color: '#c2410c',
+                                    '&:hover': { backgroundColor: '#ea580c', color: 'white' }, // orange-700
+                                }),
+                                option: (base, { isSelected, isFocused }) => ({
+                                    ...base,
+                                    backgroundColor: isSelected ? '#f97316' : isFocused ? '#fff7ed' : null, // orange-500 / orange-50
+                                    color: isSelected ? 'white' : '#1f2937', // gray-900
+                                    '&:active': { backgroundColor: '#f97316' },
+                                }),
+                            }}
                         />
-                        <p className="field-tip">Elige las características que mejor describan a la mascota.</p>
+                        <p className="text-gray-500 text-xs mt-1">Elige las características que mejor describan a la mascota.</p>
                     </div>
                 </div>
 
                 {/* Sección de Imagen */}
-                <div className="form-section image-upload-section">
-                    <h3>Foto de la Mascota<span className="required">*</span></h3>
-                    <div className="image-upload-area">
+                <div className="space-y-6 p-6 border border-gray-200 rounded-lg shadow-sm bg-gray-50">
+                    <h3 className="text-2xl font-bold text-gray-800 border-b pb-3 mb-4">Foto de la Mascota<span className="text-red-500">*</span></h3>
+                    <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 mb-4 relative bg-gray-50">
                         {formData.imagen_url_preview ? (
-                            <div className="image-preview-wrapper">
-                                <img src={formData.imagen_url_preview} alt="Vista previa" className="image-preview" />
-                                <button type="button" className="remove-image-btn" onClick={handleRemoveImage} aria-label="Eliminar imagen">
-                                    &times;
+                            <div className="relative w-48 h-48 mb-4 group">
+                                <img src={formData.imagen_url_preview} alt="Vista previa" className="w-full h-full object-cover rounded-lg shadow-md" />
+                                <button type="button" className="absolute top-2 right-2 bg-red-500 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200" onClick={handleRemoveImage} aria-label="Eliminar imagen">
+                                    <TrashIcon className="w-5 h-5" />
                                 </button>
                             </div>
                         ) : (
-                            <div className="upload-placeholder">
-                                <i className="fas fa-camera"></i>
+                            <div className="text-center text-gray-500 mb-4">
+                                <PhotoIcon className="w-16 h-16 mx-auto text-gray-400 mb-2" />
                                 <p>Sube una foto clara y atractiva de la mascota.</p>
                             </div>
                         )}
                         <input
-                            type="file"
-                            id="imagen"
-                            name="imagen"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            style={{ display: 'none' }}
-                        />
-                        <button
-                            type="button"
-                            className="upload-button"
-                            onClick={() => document.getElementById('imagen').click()}
-                        >
-                            <i className="fas fa-upload"></i> {formData.imagen_url_preview ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
-                        </button>
+                                type="file"
+                                id="imagen"
+                                name="imagen"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                className="hidden"
+                            />
+                            <button
+                                type="button"
+                                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                                onClick={() => document.getElementById('imagen').click()}
+                            >
+                                <PhotoIcon className="w-5 h-5 mr-2" /> {formData.imagen_url_preview ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
+                            </button>
                         {isEditing && formData.imagen_url_preview && (
-                            <p className="upload-tip">La imagen actual se mantendrá si no subes una nueva.</p>
+                            <p className="text-gray-500 text-xs mt-2">La imagen actual se mantendrá si no subes una nueva.</p>
                         )}
                     </div>
                 </div>
 
-                <div className="form-actions">
-                    <button type="submit" className="btn btn-primary" disabled={loading}>
+                <div className="flex justify-end space-x-4 mt-8">
+                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" disabled={loading}>
                         {loading ? 'Guardando...' : (isEditing ? 'Guardar Cambios' : 'Publicar Mascota')}
                     </button>
-                    <button type="button" className="btn btn-secondary" onClick={() => navigate('/mis-publicaciones')} disabled={loading}>
+                    <button type="button" className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => navigate('/mis-publicaciones')} disabled={loading}>
                         Cancelar
                     </button>
                 </div>

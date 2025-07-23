@@ -5,7 +5,7 @@ import MascotaForm from '../components/MascotaForm';
 
 const PublicarMascota = () => {
     return (
-        <div className="page-container"> {/* Un contenedor general para la página si no quieres que el form sea full-width */}
+        <div className="container mx-auto p-4"> {/* Un contenedor general para la página si no quieres que el form sea full-width */}
             <MascotaForm />
         </div>
     );

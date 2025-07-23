@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/MascotaDetalle.css';
-import { Link } from 'react-router-dom';
 import {
     faMars, faVenus, faMapMarkerAlt, faSyringe, faPaw, faShareNodes,
     faCalendarDays, faWeightHanging, faExpand, faPalette, faHeartCircleCheck, faHouseChimneyUser
@@ -27,12 +25,13 @@ const MascotaDetalle = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [mascota, setMascota] = useState(null);
+    const [suggestedPets, setSuggestedPets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showAdoptSuccessModal, setShowAdoptSuccessModal] = useState(false);
 
     useEffect(() => {
-        const fetchMascota = async () => {
+        const fetchMascotaAndSuggestions = async () => {
             try {
                 setLoading(true);
                 const res = await axios.get(`http://localhost:5000/api/mascotas/${id}`);
@@ -41,6 +40,12 @@ const MascotaDetalle = () => {
                     tags: res.data.tags ? JSON.parse(res.data.tags) : []
                 };
                 setMascota(fetchedMascota);
+
+                const allPetsRes = await axios.get('http://localhost:5000/api/mascotas');
+                const otherPets = allPetsRes.data.filter(pet => pet.id !== parseInt(id) && pet.disponible);
+                const randomPets = otherPets.sort(() => 0.5 - Math.random()).slice(0, 4);
+                setSuggestedPets(randomPets);
+
             } catch (err) {
                 console.error("Error al cargar detalles de la mascota:", err);
                 setError("No se pudo cargar la información de la mascota. Por favor, inténtalo de nuevo más tarde.");
@@ -48,7 +53,7 @@ const MascotaDetalle = () => {
                 setLoading(false);
             }
         };
-        fetchMascota();
+        fetchMascotaAndSuggestions();
     }, [id]);
 
     const handleAdoptClick = async () => {
@@ -114,15 +119,15 @@ const MascotaDetalle = () => {
     };
 
     if (loading) {
-        return <p className="loading-message">Cargando detalles de la mascota...</p>;
+        return <p className="text-center text-lg text-gray-600 py-8">Cargando detalles de la mascota...</p>;
     }
 
     if (error) {
-        return <div className="error-message">{error}</div>;
+        return <div className="text-center text-red-500 text-lg py-8">{error}</div>;
     }
 
     if (!mascota) {
-        return <div className="not-found-message">Lo sentimos, esta mascota no fue encontrada.</div>;
+        return <div className="text-center text-lg text-gray-600 py-8">Lo sentimos, esta mascota no fue encontrada.</div>;
     }
 
     const imageUrl = mascota.imagen_url
@@ -147,150 +152,169 @@ const MascotaDetalle = () => {
     }
 
     return (
-        <div className="mascota-detalle-container">
-            <div className="mascota-detalle-header">
-                <h1>{mascota.nombre}</h1>
-                <p className="mascota-status-detail">
-                    Estado: <span className={mascota.disponible ? 'available' : 'adopted'}>
-                        {mascota.disponible ? 'Disponible para Adopción' : '¡Adoptado!'}
-                    </span>
-                </p>
-            </div>
+        <div className="bg-gray-50 min-h-screen">
+            <div className="container mx-auto p-4 max-w-6xl">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="md:flex">
+                        <div className="md:w-1/2">
+                            <img
+                                src={imageUrl}
+                                alt={`Foto de ${mascota.nombre}`}
+                                className="w-full h-full object-cover"
+                                loading="lazy"
+                                onError={(e) => { e.target.onerror = null; e.target.src = '/paw-icon.png'; }}
+                            />
+                        </div>
+                        <div className="p-6 md:w-1/2">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h1 className="text-4xl font-bold text-gray-800">{mascota.nombre}</h1>
+                                    <p className={`mt-2 text-lg ${mascota.disponible ? 'text-green-600' : 'text-red-600'}`}>
+                                        {mascota.disponible ? 'Disponible para Adopción' : '¡Adoptado!'}
+                                    </p>
+                                </div>
+                                <button onClick={handleShare} className="p-2 rounded-full hover:bg-gray-200 transition">
+                                    <FontAwesomeIcon icon={faShareNodes} className="text-gray-600" />
+                                </button>
+                            </div>
 
-            <div className="mascota-detalle-content">
-                <div className="mascota-image-gallery">
-                    <img
-                        src={imageUrl}
-                        alt={`Foto de ${mascota.nombre}`}
-                        className="main-mascota-image"
-                        loading="lazy"
-                        onError={(e) => { e.target.onerror = null; e.target.src = '/paw-icon.png'; }}
-                    />
-                </div>
+                            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4 text-gray-700">
+                                <div className="flex items-center space-x-2">
+                                    <FontAwesomeIcon icon={faPaw} className="text-orange-500" />
+                                    <span>{mascota.especie}</span>
+                                </div>
+                                {mascota.raza && (
+                                    <div className="flex items-center space-x-2">
+                                        <span>{mascota.raza}</span>
+                                    </div>
+                                )}
+                                <div className="flex items-center space-x-2">
+                                    <FontAwesomeIcon icon={faCalendarDays} className="text-orange-500" />
+                                    <span>{mascota.edad} años</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <FontAwesomeIcon icon={mascota.sexo === 'Macho' ? faMars : faVenus} className="text-orange-500" />
+                                    <span>{mascota.sexo}</span>
+                                </div>
+                                {mascota.tamano && (
+                                    <div className="flex items-center space-x-2">
+                                        <FontAwesomeIcon icon={faExpand} className="text-orange-500" />
+                                        <span>{mascota.tamano}</span>
+                                    </div>
+                                )}
+                                {mascota.peso && (
+                                    <div className="flex items-center space-x-2">
+                                        <FontAwesomeIcon icon={faWeightHanging} className="text-orange-500" />
+                                        <span>{mascota.peso} kg</span>
+                                    </div>
+                                )}
+                                {mascota.color && (
+                                    <div className="flex items-center space-x-2">
+                                        <FontAwesomeIcon icon={faPalette} className="text-orange-500" />
+                                        <span>{mascota.color}</span>
+                                    </div>
+                                )}
+                                <div className="flex items-center space-x-2 col-span-full">
+                                    <FontAwesomeIcon icon={faMapMarkerAlt} className="text-orange-500" />
+                                    <span>{mascota.ubicacion}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <FontAwesomeIcon icon={faSyringe} className="text-orange-500" />
+                                    <span>Vacunado: {mascota.vacunas ? 'Sí' : 'No'}</span>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <FontAwesomeIcon icon={faHeartCircleCheck} className="text-orange-500" />
+                                    <span>Esterilizado: {mascota.esterilizado ? 'Sí' : 'No'}</span>
+                                </div>
+                            </div>
 
-                <div className="mascota-info-section">
-                    <div className="info-grid">
-                        <div className="info-item">
-                            <p><FontAwesomeIcon icon={faPaw} /> Especie:</p>
-                            <span>{mascota.especie}</span>
-                        </div>
-                        {mascota.raza && (
-                            <div className="info-item">
-                                <p>Raza:</p>
-                                <span>{mascota.raza}</span>
+                            <div className="mt-6">
+                                <h3 className="text-xl font-semibold text-gray-800 mb-2"><FontAwesomeIcon icon={faPaw} className="mr-2 text-orange-500" /> Sobre {mascota.nombre}</h3>
+                                <p className="text-gray-600">{mascota.descripcion}</p>
                             </div>
-                        )}
-                        <div className="info-item">
-                            <p><FontAwesomeIcon icon={faCalendarDays} /> Edad:</p>
-                            <span>{mascota.edad} años</span>
-                        </div>
-                        <div className="info-item">
-                            <p><FontAwesomeIcon icon={mascota.sexo === 'Macho' ? faMars : faVenus} /> Sexo:</p>
-                            <span>{mascota.sexo}</span>
-                        </div>
-                        {mascota.tamano && (
-                            <div className="info-item">
-                                <p><FontAwesomeIcon icon={faExpand} /> Tamaño:</p>
-                                <span>{mascota.tamano}</span>
-                            </div>
-                        )}
-                        {mascota.peso && (
-                            <div className="info-item">
-                                <p><FontAwesomeIcon icon={faWeightHanging} /> Peso:</p>
-                                <span>{mascota.peso} kg</span>
-                            </div>
-                        )}
-                        {mascota.color && (
-                            <div className="info-item">
-                                <p><FontAwesomeIcon icon={faPalette} /> Color:</p>
-                                <span>{mascota.color}</span>
-                            </div>
-                        )}
-                        <div className="info-item full-width">
-                            <p><FontAwesomeIcon icon={faMapMarkerAlt} /> Ubicación:</p>
-                            <span>{mascota.ubicacion}</span>
-                        </div>
-                        <div className="info-item">
-                            <p><FontAwesomeIcon icon={faSyringe} /> Vacunado:</p>
-                            <span>{mascota.vacunas ? 'Sí' : 'No'}</span>
-                        </div>
-                        <div className="info-item">
-                            <p><FontAwesomeIcon icon={faHeartCircleCheck} /> Esterilizado:</p>
-                            <span>{mascota.esterilizado ? 'Sí' : 'No'}</span>
+
+                            {mascota.historia && (
+                                <div className="mt-4">
+                                    <h3 className="text-xl font-semibold text-gray-800 mb-2"><FontAwesomeIcon icon={faHouseChimneyUser} className="mr-2 text-orange-500" /> Mi Historia</h3>
+                                    <p className="text-gray-600">{mascota.historia}</p>
+                                </div>
+                            )}
+
+                            {mascota.estado_salud && (
+                                <div className="mt-4">
+                                    <h3 className="text-xl font-semibold text-gray-800 mb-2"><FontAwesomeIcon icon={faSyringe} className="mr-2 text-orange-500" /> Salud y Cuidados</h3>
+                                    <p className="text-gray-600">{mascota.estado_salud}</p>
+                                </div>
+                            )}
+
+                            {tags && Array.isArray(tags) && tags.length > 0 && (
+                                <div className="mt-6">
+                                    <h4 className="text-xl font-semibold text-gray-800 mb-2">Características Destacadas:</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                        {tags.map(tag => (
+                                            <span key={tag} className="bg-orange-100 text-orange-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded-full">{TAG_LABELS[tag] || tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {mascota.disponible ? (
+                                <div className="mt-8 bg-orange-50 p-4 rounded-lg">
+                                    <h3 className="text-xl font-bold text-orange-800">¡Quiero Adoptar a {mascota.nombre}!</h3>
+                                    <p className="mt-2 text-orange-700">Si estás listo para darle un hogar lleno de amor a {mascota.nombre}, haz clic en "Solicitar Adopción".</p>
+                                    <button
+                                        className="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center"
+                                        onClick={handleAdoptClick}
+                                        disabled={!mascota.disponible} // Deshabilitar si no está disponible
+                                    >
+                                        <FontAwesomeIcon icon={faHeartCircleCheck} className="mr-2" /> Solicitar Adopción
+                                    </button>
+                                    <p className="mt-2 text-xs text-center text-orange-600">¿Dudas? Visita nuestra sección <Link to="/#como-funciona" className="font-bold hover:underline">"Cómo Adoptar"</Link>.</p>
+                                </div>
+                            ) : (
+                                <div className="mt-8 bg-green-50 p-4 rounded-lg text-center">
+                                    <h3 className="text-xl font-bold text-green-800">¡Felicidades! {mascota.nombre} ya ha encontrado un hogar.</h3>
+                                    <p className="mt-2 text-green-700">Hay muchas otras mascotas maravillosas esperando. <Link to="/mascotas" className="font-bold hover:underline">Explora más mascotas</Link>.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
+                </div>
 
-                    <div className="info-block">
-                        <h3><FontAwesomeIcon icon={faPaw} /> Sobre {mascota.nombre}</h3>
-                        <p>{mascota.descripcion}</p>
-                    </div>
-
-                    {mascota.historia && (
-                        <div className="info-block">
-                            <h3><FontAwesomeIcon icon={faHouseChimneyUser} /> Mi Historia</h3>
-                            <p>{mascota.historia}</p>
-                        </div>
-                    )}
-
-                    {mascota.estado_salud && (
-                        <div className="info-block">
-                            <h3><FontAwesomeIcon icon={faSyringe} /> Salud y Cuidados</h3>
-                            <p>{mascota.estado_salud}</p>
-                        </div>
-                    )}
-
-                    {tags && Array.isArray(tags) && tags.length > 0 && (
-                        <div className="mascota-tags">
-                            <h4>Características Destacadas:</h4>
-                            <div className="tag-list-detail">
-                                {tags.map(tag => (
-                                    <span key={tag} className="mascota-tag-detail">{TAG_LABELS[tag] || tag}</span>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {mascota.disponible ? (
-                        <div className="adoption-cta-section">
-                            <h3>¡Quiero Adoptar a {mascota.nombre}!</h3>
-                            <p>Si estás listo para darle un hogar lleno de amor a {mascota.nombre}, haz clic en "Solicitar Adopción". ¡Es el primer paso hacia una hermosa amistad!</p>
-                            <button
-                                className="btn btn-primary"
-                                onClick={handleAdoptClick}
-                            >
-                                <FontAwesomeIcon icon={faHeartCircleCheck} /> Solicitar Adopción
-                            </button>
-                            <button className="btn btn-secondary" onClick={handleShare}>
-                                <FontAwesomeIcon icon={faShareNodes} /> Compartir Publicación
-                            </button>
-                            <p className="contact-tip">¿Dudas sobre el proceso? Visita nuestra sección <Link to="/#como-funciona">"Cómo Adoptar"</Link> o <Link to="/contacto">contáctanos</Link>.</p>
-                        </div>
-                    ) : (
-                        <div className="adopted-message-section">
-                            <h3>¡Felicidades! {mascota.nombre} ya ha encontrado un hogar.</h3>
-                            <p>Nos alegra mucho que {mascota.nombre} tenga una nueva familia. ¡Hay muchas otras mascotas maravillosas esperando! <a href="/mascotas">Explora más mascotas disponibles</a>.</p>
-                        </div>
-                    )}
+                <div className="mt-6 text-center">
+                    <button className="text-orange-600 hover:text-orange-800 font-semibold" onClick={() => navigate(-1)}>
+                        &larr; Volver al Listado
+                    </button>
                 </div>
             </div>
 
-            <div className="back-button-container">
-                <button className="btn-back" onClick={() => navigate(-1)}>
-                    &larr; Volver al Listado de Mascotas
-                </button>
-            </div>
+            {suggestedPets.length > 0 && (
+                <div className="mt-12 max-w-6xl mx-auto">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">También te podría interesar</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        {suggestedPets.map(pet => (
+                            <Link to={`/mascotas/${pet.id}`} key={pet.id} className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                                <img src={`${UPLOADS_BASE_URL}${pet.imagen_url}`} alt={pet.nombre} className="w-full h-48 object-cover"/>
+                                <div className="p-4">
+                                    <h3 className="text-lg font-bold text-gray-800">{pet.nombre}</h3>
+                                    <p className="text-gray-600">{pet.ubicacion}</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {showAdoptSuccessModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2><FontAwesomeIcon icon={faHeartCircleCheck} /> ¡Solicitud Enviada!</h2>
-                        <p>Tu solicitud de adopción para **{mascota.nombre}** ha sido enviada con éxito.</p>
-                        <p>El publicador de la mascota ha sido notificado y pronto se pondrá en contacto contigo para los siguientes pasos.</p>
-                        <p>Agradecemos tu interés en darle un hogar amoroso a una mascota. ¡Te deseamos mucha suerte!</p>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full text-center">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4"><FontAwesomeIcon icon={faHeartCircleCheck} className="mr-2 text-green-500" /> ¡Solicitud Enviada!</h2>
+                        <p className="text-gray-700 mb-4">Tu solicitud de adopción para <span className="font-semibold">{mascota.nombre}</span> ha sido enviada con éxito.</p>
+                        <p className="text-gray-700 mb-6">El publicador de la mascota ha sido notificado y pronto se pondrá en contacto contigo para los siguientes pasos.</p>
+                        <p className="text-gray-600 text-sm mb-6">Agradecemos tu interés en darle un hogar lleno de amor a una mascota. ¡Te deseamos mucha suerte!</p>
                         <button
-                            className="btn btn-primary"
+                            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300"
                             onClick={() => setShowAdoptSuccessModal(false)}
-                            style={{ marginTop: '20px' }}
                         >
                             Cerrar y Volver
                         </button>

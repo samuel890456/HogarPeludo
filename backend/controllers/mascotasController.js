@@ -14,7 +14,14 @@ const limpiarCampos = (obj) => {
 
 exports.getAllMascotas = async (req, res) => {
     try {
-        const mascotas = await Mascota.getAll();
+        // Si el usuario es administrador, mostrar todas las mascotas (incluyendo no disponibles)
+        // Si no, mostrar solo las disponibles
+        let mascotas;
+        if (req.usuario && req.usuario.roles && req.usuario.roles.includes('1')) {
+            mascotas = await Mascota.getAllIncludingUnavailable();
+        } else {
+            mascotas = await Mascota.getAll();
+        }
         // **IMPORTANTE: NO se añade la URL base aquí.**
         res.json(mascotas);
     } catch (error) {

@@ -1,6 +1,4 @@
-// src/components/ConfirmationDialog.js
 import React from 'react';
-import '../styles/ConfirmationDialog.css'; // Crearemos este CSS
 
 /**
  * Componente de diálogo de confirmación reutilizable.
@@ -29,20 +27,20 @@ const ConfirmationDialog = ({
     }
 
     return (
-        <div className="confirmation-dialog-overlay" aria-modal="true" role="dialog">
-            <div className="confirmation-dialog-content">
-                <h2 className="confirmation-dialog-title">{title}</h2>
-                <p className="confirmation-dialog-message">{message}</p>
-                <div className="confirmation-dialog-actions">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" aria-modal="true" role="dialog">
+            <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">{title}</h2>
+                <p className="text-gray-700 mb-6">{message}</p>
+                <div className="flex justify-center space-x-4">
                     <button
-                        className="btn btn-secondary"
+                        className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300"
                         onClick={onCancel}
                         disabled={isLoading}
                     >
                         {cancelText}
                     </button>
                     <button
-                        className="btn btn-danger"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300"
                         onClick={onConfirm}
                         disabled={isLoading}
                     >

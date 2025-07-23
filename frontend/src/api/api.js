@@ -90,9 +90,7 @@ export const registrarUsuario = async (usuario) => {
 export const iniciarSesion = async (credenciales) => {
     try {
         const response = await api.post(`/auth/iniciar-sesion`, credenciales); 
-        localStorage.setItem('token', response.data.token); // Guardar el token
-        localStorage.setItem('userId', response.data.id); // Guardar el userId
-        localStorage.setItem('rol_id', response.data.rol_id); // Guardar el rol_id
+        // No guardar aquí, el store de Zustand se encargará de persistir
         return response.data;
     } catch (error) {
         console.error('Error al iniciar sesión:', error.response ? error.response.data : error.message);
@@ -246,10 +244,44 @@ export const getUsuario = async (id) => {
 
 export const updateUsuario = async (id, datos) => {
     try {
-        const response = await api.put(`/usuarios/${id}`, datos);
+        const response = await api.put(`/usuarios/${id}`, datos, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Importante para enviar FormData
+            },
+        });
         return response.data;
     } catch (error) {
         console.error('Error al actualizar el usuario:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const changePassword = async (userId, currentPassword, newPassword) => {
+    try {
+        const response = await api.put(`/usuarios/${userId}/cambiar-contrasena`, { currentPassword, newPassword });
+        return response.data;
+    } catch (error) {
+        console.error('Error al cambiar la contraseña:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const requestRoleChange = async (userId, motivacion) => {
+    try {
+        const response = await api.post(`/usuarios/${userId}/solicitar-rol-refugio`, { motivacion });
+        return response.data;
+    } catch (error) {
+        console.error('Error al solicitar cambio de rol:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const deleteAccount = async (userId) => {
+    try {
+        const response = await api.delete(`/usuarios/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al eliminar la cuenta:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
@@ -271,6 +303,68 @@ export const getFundacionById = async (id) => {
         return response.data;
     } catch (error) {
         console.error('Error al obtener la fundación por ID:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const getFundacionByUserId = async (userId) => {
+    try {
+        const response = await api.get(`/fundaciones/user/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener la fundación por ID de usuario:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const updateFundacionByUserId = async (userId, fundacionData) => {
+    try {
+        const response = await api.put(`/fundaciones/user/${userId}`, fundacionData);
+        return response.data;
+    } catch (error) {
+        console.error('Error al actualizar la fundación por ID de usuario:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+// ✅ CAMPAÑAS Y NOTICIAS
+export const getCampanasNoticias = async (params = {}) => {
+    try {
+        const queryParams = new URLSearchParams(params).toString();
+        const response = await api.get(`/campanas-noticias?${queryParams}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener campañas y noticias:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const getCampanaNoticiaById = async (id) => {
+    try {
+        const response = await api.get(`/campanas-noticias/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener campaña/noticia:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const getCampanasNoticiasByTipo = async (tipo) => {
+    try {
+        const response = await api.get(`/campanas-noticias/tipo/${tipo}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener campañas/noticias por tipo:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const likeCampanaNoticia = async (id) => {
+    try {
+        const response = await api.post(`/campanas-noticias/${id}/like`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al dar like:', error.response ? error.response.data : error.message);
         throw error;
     }
 };

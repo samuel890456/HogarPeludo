@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import './styles/design.css';
+import './styles/tailwind-base.css';
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

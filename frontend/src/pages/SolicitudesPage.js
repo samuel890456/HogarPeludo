@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { getSolicitudes, updateSolicitudEstado, deleteSolicitud } from '../api/api';
 import { toast } from 'react-toastify';
-import '../styles/SolicitudesPage.css';
+import useAuthStore from '../store/authStore'; // Importar el store de autenticación
+
+const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/'; // Asegúrate de que esta URL sea correcta
 
 const SolicitudesPage = () => {
     const [solicitudes, setSolicitudes] = useState([]);
@@ -9,39 +11,55 @@ const SolicitudesPage = () => {
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('');
 
-    const userId = parseInt(localStorage.getItem('userId'));
-    const userRoles = JSON.parse(localStorage.getItem('userRoles') || '[]');
+    const { user, isLoggedIn } = useAuthStore(); // Obtener el usuario y el estado de login del store
 
-    const isAdmin = userRoles.includes('1');
-    const isPublicador = userRoles.includes('2');
-    const isAdoptante = userRoles.includes('3');
+    // Determinar roles usando los nombres de rol mapeados del store
+    const isAdmin = user?.roles?.includes('admin');
+    const isRefugio = user?.roles?.includes('refugio'); // Fundaciones - solo publican
+    const isUsuario = user?.roles?.includes('usuario'); // Usuarios - adoptan y publican
+    
+    // Lógica para determinar qué pestañas mostrar
+    const isPublicador = isRefugio || isUsuario; // Ambos pueden publicar
+    const isAdoptante = isUsuario; // Solo usuarios pueden adoptar
 
     useEffect(() => {
-        if (isAdoptante) {
-            setActiveTab('adoptante');
-        } else if (isPublicador) {
-            setActiveTab('publicador');
-        } else if (isAdmin) {
-            setActiveTab('admin');
+        if (!isLoggedIn) {
+            // Redirigir o mostrar mensaje si no está logueado
+            setError('Debes iniciar sesión para ver las solicitudes.');
+            setLoading(false);
+            return;
         }
-    }, [isAdoptante, isPublicador, isAdmin]);
 
+        // Establecer la pestaña activa por defecto basada en el rol principal
+        if (isAdmin) {
+            setActiveTab('admin');
+        } else if (isRefugio) {
+            // Fundaciones solo ven solicitudes para sus mascotas
+            setActiveTab('publicador');
+        } else if (isUsuario) {
+            // Usuarios pueden ver tanto sus solicitudes como las de sus mascotas
+            // Por defecto mostrar sus solicitudes de adopción
+            setActiveTab('adoptante');
+        }
+    }, [isLoggedIn, isAdmin, isPublicador, isAdoptante, user]);
 
     useEffect(() => {
+        if (!isLoggedIn || !activeTab) return; // No cargar si no está logueado o no hay pestaña activa
+
         const fetchSolicitudes = async () => {
             try {
                 const data = await getSolicitudes();
                 setSolicitudes(data);
             } catch (err) {
                 setError('Error al cargar las solicitudes. Por favor, inténtalo de nuevo más tarde.');
-                console.error(err);
+                console.error('Error al cargar solicitudes:', err);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchSolicitudes();
-    }, []);
+    }, [isLoggedIn, activeTab]); // Recargar si el estado de login o la pestaña activa cambian
 
     const handleEstadoChange = async (solicitudId, newEstado) => {
         try {
@@ -72,19 +90,21 @@ const SolicitudesPage = () => {
     };
 
     if (loading) {
-        return <div className="solicitudes-container loading"><p>Cargando solicitudes...</p></div>;
+        return <div className="text-center py-8 text-lg text-gray-600"><p>Cargando solicitudes...</p></div>;
     }
 
     if (error) {
-        return <div className="solicitudes-container error-message"><p>{error}</p></div>;
+        return <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-auto max-w-4xl mt-8"><p>{error}</p></div>;
     }
 
+    // Solicitudes que el usuario ha enviado como adoptante
     const solicitudesComoAdoptante = solicitudes.filter(
-        sol => sol.adoptante_id === userId
+        sol => sol.adoptante_id === user?.id
     );
 
+    // Solicitudes que otros han enviado para las mascotas del usuario
     const solicitudesParaMisMascotas = solicitudes.filter(
-        sol => sol.publicador_id === userId
+        sol => sol.publicador_id === user?.id
     );
 
     let solicitudesAMostrar = [];
@@ -96,27 +116,27 @@ const SolicitudesPage = () => {
     } else if (activeTab === 'publicador') {
         solicitudesAMostrar = solicitudesParaMisMascotas;
         tituloSeccion = "Solicitudes Recibidas para Mis Mascotas";
-    } else if (isAdmin) {
+    } else if (activeTab === 'admin') {
         solicitudesAMostrar = solicitudes;
         tituloSeccion = "Todas las Solicitudes (Admin)";
     }
 
     return (
-        <div className="solicitudes-container">
-            <h2 className="page-title">Gestión de Solicitudes</h2>
+        <div className="container mx-auto p-4">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Gestión de Solicitudes</h2>
 
-            <div className="solicitudes-tabs-navigation">
-                {isAdoptante && (
+            <div className="flex justify-center space-x-4 mb-6">
+                {isUsuario && (
                     <button
-                        className={`tab-button ${activeTab === 'adoptante' ? 'active' : ''}`}
+                        className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${activeTab === 'adoptante' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                         onClick={() => setActiveTab('adoptante')}
                     >
-                        Mis Solicitudes
+                        Mis Solicitudes de Adopción
                     </button>
                 )}
-                {isPublicador && (
+                {(isRefugio || isUsuario) && (
                     <button
-                        className={`tab-button ${activeTab === 'publicador' ? 'active' : ''}`}
+                        className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${activeTab === 'publicador' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                         onClick={() => setActiveTab('publicador')}
                     >
                         Solicitudes para Mis Mascotas
@@ -124,7 +144,7 @@ const SolicitudesPage = () => {
                 )}
                 {isAdmin && (
                     <button
-                        className={`tab-button ${activeTab === 'admin' ? 'active' : ''}`}
+                        className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${activeTab === 'admin' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
                         onClick={() => setActiveTab('admin')}
                     >
                         Todas las Solicitudes
@@ -132,72 +152,80 @@ const SolicitudesPage = () => {
                 )}
             </div>
 
-            <h3 className="section-title">{tituloSeccion}</h3>
+            <h3 className="text-2xl font-semibold text-gray-700 mb-4 text-center">{tituloSeccion}</h3>
 
             {solicitudesAMostrar.length === 0 ? (
-                <div className="no-solicitudes-message">
-                    <p>No hay solicitudes disponibles en esta sección.</p>
+                <div className="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p className="text-gray-600">No hay solicitudes disponibles en esta sección.</p>
                 </div>
             ) : (
-                <div className="solicitudes-grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {solicitudesAMostrar.map((solicitud) => (
-                        <div key={solicitud.id} className="solicitud-card">
-                            <div className="card-header">
+                        <div key={solicitud.id} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
+                            <div className="p-4 border-b border-gray-200 flex items-center">
                                 <img
-                                    src={solicitud.mascota_imagen_url}
+                                    src={`${UPLOADS_BASE_URL}${solicitud.mascota_imagen_url}`}
                                     alt={solicitud.mascota_nombre}
-                                    className="mascota-img"
+                                    className="w-16 h-16 object-cover rounded-full mr-4"
                                 />
-                                <div className="mascota-info">
-                                    <h4>{solicitud.mascota_nombre} <span className="species-tag">({solicitud.mascota_especie})</span></h4>
-                                    <p className="card-date">Solicitud el: {new Date(solicitud.fecha_solicitud).toLocaleDateString()}</p>
-                                    <p className="card-status">Estado: <span className={`status-${solicitud.estado}`}>{solicitud.estado}</span></p>
+                                <div className="flex-grow">
+                                    <h4 className="text-lg font-semibold text-gray-800">{solicitud.mascota_nombre} <span className="text-gray-500 text-sm">({solicitud.mascota_especie})</span></h4>
+                                    <p className="text-gray-500 text-sm">Solicitud el: {new Date(solicitud.fecha_solicitud).toLocaleDateString()}</p>
+                                    <p className="text-gray-600 text-sm">Estado: <span className={`font-semibold ${solicitud.estado === 'aprobada' ? 'text-green-600' : solicitud.estado === 'rechazada' ? 'text-red-600' : 'text-yellow-600'}`}>{solicitud.estado}</span></p>
                                 </div>
                             </div>
-                            <div className="card-details">
+                            <div className="p-4 flex-grow">
                                 {(activeTab === 'publicador' || isAdmin) && (
-                                    <>
-                                        <h5 className="details-title">Detalles del Adoptante:</h5>
-                                        <p><strong>Nombre:</strong> {solicitud.adoptante_nombre}</p>
-                                        <p><strong>Email:</strong> {solicitud.adoptante_email}</p>
-                                        <p><strong>Teléfono:</strong> {solicitud.adoptante_telefono || 'N/A'}</p>
-                                        {solicitud.motivo && <p><strong>Motivo:</strong> {solicitud.motivo}</p>}
-                                    </>
+                                    <div className="mb-4">
+                                        <h5 className="text-md font-semibold text-gray-700 mb-2">Detalles del Adoptante:</h5>
+                                        <p className="text-gray-600"><strong>Nombre:</strong> {solicitud.adoptante_nombre}</p>
+                                        <p className="text-gray-600"><strong>Email:</strong> {solicitud.adoptante_email}</p>
+                                        <p className="text-gray-600"><strong>Teléfono:</strong> {solicitud.adoptante_telefono || 'N/A'}</p>
+                                        {solicitud.motivo && <p className="text-gray-600"><strong>Motivo:</strong> {solicitud.motivo}</p>}
+                                    </div>
                                 )}
 
-                                {activeTab === 'adoptante' && solicitud.adoptante_id === userId && (
-                                    <>
-                                        <h5 className="details-title">Detalles del Publicador:</h5>
-                                        <p><strong>Publicador:</strong> {solicitud.publicador_nombre} ({solicitud.publicador_email})</p>
-                                        <p><strong>Ubicación Mascota:</strong> {solicitud.mascota_ubicacion || 'N/A'}</p>
-                                        <p><strong>Motivo de tu Solicitud:</strong> {solicitud.motivo || 'No especificado'}</p>
-                                    </>
+                                {activeTab === 'adoptante' && solicitud.adoptante_id === user?.id && (
+                                    <div className="mb-4">
+                                        <h5 className="text-md font-semibold text-gray-700 mb-2">Detalles del Publicador:</h5>
+                                        <p className="text-gray-600">
+                                            <strong>Publicador:</strong> {solicitud.publicador_nombre}
+                                            {solicitud.publicador_email && ` (${solicitud.publicador_email})`}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <strong>Ubicación Mascota:</strong> {solicitud.mascota_ubicacion || 'No especificada'}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <strong>Motivo de tu Solicitud:</strong> {solicitud.motivo || 'No especificado'}
+                                        </p>
+                                    </div>
                                 )}
 
                                 {((isPublicador && activeTab === 'publicador') || isAdmin) && (
-                                    <div className="card-actions">
-                                        <label htmlFor={`estado-${solicitud.id}`}>Cambiar Estado:</label>
+                                    <div className="mt-auto pt-4 border-t border-gray-200">
+                                        <label htmlFor={`estado-${solicitud.id}`} className="block text-gray-700 text-sm font-bold mb-2">Cambiar Estado:</label>
                                         <select
                                             id={`estado-${solicitud.id}`}
                                             value={solicitud.estado}
                                             onChange={(e) => handleEstadoChange(solicitud.id, e.target.value)}
                                             disabled={solicitud.estado === 'aceptada' || solicitud.estado === 'rechazada'}
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
                                         >
                                             <option value="pendiente">Pendiente</option>
                                             <option value="aceptada">Aceptar</option>
                                             <option value="rechazada">Rechazar</option>
                                         </select>
-                                        {solicitud.publicador_id === userId && (isPublicador || isAdmin) && (
-                                            <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn btn-danger">
+                                        {solicitud.publicador_id === user?.id && (isPublicador || isAdmin) && (
+                                            <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
                                                 Eliminar Solicitud
                                             </button>
                                         )}
                                     </div>
                                 )}
 
-                                {isAdoptante && activeTab === 'adoptante' && solicitud.adoptante_id === userId && solicitud.estado === 'pendiente' && (
-                                    <div className="card-actions">
-                                        <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn btn-outline-secondary">
+                                {isAdoptante && activeTab === 'adoptante' && solicitud.adoptante_id === user?.id && solicitud.estado === 'pendiente' && (
+                                    <div className="mt-auto pt-4 border-t border-gray-200">
+                                        <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
                                             Cancelar Solicitud
                                         </button>
                                     </div>

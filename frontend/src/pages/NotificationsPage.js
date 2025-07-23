@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimesCircle, faEnvelopeOpen, faTrashAlt, faBell } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faTimesCircle, faEnvelopeOpen, faTrashAlt, faBell, faSpinner, faExclamationTriangle, faSadTear, faPaw } from '@fortawesome/free-solid-svg-icons';
 import { getAllNotifications, markNotificationAsRead, markAllNotificationsAsRead, deleteNotification } from '../api/api';
-import '../styles/NotificationsPage.css';
-import { faPaw } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
 const NotificationsPage = () => {
@@ -71,49 +69,62 @@ const NotificationsPage = () => {
     };
 
     if (loading) {
-        return <div className="notifications-container">Cargando notificaciones...</div>;
+        return (
+            <div className="flex flex-col items-center justify-center py-8 text-gray-600">
+                <FontAwesomeIcon icon={faSpinner} spin size="3x" className="mb-4" />
+                <p>Cargando notificaciones...</p>
+            </div>
+        );
     }
 
     if (error) {
-        return <div className="notifications-container error-message">{error}</div>;
+        return (
+            <div className="flex flex-col items-center justify-center py-8 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-auto max-w-md">
+                <FontAwesomeIcon icon={faExclamationTriangle} size="2x" className="mb-4" />
+                <p className="text-center mb-4">{error}</p>
+                <button onClick={fetchNotifications} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                    Reintentar Carga
+                </button>
+            </div>
+        );
     }
 
     const hasUnread = notifications.some(notif => !notif.leida);
 
     return (
-        <div className="notifications-container">
-            <h1><FontAwesomeIcon icon={faBell} /> Mis Notificaciones</h1>
+        <div className="container mx-auto p-4">
+            <h1 className="text-4xl font-bold text-gray-800 mb-6 text-center"><FontAwesomeIcon icon={faBell} className="mr-3" /> Mis Notificaciones</h1>
 
             {notifications.length === 0 ? (
-                <p className="no-notifications-message">No tienes notificaciones en este momento.</p>
+                <div className="bg-white p-6 rounded-lg shadow-md text-center">
+                    <p className="text-gray-600">No tienes notificaciones en este momento.</p>
+                </div>
             ) : (
                 <>
-                    <div className="notification-actions">
+                    <div className="flex justify-end mb-4">
                         {hasUnread && (
                             <button
                                 onClick={handleMarkAllAsRead}
-                                className="btn btn-secondary"
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-sm inline-flex items-center transition duration-300"
                                 title="Marcar todas como leídas"
                             >
-                                <FontAwesomeIcon icon={faEnvelopeOpen} /> Marcar todas como leídas
+                                <FontAwesomeIcon icon={faEnvelopeOpen} className="mr-2" /> Marcar todas como leídas
                             </button>
                         )}
                     </div>
 
-                    <ul className="notification-list">
+                    <ul className="space-y-4">
                         {notifications.map(notif => (
-                            <li key={notif.id} className={`notification-item ${notif.leida ? 'read' : 'unread'}`}>
-                                <div className="notification-content">
-                                    <p className="notification-message">{notif.mensaje}</p>
-                                    <span className="notification-date">
-                                        {new Date(notif.fecha_creacion).toLocaleString()}
-                                    </span>
+                            <li key={notif.id} className={`bg-white p-4 rounded-lg shadow-md flex items-center justify-between ${notif.leida ? 'opacity-70' : ''}`}>
+                                <div className="flex-grow">
+                                    <p className={`text-gray-800 ${notif.leida ? 'font-normal' : 'font-semibold'}`}>{notif.mensaje}</p>
+                                    <span className="text-gray-500 text-xs">{new Date(notif.fecha_creacion).toLocaleString()}</span>
                                 </div>
-                                <div className="notification-actions-item">
+                                <div className="flex space-x-2 ml-4">
                                     {!notif.leida && (
                                         <button
                                             onClick={() => handleMarkAsRead(notif.id)}
-                                            className="btn-action btn-mark-read"
+                                            className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full text-sm transition duration-300"
                                             title="Marcar como leída"
                                         >
                                             <FontAwesomeIcon icon={faCheckCircle} />
@@ -122,7 +133,7 @@ const NotificationsPage = () => {
                                     {notif.enlace && (
                                         <Link
                                             to={notif.enlace}
-                                            className="btn-action btn-view-link"
+                                            className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full text-sm transition duration-300 flex items-center justify-center"
                                             onClick={() => handleMarkAsRead(notif.id)}
                                             title="Ver detalles"
                                         >
@@ -131,7 +142,7 @@ const NotificationsPage = () => {
                                     )}
                                     <button
                                         onClick={() => handleDeleteNotification(notif.id)}
-                                        className="btn-action btn-delete"
+                                        className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-full text-sm transition duration-300"
                                         title="Eliminar notificación"
                                     >
                                         <FontAwesomeIcon icon={faTrashAlt} />

@@ -18,7 +18,8 @@ const notificacionesController = {
             const { id } = req.params;
             const userId = req.usuario.id; // Para asegurar que el usuario solo pueda marcar sus propias notificaciones
 
-            const [notification] = await Notificacion.getById(id); // Necesitas un getById en el modelo
+            const notifications = await Notificacion.getById(id); // getById devuelve un array
+            const notification = notifications[0]; // Tomar el primer elemento
             if (!notification || notification.usuario_id !== userId) {
                 return res.status(403).json({ message: 'No autorizado para marcar esta notificación como leída.' });
             }

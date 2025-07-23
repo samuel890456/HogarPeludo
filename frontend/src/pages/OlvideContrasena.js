@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { solicitarRestablecimientoContrasena } from '../api/api'; // Necesitarás crear esta función
-import '../styles/AuthForms.css'; // Reutilizamos los estilos
+import { solicitarRestablecimientoContrasena } from '../api/api';
 
 const OlvideContrasena = () => {
     const [email, setEmail] = useState('');
@@ -16,7 +15,6 @@ const OlvideContrasena = () => {
         setLoading(true);
 
         try {
-            // Llama a la API para solicitar el restablecimiento
             await solicitarRestablecimientoContrasena({ email });
             setMessage('Si tu correo electrónico está registrado, recibirás un enlace para restablecer tu contraseña.');
         } catch (err) {
@@ -28,46 +26,47 @@ const OlvideContrasena = () => {
     };
 
     return (
-        <div className="auth-container">
-            <div className="auth-card">
-                <h1 className="auth-title">¿Olvidaste tu Contraseña?</h1>
-                <p className="auth-subtitle">
-                    Ingresa tu correo electrónico y te enviaremos un enlace para restablecerla.
-                </p>
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+            <div className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full">
+                <div className="p-8 w-full md:w-1/2">
+                    <h1 className="text-3xl font-bold text-center mb-2">¿Olvidaste tu Contraseña?</h1>
+                    <p className="text-gray-600 text-center mb-6">
+                        Ingresa tu correo electrónico y te enviaremos un enlace para restablecerla.
+                    </p>
 
-                {message && <p className="auth-success-message">{message}</p>}
-                {error && <p className="auth-error-message">{error}</p>}
+                    {message && <p className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 text-sm">{message}</p>}
+                    {error && <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm">{error}</p>}
 
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <label htmlFor="email-forgot">Correo Electrónico</label>
-                        <input
-                            id="email-forgot"
-                            type="email"
-                            placeholder="tu@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            aria-label="Correo electrónico"
-                            disabled={loading}
-                        />
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="mb-4">
+                            <label htmlFor="email-forgot" className="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico</label>
+                            <input
+                                id="email-forgot"
+                                type="email"
+                                placeholder="tu@email.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                aria-label="Correo electrónico"
+                                disabled={loading}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+                        
+                        <button type="submit" className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" disabled={loading}>
+                            {loading ? 'Enviando...' : 'Enviar Enlace'}
+                        </button>
+                    </form>
+
+                    <p className="text-center text-gray-600 text-sm mt-4">
+                        <Link to="/iniciar-sesion" className="text-orange-500 hover:text-orange-800">Volver al inicio de sesión</Link>
+                    </p>
+                </div>
+                <div className="hidden md:block w-1/2 bg-cover bg-center rounded-r-lg" style={{ backgroundImage: 'url(/images/forgot-password-illustration.png)' }}>
+                    <div className="flex items-center justify-center h-full bg-black bg-opacity-50 rounded-r-lg">
+                        <p className="text-white text-2xl font-bold">Recupera el acceso a tu cuenta</p>
                     </div>
-                    
-                    <button type="submit" className="btn auth-submit-button" disabled={loading}>
-                        {loading ? 'Enviando...' : 'Enviar Enlace'}
-                    </button>
-                </form>
-
-                <p className="auth-link-text">
-                    <Link to="/iniciar-sesion" className="auth-link">Volver al inicio de sesión</Link>
-                </p>
-            </div>
-            {/* Puedes usar la misma imagen o una diferente para esta página */}
-            <div className="auth-image-banner">
-                <Link to="/">
-                    <img src="/images/forgot-password-illustration.png" alt="Mascota con signo de interrogación" className="auth-illustration" />
-                </Link>
-                <p className="banner-text">Recupera el acceso a tu cuenta</p>
+                </div>
             </div>
         </div>
     );
