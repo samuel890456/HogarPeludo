@@ -15,6 +15,7 @@ import {
 import { motion } from 'framer-motion';
 import { fetchResumen } from '../../api/adminApi';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -25,6 +26,7 @@ const Dashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [recentActivity, setRecentActivity] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadDashboardData = async () => {
@@ -221,21 +223,21 @@ const Dashboard = () => {
           title="Gestionar Mascotas"
           description="Ver, editar y administrar todas las mascotas"
           icon={HeartIcon}
-          action={() => window.location.href = '/admin/mascotas'}
+          action={() => navigate('/admin/mascotas')}
           color="bg-gradient-to-br from-pink-500 to-rose-500"
         />
         <QuickActionCard
           title="Revisar Solicitudes"
           description="Aprobar o rechazar solicitudes de adopción"
           icon={ClipboardDocumentListIcon}
-          action={() => window.location.href = '/admin/solicitudes'}
+          action={() => navigate('/admin/solicitudes')}
           color="bg-gradient-to-br from-blue-500 to-indigo-500"
         />
         <QuickActionCard
           title="Administrar Usuarios"
           description="Gestionar usuarios y permisos del sistema"
           icon={UserGroupIcon}
-          action={() => window.location.href = '/admin/usuarios'}
+          action={() => navigate('/admin/usuarios')}
           color="bg-gradient-to-br from-purple-500 to-violet-500"
         />
       </div>
@@ -290,19 +292,19 @@ const Dashboard = () => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Accesos Rápidos</h3>
             <div className="space-y-3">
-              <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              <button className="w-full text-left btn-secondary btn-icon">
                 <div className="flex items-center space-x-3">
                   <PlusIcon className="w-5 h-5 text-gray-400" />
                   <span className="text-sm font-medium text-gray-700">Crear Campaña</span>
                 </div>
               </button>
-              <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              <button className="w-full text-left btn-secondary btn-icon">
                 <div className="flex items-center space-x-3">
                   <BuildingOfficeIcon className="w-5 h-5 text-gray-400" />
                   <span className="text-sm font-medium text-gray-700">Gestionar Fundaciones</span>
                 </div>
               </button>
-              <button className="w-full text-left p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+              <button className="w-full text-left btn-secondary btn-icon">
                 <div className="flex items-center space-x-3">
                   <ClipboardDocumentListIcon className="w-5 h-5 text-gray-400" />
                   <span className="text-sm font-medium text-gray-700">Ver Reportes</span>

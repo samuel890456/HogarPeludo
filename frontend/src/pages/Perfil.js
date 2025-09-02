@@ -372,7 +372,7 @@ const Perfil = () => {
                                     <textarea id="biografia" name="biografia" value={formData.biografia} onChange={handleChange} rows="3" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2"></textarea>
                                 </div>
 
-                                <button type="submit" className="w-full inline-flex justify-center py-3 px-4 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" disabled={isSaving}>
+                                <button type="submit" className="w-full btn-primary" disabled={isSaving}>
                                     {isSaving ? 'Guardando...' : 'Guardar Cambios'}
                                 </button>
                             </form>
@@ -400,7 +400,7 @@ const Perfil = () => {
                                         <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
                                         <input type="password" id="confirmNewPassword" name="confirmNewPassword" value={passwordForm.confirmNewPassword} onChange={handlePasswordChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500 sm:text-sm p-2" />
                                     </div>
-                                    <button type="submit" className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" disabled={passwordSaving}>
+                                    <button type="submit" className="w-full btn-primary" disabled={passwordSaving}>
                                         {passwordSaving ? 'Guardando...' : 'Cambiar Contraseña'}
                                     </button>
                                 </form>
@@ -471,7 +471,7 @@ const Perfil = () => {
                                             <input type="checkbox" id="aceptaTerminos" name="aceptaTerminos" checked={roleRequestForm.aceptaTerminos} onChange={handleRoleRequestChange} className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded" disabled={!isProfileCompleteForRoleRequest} />
                                             <label htmlFor="aceptaTerminos" className="ml-2 block text-sm text-gray-700">Acepto los términos y condiciones de ser un refugio responsable.</label>
                                         </div>
-                                        <button type="submit" className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" disabled={!isProfileCompleteForRoleRequest || roleRequestSaving}>
+                                        <button type="submit" className="w-full btn-primary" disabled={!isProfileCompleteForRoleRequest || roleRequestSaving}>
                                             {roleRequestSaving ? 'Enviando Solicitud...' : 'Solicitar ser Refugio'}
                                         </button>
                                     </form>
@@ -489,7 +489,7 @@ const Perfil = () => {
                                 <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center"><ArrowRightOnRectangleIcon className="w-6 h-6 mr-2" /> Cerrar Sesión</h2>
                                 <button
                                     onClick={logout} // Use logout from useAuthStore
-                                    className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                    className="w-full btn-danger"
                                 >
                                     Cerrar Sesión
                                 </button>
@@ -501,7 +501,7 @@ const Perfil = () => {
                                 <p className="text-gray-600 text-sm mb-4">Esta acción es irreversible y eliminará permanentemente tu cuenta y todos los datos asociados.</p>
                                 <button
                                     onClick={handleInitiateDelete}
-                                    className="w-full inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                    className="w-full btn-danger"
                                     disabled={isDeleting}
                                 >
                                     {isDeleting ? 'Eliminando...' : 'Eliminar Mi Cuenta'}
@@ -519,7 +519,7 @@ const Perfil = () => {
                                     <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
                                         <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center"><DocumentTextIcon className="w-6 h-6 mr-2" /> Mis Publicaciones</h2>
                                         <p className="text-gray-600 mb-4">Aquí puedes ver y gestionar las mascotas que has publicado para adopción.</p>
-                                        <Link to="/mis-publicaciones" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                        <Link to="/mis-publicaciones" className="btn-primary">
                                             Ver Mis Publicaciones
                                         </Link>
                                     </div>
@@ -530,7 +530,7 @@ const Perfil = () => {
                                     <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
                                         <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center"><DocumentTextIcon className="w-6 h-6 mr-2" /> Mis Solicitudes de Adopción</h2>
                                         <p className="text-gray-600 mb-4">Revisa el estado de las solicitudes de adopción que has enviado.</p>
-                                        <Link to="/solicitudes" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                        <Link to="/solicitudes" className="btn-primary">
                                             Ver Mis Solicitudes
                                         </Link>
                                     </div>
@@ -540,7 +540,7 @@ const Perfil = () => {
                                 <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
                                     <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center"><BellIcon className="w-6 h-6 mr-2" /> Notificaciones</h2>
                                     <p className="text-gray-600 mb-4">Mantente al día con las actualizaciones importantes de tu cuenta y solicitudes.</p>
-                                    <Link to="/notificaciones" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                                    <Link to="/notificaciones" className="btn-primary">
                                         Ver Notificaciones
                                     </Link>
                                 </div>

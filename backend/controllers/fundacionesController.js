@@ -85,3 +85,38 @@ exports.deleteFundacion = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.calificarFundacion = async (req, res) => {
+  try {
+    const fundacionId = req.params.id;
+    const usuarioId = req.usuario.id;
+    const { puntuacion, comentario } = req.body;
+    if (!puntuacion || puntuacion < 1 || puntuacion > 5) {
+      return res.status(400).json({ message: 'La puntuación debe ser entre 1 y 5.' });
+    }
+    await Fundacion.addCalificacion(fundacionId, usuarioId, puntuacion, comentario);
+    res.status(201).json({ message: 'Calificación registrada.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getCalificacionesFundacion = async (req, res) => {
+  try {
+    const fundacionId = req.params.id;
+    const calificaciones = await Fundacion.getCalificaciones(fundacionId);
+    res.json(calificaciones);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.getPromedioCalificacionFundacion = async (req, res) => {
+  try {
+    const fundacionId = req.params.id;
+    const promedio = await Fundacion.getPromedioCalificacion(fundacionId);
+    res.json({ promedio });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

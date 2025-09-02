@@ -218,7 +218,7 @@ const GestionSolicitudes = () => {
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+            className="btn-secondary btn-icon"
           >
             <FunnelIcon className="w-4 h-4 mr-2" />
             Filtros
@@ -331,7 +331,7 @@ const GestionSolicitudes = () => {
                           setSelectedSolicitud(solicitud);
                           setShowDetailModal(true);
                         }}
-                        className="text-blue-600 hover:text-blue-900 transition-colors duration-200"
+                        className="btn-icon text-blue-600 hover:text-blue-900"
                         title="Ver detalles"
                       >
                         <EyeIcon className="w-4 h-4" />
@@ -341,14 +341,14 @@ const GestionSolicitudes = () => {
                         <>
                           <button
                             onClick={() => handleAprobar(solicitud.id)}
-                            className="text-green-600 hover:text-green-900 transition-colors duration-200"
+                            className="btn-icon text-green-600 hover:text-green-900"
                             title="Aprobar solicitud"
                           >
                             <CheckCircleIcon className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleRechazar(solicitud.id)}
-                            className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                            className="btn-icon text-red-600 hover:text-red-900"
                             title="Rechazar solicitud"
                           >
                             <XCircleIcon className="w-4 h-4" />
@@ -447,7 +447,7 @@ const GestionSolicitudes = () => {
                   <button
                     type="button"
                     onClick={() => setShowDetailModal(false)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-primary sm:ml-3 sm:w-auto"
                   >
                     Cerrar
                   </button>

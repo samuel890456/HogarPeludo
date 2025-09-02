@@ -62,8 +62,8 @@ const useAuthStore = create(
         try {
           const roleMap = {
             '1': 'admin',
-            '2': 'refugio',
-            '3': 'usuario',
+            '2': 'usuario',
+            '3': 'refugio',
           };
           const mappedRoles = (userData.roles || []).map(roleId => roleMap[roleId] || 'desconocido');
 

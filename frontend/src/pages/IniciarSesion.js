@@ -62,9 +62,9 @@ const IniciarSesion = () => {
         // Pequeña pausa para asegurar que el estado se actualice
         setTimeout(() => {
           // Redirigir basado en el rol del usuario
-          if (response.roles && response.roles.includes('admin')) {
-            navigate('/admin', { replace: true });
-          } else if (response.roles && response.roles.includes('refugio')) {
+          if (response.roles && response.roles.includes('1')) {
+            navigate('/admin/dashboard', { replace: true });
+          } else if (response.roles && response.roles.includes('3')) {
             navigate('/mi-fundacion', { replace: true });
           } else {
             navigate('/', { replace: true });

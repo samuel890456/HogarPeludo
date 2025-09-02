@@ -52,9 +52,10 @@ exports.registrarUsuario = async (req, res) => {
 
         // Obtener los roles del usuario recién creado para el token
         const userRoles = await Usuario.getUserRoles(id); 
+        const rol_id = userRoles[0]; // principal
 
-        // Generar un token JWT con el ARRAY de roles
-        const token = jwt.sign({ id, email, roles: userRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Generar un token JWT con el ARRAY de roles y el rol_id principal
+        const token = jwt.sign({ id, email, roles: userRoles, rol_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         res.status(201).json({ 
             success: true, 
@@ -63,7 +64,8 @@ exports.registrarUsuario = async (req, res) => {
             nombre, 
             email, 
             token, 
-            roles: userRoles 
+            roles: userRoles,
+            rol_id
         });
     } catch (error) {
         console.error('Error en registro:', error);
@@ -94,12 +96,13 @@ exports.iniciarSesion = async (req, res) => {
 
         // Asegúrate de que `usuario.roles` sea un array de strings de IDs de rol
         const userRoles = usuario.roles || [];
+        const rol_id = userRoles[0]; // principal
 
-        // Generar un token JWT con el ARRAY de roles
-        const token = jwt.sign({ id: usuario.id, email: usuario.email, roles: userRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Generar un token JWT con el ARRAY de roles y el rol_id principal
+        const token = jwt.sign({ id: usuario.id, email: usuario.email, roles: userRoles, rol_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Devolver la respuesta con el token y el ARRAY de roles
-        res.json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email, token, roles: userRoles, biografia: usuario.biografia, foto_perfil_url: usuario.foto_perfil_url, notificarEmail: usuario.notificarEmail, notificarWeb: usuario.notificarWeb });
+        res.json({ id: usuario.id, nombre: usuario.nombre, email: usuario.email, token, roles: userRoles, rol_id, biografia: usuario.biografia, foto_perfil_url: usuario.foto_perfil_url, notificarEmail: usuario.notificarEmail, notificarWeb: usuario.notificarWeb });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -131,7 +134,8 @@ exports.googleLogin = async (req, res) => {
             // Si el usuario ya existe, genera un token JWT para tu aplicación
             // y envía sus datos (incluyendo roles) al frontend.
             const userRoles = user.roles || [];
-            const token = jwt.sign({ id: user.id, email: user.email, roles: userRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const rol_id = userRoles[0]; // principal
+            const token = jwt.sign({ id: user.id, email: user.email, roles: userRoles, rol_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             return res.json({ id: user.id, nombre: user.nombre, email: user.email, token, roles: userRoles });
 
         } else {
@@ -151,9 +155,10 @@ exports.googleLogin = async (req, res) => {
             
             // Obtener los roles del nuevo usuario
             const newUserRoles = await Usuario.getUserRoles(newUserId);
+            const rol_id = newUserRoles[0]; // principal
 
             // Generar un token JWT para tu aplicación para el nuevo usuario
-            const token = jwt.sign({ id: newUserId, email: email, roles: newUserRoles }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: newUserId, email: email, roles: newUserRoles, rol_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             
             // Opcional: Podrías querer enviar un correo de bienvenida aquí.
 

@@ -58,7 +58,17 @@ CREATE TABLE `fundaciones` (
   `usuario_id` int(11) DEFAULT NULL,
   `ciudad` varchar(100) DEFAULT NULL,
   `departamento` varchar(100) DEFAULT NULL,
-  `aprobacion` enum('pendiente','aprobada','rechazada') NOT NULL DEFAULT 'pendiente'
+  `aprobacion` enum('pendiente','aprobada','rechazada') NOT NULL DEFAULT 'pendiente',
+  `numero_registro_legal` varchar(255) DEFAULT NULL,
+  `acepta_voluntarios` tinyint(1) DEFAULT 0,
+  `acepta_donaciones` tinyint(1) DEFAULT 0,
+  `facebook` varchar(255) DEFAULT NULL,
+  `instagram` varchar(255) DEFAULT NULL,
+  `whatsapp` varchar(50) DEFAULT NULL,
+  `horario` varchar(255) DEFAULT NULL,
+  `especialidad` varchar(255) DEFAULT NULL,
+  `fundacion_desde` int(11) DEFAULT NULL,
+  `calificacion` decimal(2,1) DEFAULT 0.0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -223,6 +233,33 @@ CREATE TABLE `campanas_noticias_likes` (
   `usuario_id` int(11) NOT NULL,
   `fecha_like` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Tabla para solicitudes de cambio de rol
+CREATE TABLE IF NOT EXISTS `solicitudes_cambio_rol` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `usuario_id` INT NOT NULL,
+  `rol_solicitado` VARCHAR(50) NOT NULL,
+  `estado` ENUM('pendiente','aprobada','rechazada') NOT NULL DEFAULT 'pendiente',
+  `fecha_solicitud` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `fecha_respuesta` DATETIME DEFAULT NULL,
+  `admin_id` INT DEFAULT NULL,
+  `comentario` TEXT DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`admin_id`) REFERENCES `usuarios`(`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Tabla intermedia para notificaciones leídas/no leídas
+CREATE TABLE IF NOT EXISTS `notificaciones_usuarios` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `usuario_id` INT NOT NULL,
+  `notificacion_id` INT NOT NULL,
+  `leida` TINYINT(1) NOT NULL DEFAULT 0,
+  `fecha_leida` DATETIME DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`usuario_id`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`notificacion_id`) REFERENCES `notificaciones`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Índices para tablas volcadas

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   BuildingOfficeIcon, 
   MagnifyingGlassIcon,
@@ -54,7 +54,18 @@ const GestionFundaciones = () => {
           estado: 'aprobada',
           fecha_registro: '2024-01-15',
           mascotas_count: 25,
-          adopciones_count: 150
+          adopciones_count: 150,
+          numero_registro_legal: 'REG-001-2024',
+          acepta_voluntarios: true,
+          acepta_donaciones: true,
+          facebook: 'https://www.facebook.com/patitasdeamor',
+          instagram: 'https://www.instagram.com/patitasdeamor',
+          whatsapp: '+57 300 123 4567',
+          horario: 'Lunes a Sábado, 9:00 AM - 6:00 PM',
+          especialidad: 'Rescate y cuidado de mascotas',
+          fundacion_desde: '2023-01-01',
+          logo_url: 'https://via.placeholder.com/150',
+          calificacion: 4.5
         },
         {
           id: 2,
@@ -68,7 +79,18 @@ const GestionFundaciones = () => {
           estado: 'pendiente',
           fecha_registro: '2024-01-20',
           mascotas_count: 18,
-          adopciones_count: 89
+          adopciones_count: 89,
+          numero_registro_legal: 'REG-002-2024',
+          acepta_voluntarios: false,
+          acepta_donaciones: true,
+          facebook: 'https://www.facebook.com/refugioesperanza',
+          instagram: 'https://www.instagram.com/refugioesperanza',
+          whatsapp: '+57 310 987 6543',
+          horario: 'Lunes a Viernes, 10:00 AM - 5:00 PM',
+          especialidad: 'Rescate y cuidado de mascotas',
+          fundacion_desde: '2023-05-01',
+          logo_url: 'https://via.placeholder.com/150',
+          calificacion: 4.0
         },
         {
           id: 3,
@@ -82,7 +104,18 @@ const GestionFundaciones = () => {
           estado: 'rechazada',
           fecha_registro: '2024-01-10',
           mascotas_count: 12,
-          adopciones_count: 67
+          adopciones_count: 67,
+          numero_registro_legal: 'REG-003-2024',
+          acepta_voluntarios: true,
+          acepta_donaciones: false,
+          facebook: 'https://www.facebook.com/casademascotas',
+          instagram: 'https://www.instagram.com/casademascotas',
+          whatsapp: '+57 315 456 7890',
+          horario: 'Lunes a Sábado, 11:00 AM - 7:00 PM',
+          especialidad: 'Adopción y cuidado temporal',
+          fundacion_desde: '2023-10-01',
+          logo_url: 'https://via.placeholder.com/150',
+          calificacion: 3.8
         }
       ];
 
@@ -211,10 +244,10 @@ const GestionFundaciones = () => {
           <p className="text-gray-600 mt-2">Administra fundaciones y organizaciones de rescate</p>
         </div>
         <div className="mt-4 sm:mt-0">
-          <button className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200">
+          <Link to="/admin/fundaciones/nueva" className="btn-primary btn-icon">
             <PlusIcon className="w-5 h-5 mr-2" />
             Nueva Fundación
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -303,7 +336,7 @@ const GestionFundaciones = () => {
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+            className="btn-secondary btn-icon"
           >
             <FunnelIcon className="w-4 h-4 mr-2" />
             Filtros
@@ -411,7 +444,7 @@ const GestionFundaciones = () => {
                     setSelectedFundacion(fundacion);
                     setShowDetailModal(true);
                   }}
-                  className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+                  className="flex-1 btn-secondary btn-icon"
                 >
                   <EyeIcon className="w-4 h-4 mr-1" />
                   Ver
@@ -421,13 +454,13 @@ const GestionFundaciones = () => {
                   <>
                     <button
                       onClick={() => handleAprobar(fundacion.id)}
-                      className="inline-flex items-center px-3 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-colors duration-200"
+                      className="btn-primary btn-icon"
                     >
                       <CheckCircleIcon className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleRechazar(fundacion.id)}
-                      className="inline-flex items-center px-3 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
+                      className="btn-danger btn-icon"
                     >
                       <XCircleIcon className="w-4 h-4" />
                     </button>
@@ -436,7 +469,7 @@ const GestionFundaciones = () => {
                 
                 <button
                   onClick={() => handleEdit(fundacion.id)}
-                  className="inline-flex items-center px-3 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+                  className="btn-primary btn-icon"
                 >
                   <PencilIcon className="w-4 h-4" />
                 </button>
@@ -446,7 +479,7 @@ const GestionFundaciones = () => {
                     setSelectedFundacion(fundacion);
                     setShowDeleteModal(true);
                   }}
-                  className="inline-flex items-center px-3 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
+                  className="btn-danger btn-icon"
                 >
                   <TrashIcon className="w-4 h-4" />
                 </button>
@@ -535,6 +568,43 @@ const GestionFundaciones = () => {
                               <span className="font-medium">Adopciones Realizadas:</span>
                               <span className="ml-2">{selectedFundacion.adopciones_count}</span>
                             </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">Número de registro legal:</span>
+                              <span className="ml-2">{selectedFundacion.numero_registro_legal}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">¿Acepta voluntarios?</span>
+                              <span className="ml-2">{selectedFundacion.acepta_voluntarios ? 'Sí' : 'No'}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">¿Acepta donaciones?</span>
+                              <span className="ml-2">{selectedFundacion.acepta_donaciones ? 'Sí' : 'No'}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">Horario:</span>
+                              <span className="ml-2">{selectedFundacion.horario}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">Especialidad:</span>
+                              <span className="ml-2">{selectedFundacion.especialidad}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">Fundación desde:</span>
+                              <span className="ml-2">{new Date(selectedFundacion.fundacion_desde).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">Logo URL:</span>
+                              <span className="ml-2">{selectedFundacion.logo_url}</span>
+                            </div>
+                            <div className="flex items-center text-sm">
+                              <span className="font-medium">Calificación:</span>
+                              <span className="ml-2">{selectedFundacion.calificacion}</span>
+                            </div>
+                            <div className="flex space-x-2 mt-2">
+                              {selectedFundacion.facebook && <a href={selectedFundacion.facebook} target="_blank" rel="noopener noreferrer"><img src="/icons/facebook.svg" alt="Facebook" className="w-6 h-6" /></a>}
+                              {selectedFundacion.instagram && <a href={selectedFundacion.instagram} target="_blank" rel="noopener noreferrer"><img src="/icons/instagram.svg" alt="Instagram" className="w-6 h-6" /></a>}
+                              {selectedFundacion.whatsapp && <a href={`https://wa.me/${selectedFundacion.whatsapp}`} target="_blank" rel="noopener noreferrer"><img src="/icons/whatsapp.svg" alt="WhatsApp" className="w-6 h-6" /></a>}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -545,7 +615,7 @@ const GestionFundaciones = () => {
                   <button
                     type="button"
                     onClick={() => setShowDetailModal(false)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-primary sm:ml-3 sm:w-auto"
                   >
                     Cerrar
                   </button>
@@ -591,14 +661,14 @@ const GestionFundaciones = () => {
                   <button
                     type="button"
                     onClick={() => handleEliminar(selectedFundacion.id)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-danger sm:ml-3 sm:w-auto"
                   >
                     Eliminar
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowDeleteModal(false)}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-secondary sm:mt-0 sm:ml-3 sm:w-auto"
                   >
                     Cancelar
                   </button>

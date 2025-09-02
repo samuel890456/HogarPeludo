@@ -119,7 +119,7 @@ const Mascotas = () => {
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-orange-600 transition-colors duration-200"
+                  className="btn-secondary btn-icon"
                 >
                   <XMarkIcon className="w-4 h-4" />
                   <span>Limpiar filtros</span>
@@ -128,7 +128,7 @@ const Mascotas = () => {
               
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center space-x-2 px-4 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl hover:from-orange-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                className="btn-primary btn-icon"
               >
                 <FunnelIcon className="w-5 h-5" />
                 <span>Filtros</span>
@@ -247,7 +247,7 @@ const Mascotas = () => {
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-xl hover:from-orange-600 hover:to-pink-600 transition-all duration-200"
+                  className="btn-primary"
                 >
                   Limpiar filtros
                 </button>

@@ -72,7 +72,7 @@ const Header = () => {
   };
 
   // Determinar si el usuario tiene el rol de publicador
-  const isPublicador = user?.roles?.includes('3'); // Rol 'refugio' (ID 3)
+  const isPublicador = user?.roles?.includes('usuario') || user?.roles?.includes('refugio'); // Roles 'usuario' o 'refugio'
   const userIsAdmin = isAdmin();
 
   const menuItems = [
@@ -173,7 +173,7 @@ const Header = () => {
                 {userIsAdmin && (
                   <Link
                     to="/admin/dashboard"
-                    className="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-md hover:shadow-lg"
+                    className="btn-primary bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
                   >
                     Admin
                   </Link>
@@ -196,6 +196,14 @@ const Header = () => {
                       >
                         Mi Perfil
                       </Link>
+                      {isPublicador && (
+                        <Link
+                          to="/mi-fundacion"
+                          className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-200"
+                        >
+                          Mi Fundación
+                        </Link>
+                      )}
                       <Link
                         to="/mis-publicaciones"
                         className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-200"
@@ -223,13 +231,13 @@ const Header = () => {
               <div className="flex items-center space-x-3">
                 <Link
                   to="/iniciar-sesion"
-                  className="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="btn-primary"
                 >
                   Iniciar Sesión
                 </Link>
                 <Link
                   to="/registrarse"
-                  className="px-4 py-2 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="btn-primary"
                 >
                   Registrarse
                 </Link>
@@ -338,6 +346,17 @@ const Header = () => {
                       <span>Mi Perfil</span>
                     </Link>
                     
+                    {isPublicador && (
+                      <Link
+                        to="/mi-fundacion"
+                        onClick={() => setIsMenuOpen(false)}
+                        className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all duration-200"
+                      >
+                        <BuildingOfficeIcon className="w-5 h-5" />
+                        <span>Mi Fundación</span>
+                      </Link>
+                    )}
+                    
                     <Link
                       to="/mis-publicaciones"
                       onClick={() => setIsMenuOpen(false)}
@@ -363,7 +382,7 @@ const Header = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="flex items-center space-x-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+                      className="btn-danger btn-icon w-full text-left px-4 py-3"
                     >
                       <XMarkIcon className="w-5 h-5" />
                       <span>Cerrar Sesión</span>
@@ -374,14 +393,14 @@ const Header = () => {
                     <Link
                       to="/iniciar-sesion"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block w-full px-4 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all duration-200 text-center whitespace-nowrap"
+                      className="block w-full btn-primary text-center whitespace-nowrap"
                     >
                       Iniciar Sesión
                     </Link>
                     <Link
                       to="/registrarse"
                       onClick={() => setIsMenuOpen(false)}
-                      className="block w-full px-4 py-3 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-lg font-medium hover:from-orange-600 hover:to-pink-600 transition-all duration-200 text-center whitespace-nowrap"
+                      className="block w-full btn-primary text-center whitespace-nowrap"
                     >
                       Registrarse
                     </Link>

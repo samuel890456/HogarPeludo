@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const GestionCampanasNoticias = () => {
   const [campanas, setCampanas] = useState([]);
@@ -198,10 +199,10 @@ const GestionCampanasNoticias = () => {
           <p className="text-gray-600 mt-2">Administra contenido informativo y campañas de adopción</p>
         </div>
         <div className="mt-4 sm:mt-0">
-          <button className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200">
+          <Link to="/admin/campanas-noticias/nueva" className="btn-primary btn-icon">
             <PlusIcon className="w-5 h-5 mr-2" />
             Crear Contenido
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -280,21 +281,13 @@ const GestionCampanasNoticias = () => {
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('campanas')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'campanas'
-                ? 'border-purple-500 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'campanas' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Campañas ({campanas.length})
           </button>
           <button
             onClick={() => setActiveTab('noticias')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'noticias'
-                ? 'border-purple-500 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'noticias' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Noticias ({noticias.length})
           </button>
@@ -316,7 +309,7 @@ const GestionCampanasNoticias = () => {
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+            className="btn-secondary btn-icon"
           >
             <FunnelIcon className="w-4 h-4 mr-2" />
             Filtros
@@ -414,7 +407,7 @@ const GestionCampanasNoticias = () => {
                     setSelectedItem(item);
                     setShowDetailModal(true);
                   }}
-                  className="flex-1 inline-flex items-center justify-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+                  className="flex-1 btn-secondary btn-icon"
                 >
                   <EyeIcon className="w-4 h-4 mr-1" />
                   Ver
@@ -425,7 +418,7 @@ const GestionCampanasNoticias = () => {
                     setSelectedItem(item);
                     setShowDeleteModal(true);
                   }}
-                  className="inline-flex items-center px-3 py-2 border border-transparent rounded-lg text-sm font-medium text-white bg-red-600 hover:bg-red-700 transition-colors duration-200"
+                  className="btn-danger btn-icon"
                 >
                   <TrashIcon className="w-4 h-4" />
                 </button>
@@ -523,7 +516,7 @@ const GestionCampanasNoticias = () => {
                   <button
                     type="button"
                     onClick={() => setShowDetailModal(false)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-primary sm:ml-3 sm:w-auto"
                   >
                     Cerrar
                   </button>
@@ -569,14 +562,14 @@ const GestionCampanasNoticias = () => {
                   <button
                     type="button"
                     onClick={() => handleEliminar(selectedItem.id, selectedItem.tipo)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-danger sm:ml-3 sm:w-auto"
                   >
                     Eliminar
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowDeleteModal(false)}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-secondary sm:mt-0 sm:ml-3 sm:w-auto"
                   >
                     Cancelar
                   </button>

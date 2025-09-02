@@ -62,6 +62,17 @@ exports.getMascotasByUserId = async (req, res) => {
     }
 };
 
+exports.getMascotasByUserIdPublic = async (req, res) => {
+    try {
+        const requestedUserId = req.params.id;
+        const mascotas = await Mascota.getByUserId(requestedUserId);
+        res.json(mascotas);
+    } catch (error) {
+        console.error("Error en getMascotasByUserIdPublic:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
 exports.createMascota = async (req, res) => {
     try {
         console.log("Datos recibidos en el backend antes de limpiar (CREATE):", req.body);

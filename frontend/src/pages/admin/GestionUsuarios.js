@@ -255,21 +255,13 @@ const GestionUsuarios = () => {
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('usuarios')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'usuarios'
-                ? 'border-purple-500 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'usuarios' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Usuarios ({usuarios.length})
           </button>
           <button
             onClick={() => setActiveTab('solicitudes')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
-              activeTab === 'solicitudes'
-                ? 'border-purple-500 text-purple-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-            }`}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === 'solicitudes' ? 'border-purple-500 text-purple-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'}`}
           >
             Solicitudes de Rol ({solicitudesRol.length})
           </button>
@@ -293,7 +285,7 @@ const GestionUsuarios = () => {
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+                className="btn-secondary btn-icon"
               >
                 <FunnelIcon className="w-4 h-4 mr-2" />
                 Filtros
@@ -395,16 +387,16 @@ const GestionUsuarios = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex items-center space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900 transition-colors duration-200">
+                          <button className="btn-icon text-blue-600 hover:text-blue-900">
                             <EyeIcon className="w-4 h-4" />
                           </button>
-                          <button className="text-green-600 hover:text-green-900 transition-colors duration-200">
+                          <button className="btn-icon text-green-600 hover:text-green-900">
                             <PencilIcon className="w-4 h-4" />
                           </button>
                           {usuario.bloqueado ? (
                             <button
                               onClick={() => handleDesbloquearUsuario(usuario.id)}
-                              className="text-green-600 hover:text-green-900 transition-colors duration-200"
+                              className="btn-icon text-green-600 hover:text-green-900"
                               title="Desbloquear usuario"
                             >
                               <CheckCircleIcon className="w-4 h-4" />
@@ -412,7 +404,7 @@ const GestionUsuarios = () => {
                           ) : (
                             <button
                               onClick={() => handleBloquearUsuario(usuario.id)}
-                              className="text-yellow-600 hover:text-yellow-900 transition-colors duration-200"
+                              className="btn-icon text-yellow-600 hover:text-yellow-900"
                               title="Bloquear usuario"
                             >
                               <XCircleIcon className="w-4 h-4" />
@@ -489,14 +481,14 @@ const GestionUsuarios = () => {
                 <div className="flex flex-col space-y-2 ml-6">
                   <button
                     onClick={() => handleAprobarRol(solicitud.id)}
-                    className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                    className="btn-primary btn-icon"
                   >
                     <CheckCircleIcon className="w-4 h-4 mr-2" />
                     Aprobar
                   </button>
                   <button
                     onClick={() => handleRechazarRol(solicitud.id)}
-                    className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                    className="btn-danger btn-icon"
                   >
                     <XCircleIcon className="w-4 h-4 mr-2" />
                     Rechazar

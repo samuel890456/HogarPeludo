@@ -53,7 +53,7 @@ const OlvideContrasena = () => {
                             />
                         </div>
                         
-                        <button type="submit" className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full" disabled={loading}>
+                        <button type="submit" className="btn-primary w-full" disabled={loading}>
                             {loading ? 'Enviando...' : 'Enviar Enlace'}
                         </button>
                     </form>

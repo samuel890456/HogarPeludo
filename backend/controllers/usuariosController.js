@@ -100,13 +100,16 @@ exports.requestRoleChange = async (req, res) => {
         const userId = req.params.id; // ID del usuario
         const { motivacion } = req.body;
 
-        // Aquí podrías añadir validaciones adicionales para la motivación
         if (!motivacion || motivacion.length < 10) {
             return res.status(400).json({ message: 'La motivación debe tener al menos 10 caracteres.' });
         }
 
-        // Guardar la solicitud de rol en la base de datos (estado: pendiente_aprobacion_admin)
-        await Usuario.saveRoleRequest(userId, motivacion, 'pendiente_aprobacion_admin');
+        // Registrar la solicitud en la nueva tabla
+        const db = require('../config/db');
+        await db.query(
+            'INSERT INTO solicitudes_cambio_rol (usuario_id, rol_solicitado, estado, fecha_solicitud, comentario) VALUES (?, ?, ?, NOW(), ?)',
+            [userId, 'refugio', 'pendiente', motivacion]
+        );
 
         res.status(200).json({ message: 'Solicitud de cambio de rol enviada con éxito. Será revisada por un administrador.' });
     } catch (error) {
@@ -157,10 +160,11 @@ exports.getPendingRoleRequests = async (req, res) => {
 exports.approveRoleRequest = async (req, res) => {
     try {
         const { userId } = req.params;
+        const db = require('../config/db');
         // Asignar el rol de 'refugio' (ID 3) al usuario
-        await Usuario.assignRole(userId, '3'); // Asumiendo que '3' es el ID del rol 'refugio'
+        await db.query('INSERT INTO usuario_roles (usuario_id, rol_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE rol_id = VALUES(rol_id)', [userId, 3]);
         // Actualizar el estado de la solicitud a 'aprobada'
-        await Usuario.saveRoleRequest(userId, null, 'aprobada');
+        await db.query('UPDATE solicitudes_cambio_rol SET estado = ?, fecha_respuesta = NOW(), admin_id = ? WHERE usuario_id = ? AND estado = ? ORDER BY fecha_solicitud DESC LIMIT 1', ['aprobada', req.usuario.id, userId, 'pendiente']);
         res.status(200).json({ message: 'Solicitud de rol aprobada y rol asignado con éxito.' });
     } catch (error) {
         console.error('Error al aprobar solicitud de rol:', error);
@@ -172,8 +176,9 @@ exports.approveRoleRequest = async (req, res) => {
 exports.rejectRoleRequest = async (req, res) => {
     try {
         const { userId } = req.params;
+        const db = require('../config/db');
         // Actualizar el estado de la solicitud a 'rechazada'
-        await Usuario.saveRoleRequest(userId, null, 'rechazada');
+        await db.query('UPDATE solicitudes_cambio_rol SET estado = ?, fecha_respuesta = NOW(), admin_id = ? WHERE usuario_id = ? AND estado = ? ORDER BY fecha_solicitud DESC LIMIT 1', ['rechazada', req.usuario.id, userId, 'pendiente']);
         res.status(200).json({ message: 'Solicitud de rol rechazada con éxito.' });
     } catch (error) {
         console.error('Error al rechazar solicitud de rol:', error);

@@ -104,14 +104,14 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
                   to="/mascotas"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-500 to-pink-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  className="btn-primary btn-icon"
                 >
                   Ver Mascotas
                   <ArrowRightIcon className="w-5 h-5 ml-2" />
                 </Link>
                 <Link
                   to="/fundaciones"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-orange-500 text-orange-600 font-semibold rounded-xl hover:bg-orange-50 transition-all duration-200"
+                  className="btn-outline"
                 >
                   Conoce Fundaciones
                 </Link>
@@ -280,7 +280,7 @@ const Home = () => {
                 </p>
                 <Link
                   to="/publicar-mascota"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-white text-green-600 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                  className="btn-primary btn-icon bg-white text-green-600 hover:bg-gray-100"
                 >
                   <PlusCircleIcon className="w-5 h-5 mr-2" />
                   Publicar Mascota
@@ -335,18 +335,18 @@ const Home = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="/registrarse"
-                className="inline-flex items-center justify-center px-8 py-4 bg-white text-orange-600 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-              >
-                Crear Cuenta
-                <ArrowRightIcon className="w-5 h-5 ml-2" />
-              </Link>
-              <Link
-                to="/mascotas"
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-white text-white font-semibold rounded-xl hover:bg-white hover:text-orange-600 transition-all duration-200"
-              >
-                Explorar Mascotas
-              </Link>
+                  to="/registrarse"
+                  className="btn-primary btn-icon bg-white text-orange-600 hover:bg-gray-100"
+                >
+                  Crear Cuenta
+                  <ArrowRightIcon className="w-5 h-5 ml-2" />
+                </Link>
+                <Link
+                  to="/mascotas"
+                  className="btn-outline border-white text-white hover:bg-white hover:text-orange-600"
+                >
+                  Explorar Mascotas
+                </Link>
             </div>
           </motion.div>
         </div>

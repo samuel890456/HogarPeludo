@@ -307,25 +307,58 @@ export const getFundacionById = async (id) => {
     }
 };
 
+// Obtener fundación por ID de usuario
 export const getFundacionByUserId = async (userId) => {
     try {
         const response = await api.get(`/fundaciones/user/${userId}`);
         return response.data;
     } catch (error) {
-        console.error('Error al obtener la fundación por ID de usuario:', error.response ? error.response.data : error.message);
+        console.error('Error al obtener la fundación por usuario:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
 
-export const updateFundacionByUserId = async (userId, fundacionData) => {
+// Actualizar fundación por ID de usuario
+export const updateFundacionByUserId = async (userId, data) => {
     try {
-        const response = await api.put(`/fundaciones/user/${userId}`, fundacionData);
+        const response = await api.put(`/fundaciones/user/${userId}`, data);
         return response.data;
     } catch (error) {
-        console.error('Error al actualizar la fundación por ID de usuario:', error.response ? error.response.data : error.message);
+        console.error('Error al actualizar la fundación por usuario:', error.response ? error.response.data : error.message);
         throw error;
     }
 };
+
+export const calificarFundacion = async (fundacionId, puntuacion, comentario) => {
+    try {
+        const response = await api.post(`/fundaciones/${fundacionId}/calificar`, { puntuacion, comentario });
+        return response.data;
+    } catch (error) {
+        console.error('Error al calificar la fundación:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const getCalificacionesFundacion = async (fundacionId) => {
+    try {
+        const response = await api.get(`/fundaciones/${fundacionId}/calificaciones`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener calificaciones de la fundación:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const getPromedioCalificacionFundacion = async (fundacionId) => {
+    try {
+        const response = await api.get(`/fundaciones/${fundacionId}/promedio-calificacion`);
+        return response.data.promedio;
+    } catch (error) {
+        console.error('Error al obtener el promedio de calificación de la fundación:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
 
 // ✅ CAMPAÑAS Y NOTICIAS
 export const getCampanasNoticias = async (params = {}) => {
@@ -365,6 +398,16 @@ export const likeCampanaNoticia = async (id) => {
         return response.data;
     } catch (error) {
         console.error('Error al dar like:', error.response ? error.response.data : error.message);
+        throw error;
+    }
+};
+
+export const getMascotasByUserIdPublic = async (userId) => {
+    try {
+        const response = await api.get(`/mascotas/publico/usuario/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error al obtener las mascotas públicas por ID de usuario:', error.response ? error.response.data : error.message);
         throw error;
     }
 };

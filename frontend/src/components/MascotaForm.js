@@ -56,6 +56,7 @@ const MascotaForm = () => {
         vacunas: false,
         clear_imagen: false,
         tags: [],
+        estado: '',
     });
     const [paises, setPaises] = useState([]);
     const [estados, setEstados] = useState([]);

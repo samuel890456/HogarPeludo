@@ -21,6 +21,9 @@ const upload = multer({ storage: storage });
 
 // Obtener todas las mascotas
 router.get('/', mascotasController.getAllMascotas);
+// Ruta pública para ver mascotas de un usuario/fundación sin autenticación
+router.get('/publico/usuario/:id', mascotasController.getMascotasByUserIdPublic);
+
 // Obtener mascotas por ID de usuario (¡NUEVA RUTA!)
 router.get('/usuario/:id', authController.verificarToken, mascotasController.getMascotasByUserId); // <--- AÑADE ESTA LÍNEA
 // Obtener una mascota por su ID

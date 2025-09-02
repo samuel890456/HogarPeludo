@@ -13,4 +13,11 @@ router.delete('/:id', fundacionesController.deleteFundacion);
 router.get('/user/:userId', authController.verificarToken, authController.checkRole(['3']), fundacionesController.getFundacionByUserId);
 router.put('/user/:userId', authController.verificarToken, authController.checkRole(['3']), fundacionesController.updateFundacionByUserId);
 
+// Calificar una fundación (requiere autenticación)
+router.post('/:id/calificar', authController.verificarToken, fundacionesController.calificarFundacion);
+// Obtener todas las calificaciones de una fundación
+router.get('/:id/calificaciones', fundacionesController.getCalificacionesFundacion);
+// Obtener el promedio de calificación de una fundación
+router.get('/:id/promedio-calificacion', fundacionesController.getPromedioCalificacionFundacion);
+
 module.exports = router;

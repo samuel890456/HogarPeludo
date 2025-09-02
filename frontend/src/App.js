@@ -20,6 +20,7 @@ import PublicarMascota from './pages/PublicarMascota';
 import MisPublicaciones from './pages/MisPublicaciones';
 import MascotaForm from './components/MascotaForm'; 
 import Fundaciones from './pages/Fundaciones';
+import FundacionProfileForm from './components/FundacionProfileForm';
 import FundacionDetail from './pages/FundacionDetail';
 import Campanas from './pages/Campanas';
 import Noticias from './pages/Noticias'; 
@@ -150,14 +151,14 @@ const App = () => {
           {/* Routes that require any authenticated user, or specific roles */}
           <Route path="/publicar-mascota" element={
             <Layout>
-              <RutaPrivada allowedRoles={['refugio', 'admin']}>
+              <RutaPrivada allowedRoles={['refugio', 'usuario', 'admin']}>
                 <MascotaForm />
               </RutaPrivada>
             </Layout>
           } />
           <Route path="/mascotas/:id/editar" element={
             <Layout>
-              <RutaPrivada allowedRoles={['refugio', 'admin']}>
+              <RutaPrivada allowedRoles={['refugio', 'admin', 'usuario']}>
                 <MascotaForm />
               </RutaPrivada>
             </Layout>
@@ -191,8 +192,15 @@ const App = () => {
           } />
           <Route path="/mis-publicaciones" element={
             <Layout>
-              <RutaPrivada allowedRoles={['refugio', 'admin']}>
+              <RutaPrivada allowedRoles={['refugio', 'admin', 'usuario']}>
                 <MisPublicaciones />
+              </RutaPrivada>
+            </Layout>
+          } />
+          <Route path="/mi-fundacion" element={
+            <Layout>
+              <RutaPrivada allowedRoles={['refugio']}>
+                <FundacionProfileForm />
               </RutaPrivada>
             </Layout>
           } />

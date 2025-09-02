@@ -1,19 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  BuildingOfficeIcon,
-  MapPinIcon,
-  PhoneIcon,
-  EnvelopeIcon,
-  GlobeAltIcon,
-  HeartIcon,
-  UserGroupIcon,
-  MagnifyingGlassIcon,
-  StarIcon
-} from '@heroicons/react/24/outline';
+import { BuildingOfficeIcon, MapPinIcon, PhoneIcon, EnvelopeIcon, GlobeAltIcon, HeartIcon, StarIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { getFundaciones } from '../api/api';
+
+const renderStars = (rating) => {
+  const stars = [];
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 !== 0;
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(<StarSolidIcon key={i} className="w-4 h-4 text-yellow-400" />);
+  }
+  if (hasHalfStar) {
+    stars.push(<StarIcon key="half" className="w-4 h-4 text-yellow-400" />);
+  }
+  const emptyStars = 5 - Math.ceil(rating);
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(<StarIcon key={`empty-${i}`} className="w-4 h-4 text-gray-300" />);
+  }
+  return stars;
+};
 
 const Fundaciones = () => {
   const [fundaciones, setFundaciones] = useState([]);
@@ -21,108 +29,31 @@ const Fundaciones = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Datos de ejemplo para las fundaciones
-  const fundacionesData = [
-    {
-      id: 1,
-      nombre: 'Fundación Patitas de Amor',
-      descripcion: 'Dedicada al rescate y cuidado de perros y gatos abandonados. Brindamos atención veterinaria, alimentación y buscamos hogares amorosos para nuestros peludos.',
-      ubicacion: 'Bogotá, Colombia',
-      telefono: '+57 300 123 4567',
-      email: 'info@patitasdeamor.org',
-      website: 'www.patitasdeamor.org',
-      mascotas_disponibles: 25,
-      fundacion_desde: 2018,
-      calificacion: 4.8,
-      imagen: '/images/logo-mascotas.png',
-      especialidad: 'Perros y Gatos',
-      horario: 'Lun - Vie: 8:00 AM - 6:00 PM'
-    },
-    {
-      id: 2,
-      nombre: 'Rescate Animal Colombia',
-      descripcion: 'Organización sin fines de lucro que trabaja por el bienestar animal. Realizamos campañas de esterilización, rescate de emergencia y educación sobre tenencia responsable.',
-      ubicacion: 'Medellín, Colombia',
-      telefono: '+57 310 987 6543',
-      email: 'contacto@rescateanimal.co',
-      website: 'www.rescateanimal.co',
-      mascotas_disponibles: 18,
-      fundacion_desde: 2015,
-      calificacion: 4.9,
-      imagen: '/images/logo-mascotas.png',
-      especialidad: 'Todo tipo de animales',
-      horario: 'Lun - Dom: 9:00 AM - 7:00 PM'
-    },
-    {
-      id: 3,
-      nombre: 'Hogar Temporal Felino',
-      descripcion: 'Especialistas en el rescate y adopción de gatos. Proporcionamos refugio temporal, atención médica y buscamos familias comprometidas para nuestros felinos.',
-      ubicacion: 'Cali, Colombia',
-      telefono: '+57 315 456 7890',
-      email: 'adopciones@hogarfelino.com',
-      website: 'www.hogarfelino.com',
-      mascotas_disponibles: 12,
-      fundacion_desde: 2020,
-      calificacion: 4.7,
-      imagen: '/images/logo-mascotas.png',
-      especialidad: 'Gatos',
-      horario: 'Mar - Sáb: 10:00 AM - 5:00 PM'
-    },
-    {
-      id: 4,
-      nombre: 'Amigos de los Animales',
-      descripcion: 'Fundación comprometida con el rescate, rehabilitación y reubicación de animales en situación de vulnerabilidad. Trabajamos con voluntarios dedicados.',
-      ubicacion: 'Barranquilla, Colombia',
-      telefono: '+57 320 111 2222',
-      email: 'ayuda@amigosanimales.org',
-      website: 'www.amigosanimales.org',
-      mascotas_disponibles: 30,
-      fundacion_desde: 2012,
-      calificacion: 4.6,
-      imagen: '/images/logo-mascotas.png',
-      especialidad: 'Perros, Gatos y Aves',
-      horario: 'Lun - Dom: 7:00 AM - 8:00 PM'
-    }
-  ];
-
   useEffect(() => {
-    // Simular carga de datos
-    setTimeout(() => {
-      setFundaciones(fundacionesData);
-      setFilteredFundaciones(fundacionesData);
-      setLoading(false);
-    }, 1000);
+    const fetchFundaciones = async () => {
+      setLoading(true);
+      try {
+        const data = await getFundaciones();
+        setFundaciones(data);
+        setFilteredFundaciones(data);
+      } catch (error) {
+        setFundaciones([]);
+        setFilteredFundaciones([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFundaciones();
   }, []);
 
   useEffect(() => {
     const filtered = fundaciones.filter(fundacion =>
       fundacion.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      fundacion.ubicacion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      fundacion.especialidad.toLowerCase().includes(searchTerm.toLowerCase())
+      (fundacion.ubicacion || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (fundacion.especialidad || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredFundaciones(filtered);
   }, [fundaciones, searchTerm]);
-
-  const renderStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<StarSolidIcon key={i} className="w-4 h-4 text-yellow-400" />);
-    }
-
-    if (hasHalfStar) {
-      stars.push(<StarIcon key="half" className="w-4 h-4 text-yellow-400" />);
-    }
-
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(<StarIcon key={`empty-${i}`} className="w-4 h-4 text-gray-300" />);
-    }
-
-    return stars;
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -151,7 +82,6 @@ const Fundaciones = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-md mx-auto">
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               <input
                 type="text"
                 placeholder="Buscar fundaciones..."
@@ -159,6 +89,7 @@ const Fundaciones = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
             </div>
           </div>
         </div>
@@ -184,7 +115,6 @@ const Fundaciones = () => {
               <LoadingSpinner size="lg" color="blue" />
             </div>
           ) : filteredFundaciones.length === 0 ? (
-            /* Empty State */
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -204,7 +134,6 @@ const Fundaciones = () => {
               </p>
             </motion.div>
           ) : (
-            /* Fundaciones Grid */
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <AnimatePresence>
                 {filteredFundaciones.map((fundacion, index) => (
@@ -214,7 +143,7 @@ const Fundaciones = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                     exit={{ opacity: 0, y: -20 }}
-                    className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
+                    className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col"
                   >
                     {/* Header */}
                     <div className="relative h-48 bg-gradient-to-br from-blue-500 to-purple-600">
@@ -235,7 +164,7 @@ const Fundaciones = () => {
                         <div className="flex items-center space-x-2">
                           {renderStars(fundacion.calificacion)}
                           <span className="text-white text-sm font-medium">
-                            {fundacion.calificacion}
+                            {fundacion.calificacion !== null && fundacion.calificacion !== undefined ? Number(fundacion.calificacion).toFixed(1) : '—'}
                           </span>
                         </div>
                       </div>
@@ -286,16 +215,16 @@ const Fundaciones = () => {
                           <EnvelopeIcon className="w-4 h-4 mr-3 text-blue-500" />
                           <span className="text-sm">{fundacion.email}</span>
                         </div>
-                        {fundacion.website && (
+                        {fundacion.sitio_web && (
                           <div className="flex items-center text-gray-600">
                             <GlobeAltIcon className="w-4 h-4 mr-3 text-blue-500" />
                             <a 
-                              href={`https://${fundacion.website}`} 
+                              href={`https://${fundacion.sitio_web}`} 
                               target="_blank" 
                               rel="noopener noreferrer"
                               className="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
                             >
-                              {fundacion.website}
+                              {fundacion.sitio_web}
                             </a>
                           </div>
                         )}

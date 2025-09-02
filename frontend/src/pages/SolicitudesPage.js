@@ -128,7 +128,7 @@ const SolicitudesPage = () => {
             <div className="flex justify-center space-x-4 mb-6">
                 {isUsuario && (
                     <button
-                        className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${activeTab === 'adoptante' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                        className={`btn-secondary ${activeTab === 'adoptante' ? 'btn-primary' : ''}`}
                         onClick={() => setActiveTab('adoptante')}
                     >
                         Mis Solicitudes de Adopción
@@ -136,7 +136,7 @@ const SolicitudesPage = () => {
                 )}
                 {(isRefugio || isUsuario) && (
                     <button
-                        className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${activeTab === 'publicador' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                        className={`btn-secondary ${activeTab === 'publicador' ? 'btn-primary' : ''}`}
                         onClick={() => setActiveTab('publicador')}
                     >
                         Solicitudes para Mis Mascotas
@@ -144,7 +144,7 @@ const SolicitudesPage = () => {
                 )}
                 {isAdmin && (
                     <button
-                        className={`px-6 py-2 rounded-full text-lg font-semibold transition-colors duration-300 ${activeTab === 'admin' ? 'bg-orange-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                        className={`btn-secondary ${activeTab === 'admin' ? 'btn-primary' : ''}`}
                         onClick={() => setActiveTab('admin')}
                     >
                         Todas las Solicitudes
@@ -171,7 +171,7 @@ const SolicitudesPage = () => {
                                 <div className="flex-grow">
                                     <h4 className="text-lg font-semibold text-gray-800">{solicitud.mascota_nombre} <span className="text-gray-500 text-sm">({solicitud.mascota_especie})</span></h4>
                                     <p className="text-gray-500 text-sm">Solicitud el: {new Date(solicitud.fecha_solicitud).toLocaleDateString()}</p>
-                                    <p className="text-gray-600 text-sm">Estado: <span className={`font-semibold ${solicitud.estado === 'aprobada' ? 'text-green-600' : solicitud.estado === 'rechazada' ? 'text-red-600' : 'text-yellow-600'}`}>{solicitud.estado}</span></p>
+                                    <p className="text-gray-600 text-sm">Estado: <span className={`px-2 py-1 rounded-full text-xs font-semibold uppercase ${solicitud.estado === 'aprobada' ? 'bg-green-100 text-green-800' : solicitud.estado === 'rechazada' ? 'bg-red-100 text-red-800' : solicitud.estado === 'completada' ? 'bg-blue-100 text-blue-800' : 'bg-yellow-100 text-yellow-800'}`}>{solicitud.estado}</span></p>
                                 </div>
                             </div>
                             <div className="p-4 flex-grow">
@@ -208,15 +208,16 @@ const SolicitudesPage = () => {
                                             id={`estado-${solicitud.id}`}
                                             value={solicitud.estado}
                                             onChange={(e) => handleEstadoChange(solicitud.id, e.target.value)}
-                                            disabled={solicitud.estado === 'aceptada' || solicitud.estado === 'rechazada'}
+                                            disabled={solicitud.estado === 'rechazada' || solicitud.estado === 'completada'}
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2"
                                         >
                                             <option value="pendiente">Pendiente</option>
-                                            <option value="aceptada">Aceptar</option>
-                                            <option value="rechazada">Rechazar</option>
+                                            <option value="aprobada">Aprobada</option>
+                                            <option value="rechazada">Rechazada</option>
+                                            {solicitud.estado === 'aprobada' && <option value="completada">Completada</option>}
                                         </select>
                                         {solicitud.publicador_id === user?.id && (isPublicador || isAdmin) && (
-                                            <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                                            <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn-danger w-full">
                                                 Eliminar Solicitud
                                             </button>
                                         )}
@@ -225,7 +226,7 @@ const SolicitudesPage = () => {
 
                                 {isAdoptante && activeTab === 'adoptante' && solicitud.adoptante_id === user?.id && solicitud.estado === 'pendiente' && (
                                     <div className="mt-auto pt-4 border-t border-gray-200">
-                                        <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                                        <button onClick={() => handleDeleteSolicitud(solicitud.id)} className="btn-secondary w-full">
                                             Cancelar Solicitud
                                         </button>
                                     </div>

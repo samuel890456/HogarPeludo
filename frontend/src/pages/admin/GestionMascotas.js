@@ -14,6 +14,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchMascotas, eliminarMascota } from '../../api/adminApi';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const GestionMascotas = () => {
   const [mascotas, setMascotas] = useState([]);
@@ -170,10 +171,10 @@ const GestionMascotas = () => {
           <p className="text-gray-600 mt-2">Administra todas las mascotas registradas en el sistema</p>
         </div>
         <div className="mt-4 sm:mt-0">
-          <button className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200">
+          <Link to="/publicar-mascota" className="btn-primary btn-icon">
             <PlusIcon className="w-5 h-5 mr-2" />
             Nueva Mascota
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -195,7 +196,7 @@ const GestionMascotas = () => {
           {/* Filter Toggle */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
+            className="btn-secondary btn-icon"
           >
             <FunnelIcon className="w-4 h-4 mr-2" />
             Filtros
@@ -351,10 +352,10 @@ const GestionMascotas = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex items-center space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900 transition-colors duration-200">
+                      <button className="btn-icon text-blue-600 hover:text-blue-900">
                         <EyeIcon className="w-4 h-4" />
                       </button>
-                      <button className="text-green-600 hover:text-green-900 transition-colors duration-200">
+                      <button className="btn-icon text-green-600 hover:text-green-900">
                         <PencilIcon className="w-4 h-4" />
                       </button>
                       <button 
@@ -362,7 +363,7 @@ const GestionMascotas = () => {
                           setSelectedMascota(mascota);
                           setShowDeleteModal(true);
                         }}
-                        className="text-red-600 hover:text-red-900 transition-colors duration-200"
+                        className="btn-icon text-red-600 hover:text-red-900"
                       >
                         <TrashIcon className="w-4 h-4" />
                       </button>
@@ -420,14 +421,14 @@ const GestionMascotas = () => {
                   <button
                     type="button"
                     onClick={() => handleDelete(selectedMascota?.id)}
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-danger sm:ml-3 sm:w-auto"
                   >
                     Eliminar
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowDeleteModal(false)}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-secondary sm:mt-0 sm:ml-3 sm:w-auto"
                   >
                     Cancelar
                   </button>

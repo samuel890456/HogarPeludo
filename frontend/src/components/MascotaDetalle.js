@@ -263,7 +263,7 @@ const MascotaDetalle = () => {
                                     <h3 className="text-xl font-bold text-orange-800">¡Quiero Adoptar a {mascota.nombre}!</h3>
                                     <p className="mt-2 text-orange-700">Si estás listo para darle un hogar lleno de amor a {mascota.nombre}, haz clic en "Solicitar Adopción".</p>
                                     <button
-                                        className="mt-4 w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center"
+                                        className="mt-4 w-full btn-primary btn-icon"
                                         onClick={handleAdoptClick}
                                         disabled={!mascota.disponible} // Deshabilitar si no está disponible
                                     >
@@ -282,7 +282,7 @@ const MascotaDetalle = () => {
                 </div>
 
                 <div className="mt-6 text-center">
-                    <button className="text-orange-600 hover:text-orange-800 font-semibold" onClick={() => navigate(-1)}>
+                    <button className="btn-outline btn-icon" onClick={() => navigate(-1)}>
                         &larr; Volver al Listado
                     </button>
                 </div>
@@ -313,7 +313,7 @@ const MascotaDetalle = () => {
                         <p className="text-gray-700 mb-6">El publicador de la mascota ha sido notificado y pronto se pondrá en contacto contigo para los siguientes pasos.</p>
                         <p className="text-gray-600 text-sm mb-6">Agradecemos tu interés en darle un hogar lleno de amor a una mascota. ¡Te deseamos mucha suerte!</p>
                         <button
-                            className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-full transition duration-300"
+                            className="btn-primary rounded-full"
                             onClick={() => setShowAdoptSuccessModal(false)}
                         >
                             Cerrar y Volver

@@ -82,7 +82,7 @@ const NotificationsPage = () => {
             <div className="flex flex-col items-center justify-center py-8 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mx-auto max-w-md">
                 <FontAwesomeIcon icon={faExclamationTriangle} size="2x" className="mb-4" />
                 <p className="text-center mb-4">{error}</p>
-                <button onClick={fetchNotifications} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300">
+                <button onClick={fetchNotifications} className="btn-primary">
                     Reintentar Carga
                 </button>
             </div>
@@ -105,7 +105,7 @@ const NotificationsPage = () => {
                         {hasUnread && (
                             <button
                                 onClick={handleMarkAllAsRead}
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-sm inline-flex items-center transition duration-300"
+                                className="btn-primary btn-icon"
                                 title="Marcar todas como leídas"
                             >
                                 <FontAwesomeIcon icon={faEnvelopeOpen} className="mr-2" /> Marcar todas como leídas
@@ -124,7 +124,7 @@ const NotificationsPage = () => {
                                     {!notif.leida && (
                                         <button
                                             onClick={() => handleMarkAsRead(notif.id)}
-                                            className="bg-green-500 hover:bg-green-700 text-white p-2 rounded-full text-sm transition duration-300"
+                                            className="btn-primary btn-icon"
                                             title="Marcar como leída"
                                         >
                                             <FontAwesomeIcon icon={faCheckCircle} />
@@ -133,7 +133,7 @@ const NotificationsPage = () => {
                                     {notif.enlace && (
                                         <Link
                                             to={notif.enlace}
-                                            className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-full text-sm transition duration-300 flex items-center justify-center"
+                                            className="btn-secondary btn-icon"
                                             onClick={() => handleMarkAsRead(notif.id)}
                                             title="Ver detalles"
                                         >
@@ -142,7 +142,7 @@ const NotificationsPage = () => {
                                     )}
                                     <button
                                         onClick={() => handleDeleteNotification(notif.id)}
-                                        className="bg-red-500 hover:bg-red-700 text-white p-2 rounded-full text-sm transition duration-300"
+                                        className="btn-danger btn-icon"
                                         title="Eliminar notificación"
                                     >
                                         <FontAwesomeIcon icon={faTrashAlt} />

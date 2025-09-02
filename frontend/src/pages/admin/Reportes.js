@@ -269,11 +269,11 @@ const Reportes = () => {
             <p className="text-gray-600 mt-1">Descarga reportes detallados en diferentes formatos</p>
           </div>
           <div className="mt-4 sm:mt-0 flex space-x-3">
-            <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
+            <button className="btn-secondary btn-icon">
               <DocumentTextIcon className="w-4 h-4 mr-2" />
               Exportar PDF
             </button>
-            <button className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200">
+            <button className="btn-primary btn-icon">
               <ChartBarIcon className="w-4 h-4 mr-2" />
               Exportar Excel
             </button>

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getFundacionById, updateFundacion, createFundacion } from '../../api/adminApi'; // Assuming these API functions exist
 import { toast } from 'react-toastify';
 import { PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 
 const UPLOADS_BASE_URL = 'http://localhost:5000/uploads/';
 
@@ -168,8 +169,8 @@ const FundacionForm = () => {
                         {formData.logo_url_preview ? (
                             <div className="relative w-32 h-32 mb-4">
                                 <img src={formData.logo_url_preview} alt="Vista previa del logo" className="w-full h-full object-contain rounded-lg" />
-                                <button type="button" className="absolute top-0 right-0 bg-red-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-lg font-bold" onClick={handleRemoveLogo} aria-label="Eliminar logo">
-                                    &times;
+                                <button type="button" className="absolute top-0 right-0 btn-danger btn-icon rounded-full h-6 w-6 flex items-center justify-center" onClick={handleRemoveLogo} aria-label="Eliminar logo">
+                                    <XMarkIcon className="w-4 h-4" />
                                 </button>
                             </div>
                         ) : (
@@ -188,7 +189,7 @@ const FundacionForm = () => {
                         />
                         <button
                             type="button"
-                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+                            className="btn-primary btn-icon"
                             onClick={() => document.getElementById('logo').click()}
                         >
                             <PhotoIcon className="w-5 h-5 mr-2" /> {formData.logo_url_preview ? 'Cambiar Logo' : 'Seleccionar Logo'}
@@ -200,10 +201,10 @@ const FundacionForm = () => {
                 </div>
 
                 <div className="flex justify-end space-x-4 mt-8">
-                    <button type="submit" className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500" disabled={loading}>
+                    <button type="submit" className="btn-primary" disabled={loading}>
                         {loading ? 'Guardando...' : (isEditing ? 'Guardar Cambios' : 'Crear Fundación')}
                     </button>
-                    <button type="button" className="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => navigate('/admin/fundaciones')} disabled={loading}>
+                    <button type="button" className="btn-secondary" onClick={() => navigate('/admin/fundaciones')} disabled={loading}>
                         Cancelar
                     </button>
                 </div>
